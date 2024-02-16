@@ -79,7 +79,7 @@ export default class RelayPool {
 
   get connectedCount() {
     let count = 0;
-    for (const [url, relay] of this.relays.entries()) {
+    for (const [_url, relay] of this.relays.entries()) {
       if (relay.connected) count++;
     }
     return count;

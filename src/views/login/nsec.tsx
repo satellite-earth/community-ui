@@ -17,7 +17,7 @@ export default function LoginNsecView() {
   const [inputValue, setInputValue] = useState("");
 
   const [hexKey, setHexKey] = useState("");
-  const [relayUrl, setRelayUrl] = useState("");
+  const [relayUrl, _setRelayUrl] = useState("");
 
   const [npub, setNpub] = useState("");
 

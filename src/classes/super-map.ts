@@ -6,7 +6,7 @@ export default class SuperMap<Key, Value> extends Map<Key, Value> {
     this.newValue = newValue;
   }
 
-  has(key: Key) {
+  has(_key: Key) {
     return true;
   }
   get(key: Key) {
