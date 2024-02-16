@@ -1,13 +1,14 @@
-import { nanoid } from "nanoid";
 import Observable from "zen-observable";
 
-export default class TransparentObservable<T> implements Observable<T> {
+export default class ControlledObservable<T> implements Observable<T> {
   private observable: Observable<T>;
   private subscriptions = new Set<ZenObservable.SubscriptionObserver<T>>();
-  id = nanoid(8);
   private _complete = false;
   get closed() {
     return this._complete;
+  }
+  get used() {
+    return this.subscriptions.size > 0;
   }
 
   constructor(subscriber?: ZenObservable.Subscriber<T>) {

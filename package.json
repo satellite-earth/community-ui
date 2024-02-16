@@ -19,6 +19,7 @@
     "dayjs": "^1.11.10",
     "debug": "^4.3.4",
     "framer-motion": "^11.0.5",
+    "json-stringify-deterministic": "^1.0.12",
     "lodash.throttle": "^4.1.1",
     "nanoid": "^5.0.5",
     "nostr-idb": "^2.1.1",
@@ -32,6 +33,7 @@
   },
   "devDependencies": {
     "@types/debug": "^4.1.12",
+    "@types/lodash.throttle": "^4.1.9",
     "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.19",
     "@types/webscopeio__react-textarea-autocomplete": "^4.7.5",

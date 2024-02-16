@@ -1,8 +1,10 @@
-import { Avatar, Box, Button, Flex, Image, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Image } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 
 import accountService from "../../services/account";
 import useCurrentAccount from "../../hooks/use-current-account";
+import UserAvatar from "../user/user-avatar";
+import UserName from "../user/user-name";
 
 export default function SideNav() {
   const account = useCurrentAccount();
@@ -14,8 +16,8 @@ export default function SideNav() {
       </Box>
       {account ? (
         <Flex gap="2" alignItems="center">
-          <Avatar size="sm" />
-          <Text fontWeight="bold">{account.pubkey.slice(0, 8)}</Text>
+          <UserAvatar size="sm" pubkey={account.pubkey} />
+          <UserName pubkey={account.pubkey} />
           <Button size="sm" onClick={() => accountService.logout()} ml="auto">
             Logout
           </Button>

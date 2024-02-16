@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { PersistentSubject, Subject } from "../classes/subject";
+import Subject, { PersistentSubject } from "../classes/subject";
 
 function useSubject<Value extends unknown>(subject: PersistentSubject<Value>): Value;
 function useSubject<Value extends unknown>(subject?: PersistentSubject<Value>): Value | undefined;

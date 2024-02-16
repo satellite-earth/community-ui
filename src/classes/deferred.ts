@@ -7,14 +7,14 @@ export default function createDefer<T>() {
   let _resolve: (value?: T | PromiseLike<T>) => void;
   let _reject: (reason?: any) => void;
   const promise = new Promise<T>((resolve, reject) => {
-    // @ts-ignore
+    // @ts-expect-error
     _resolve = resolve;
     _reject = reject;
   }) as Deferred<T>;
 
-  // @ts-ignore
+  // @ts-expect-error
   promise.resolve = _resolve;
-  // @ts-ignore
+  // @ts-expect-error
   promise.reject = _reject;
 
   return promise;
