@@ -1,23 +1,30 @@
 import { PropsWithChildren } from "react";
-import { Flex, IconButton, Image } from "@chakra-ui/react";
+import { Center, Flex, Heading } from "@chakra-ui/react";
 import ErrorBoundary from "../error-boundary";
 import SideNav from "./nav";
+import CommunitiesNav from "./communities";
+import useSubject from "../../hooks/use-subject";
+import clientRelaysService from "../../services/client-relays";
 
 export default function Layout({ children }: PropsWithChildren) {
+  const community = useSubject(clientRelaysService.community);
+
   return (
     <>
       <Flex direction={{ base: "column", md: "row" }} minH="100vh">
-        <Flex direction="column" gap="4" px="2" py="4" shrink={0} borderRightWidth={1}>
-          <IconButton
-            aria-label="Satellite Instance"
-            icon={<Image borderRadius="lg" src="https://satellite.earth/assets/favicon-a0e2b399.png" w="12" h="12" />}
-          />
-          <IconButton aria-label="Satellite Instance" icon={<p>+</p>} w="12" h="12" fontSize="24" />
-        </Flex>
-        <SideNav />
-        <Flex direction="column" overflow="hidden" grow={1}>
-          <ErrorBoundary>{children}</ErrorBoundary>
-        </Flex>
+        <CommunitiesNav />
+        {community ? (
+          <>
+            <SideNav />
+            <Flex direction="column" overflow="hidden" grow={1}>
+              <ErrorBoundary>{children}</ErrorBoundary>
+            </Flex>
+          </>
+        ) : (
+          <Center flex={1}>
+            <Heading>Select Community</Heading>
+          </Center>
+        )}
       </Flex>
     </>
   );

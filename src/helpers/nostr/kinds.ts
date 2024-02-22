@@ -1,0 +1,1 @@
+export const COMMUNITY_CHAT_MESSAGE = 9;

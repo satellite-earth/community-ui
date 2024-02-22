@@ -11,7 +11,7 @@ export default function SideNav() {
 
   return (
     <Flex direction="column" gap="2" px="2" py="2" shrink={0} w="xs" borderRightWidth={1}>
-      <Box p="4" borderRadius="lg" bg="black">
+      <Box as={RouterLink} to="/" p="4" borderRadius="lg" bg="black">
         <Image src="https://satellite.earth/assets/branding-94b401c7.png" w="full" />
       </Box>
       {account ? (
@@ -27,8 +27,11 @@ export default function SideNav() {
           Login
         </Button>
       )}
-      <Button size="sm" justifyContent="flex-start" variant="ghost">
+      <Button as={RouterLink} to="/c/general" size="sm" justifyContent="flex-start" variant="ghost">
         General
+      </Button>
+      <Button as={RouterLink} to="/c/other" size="sm" justifyContent="flex-start" variant="ghost">
+        Other
       </Button>
     </Flex>
   );

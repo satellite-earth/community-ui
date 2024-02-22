@@ -5,6 +5,7 @@ import { safeRelayUrls } from "../helpers/relay";
 import RelaySet from "../classes/relay-set";
 
 class ClientRelayService {
+  community = new PersistentSubject("");
   readRelays = new PersistentSubject(new RelaySet(safeRelayUrls(["wss://nostrue.com"])));
   writeRelays = new PersistentSubject(new RelaySet(safeRelayUrls(["wss://nostrue.com"])));
 

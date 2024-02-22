@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { Debugger } from "debug";
-import { Filter, NostrEvent } from "nostr-tools";
+import { Filter, NostrEvent, matchFilters } from "nostr-tools";
 import _throttle from "lodash.throttle";
 
 import { PersistentSubject } from "./subject";
@@ -58,6 +58,7 @@ export default class TimelineLoader {
   private handleEvent(event: NostrEvent, cache = true) {
     // if this is a replaceable event, mirror it over to the replaceable event service
     if (isReplaceable(event.kind)) replaceableEventsService.handleEvent(event);
+    if (!matchFilters(this.filters, event)) return;
 
     this.events.addEvent(event);
     if (cache) localRelay.publish(event);
