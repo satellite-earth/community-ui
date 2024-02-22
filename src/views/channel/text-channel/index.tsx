@@ -9,7 +9,7 @@ import UserAvatar from "../../../components/user/user-avatar";
 
 export default function TextChannelView({ groupId }: { groupId: string }) {
   const relay = useSubject(clientRelaysService.community);
-  const timeline = useTimelineLoader(`${groupId}-messages`, relay, [
+  const timeline = useTimelineLoader(`${relay}-${groupId}-messages`, relay, [
     { kinds: [COMMUNITY_CHAT_MESSAGE], "#h": [groupId] },
   ]);
 
@@ -25,7 +25,7 @@ export default function TextChannelView({ groupId }: { groupId: string }) {
       <Flex overflowX="hidden" overflowY="auto" flex={1} direction="column-reverse" p="2" gap="2">
         {messages.map((message) => (
           <Box key={message.id}>
-            <UserAvatar pubkey={message.pubkey} size="sm" verticalAlign="middle" />
+            <UserAvatar pubkey={message.pubkey} size="sm" verticalAlign="middle" mr="2" />
             <UserName pubkey={message.pubkey} />: {message.content}
           </Box>
         ))}

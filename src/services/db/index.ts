@@ -14,6 +14,12 @@ const db = await openDB<SchemaV1>(dbName, version, {
     if (oldVersion < 1) {
       db.createObjectStore("settings");
       db.createObjectStore("accounts", { keyPath: "pubkey" });
+
+      const dnsIdentifiers = db.createObjectStore("dnsIdentifiers");
+      dnsIdentifiers.createIndex("pubkey", "pubkey");
+      dnsIdentifiers.createIndex("name", "name");
+      dnsIdentifiers.createIndex("domain", "domain");
+      dnsIdentifiers.createIndex("updated", "updated");
     }
   },
 });

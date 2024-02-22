@@ -33,6 +33,12 @@ class TimelineCacheService {
 
     return timeline;
   }
+
+  clear(){
+    this.log('Cleared')
+    this.timelines.clear()
+    this.cacheQueue = []
+  }
 }
 
 const timelineCacheService = new TimelineCacheService();

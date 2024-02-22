@@ -14,4 +14,9 @@ export interface SchemaV1 {
       useExtension?: boolean;
     };
   };
+  dnsIdentifiers: {
+    key: string;
+    value: { name: string; domain: string; pubkey: string; relays: string[]; updated: number };
+    indexes: { name: string; domain: string; pubkey: string; updated: number };
+  };
 }
