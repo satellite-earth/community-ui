@@ -41,7 +41,7 @@ export type ParsedZap = {
 };
 
 export function parseZapEvent(event: NostrEvent): ParsedZap {
-  const zapRequestStr = event.tags.find(([t, v]) => t === "description")?.[1];
+  const zapRequestStr = event.tags.find(([t]) => t === "description")?.[1];
   if (!zapRequestStr) throw new Error("no description tag");
 
   const bolt11 = event.tags.find((t) => t[0] === "bolt11")?.[1];
