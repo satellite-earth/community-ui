@@ -27,7 +27,7 @@ const router = createHashRouter([
         <Outlet />
       </Layout>
     ),
-    children: [{ path: "c/:id", element: <ChannelView /> }],
+    children: [{ path: "g/:id", element: <ChannelView /> }],
   },
 ]);
 

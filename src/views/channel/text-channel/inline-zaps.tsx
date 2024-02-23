@@ -78,15 +78,15 @@ export default function InlineZaps({ event }: { event: NostrEvent }) {
   const zaps = useEventZaps(event.id);
 
   return (
-    <Flex gap="2">
+    <Flex gap="2" overflowY="hidden" overflowX="auto" style={{ scrollbarWidth: "none" }}>
+      <InlineZapButton event={event} />
       {zaps.map((zap) => (
-        <Tag key={zap.receipt.id} size="lg" variant="outline" colorScheme="yellow" borderRadius="full">
+        <Tag key={zap.receipt.id} size="lg" variant="outline" colorScheme="yellow" borderRadius="full" flexShrink={0}>
           <ZapIcon ml={-1} mr={2} />
           <TagLabel>{readablizeSats((zap.payment.amount || 0) / 1000)}</TagLabel>
           <UserAvatar pubkey={zap.request.pubkey} size="xs" ml={2} mr={-2} />
         </Tag>
       ))}
-      <InlineZapButton event={event} />
     </Flex>
   );
 }
