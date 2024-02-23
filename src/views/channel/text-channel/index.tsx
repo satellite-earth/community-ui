@@ -1,11 +1,10 @@
-import { Box, Flex, Heading } from "@chakra-ui/react";
+import { Flex, Heading } from "@chakra-ui/react";
 import { COMMUNITY_CHAT_MESSAGE } from "../../../helpers/nostr/kinds";
 import SendMessageForm from "./send-message-form";
 import useTimelineLoader from "../../../hooks/use-timeline-loader";
 import clientRelaysService from "../../../services/client-relays";
 import useSubject from "../../../hooks/use-subject";
-import UserName from "../../../components/user/user-name";
-import UserAvatar from "../../../components/user/user-avatar";
+import TextMessage from "./text-message";
 
 export default function TextChannelView({ groupId }: { groupId: string }) {
   const relay = useSubject(clientRelaysService.community);
@@ -24,10 +23,7 @@ export default function TextChannelView({ groupId }: { groupId: string }) {
       </Flex>
       <Flex overflowX="hidden" overflowY="auto" flex={1} direction="column-reverse" p="2" gap="2">
         {messages.map((message) => (
-          <Box key={message.id}>
-            <UserAvatar pubkey={message.pubkey} size="sm" verticalAlign="middle" mr="2" />
-            <UserName pubkey={message.pubkey} />: {message.content}
-          </Box>
+          <TextMessage key={message.id} message={message} />
         ))}
       </Flex>
       <SendMessageForm groupId={groupId} />

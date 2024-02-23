@@ -3,8 +3,9 @@ import useSubject from "./use-subject";
 
 export function useReadRelays(additional?: Iterable<string>) {
   const set = useSubject(clientRelaysService.readRelays);
-  if (additional) return set.clone().merge(additional);
-  return set;
+  const community = useSubject(clientRelaysService.community);
+  // if (additional) return set.clone().merge(additional);
+  return set.clone().add(community);
 }
 export function useWriteRelays(additional?: Iterable<string>) {
   const set = useSubject(clientRelaysService.writeRelays);

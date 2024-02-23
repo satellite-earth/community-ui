@@ -113,7 +113,8 @@ export default class TimelineLoader {
     this.running = true;
     this.createChunkLoader();
     this.openSubscription();
-    this.loadEventsFromCache();
+    // NOTE: disabled until cached events can be tagged by relay
+    // this.loadEventsFromCache();
   }
   stop() {
     if (!this.running) return;
