@@ -10,7 +10,6 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 import useLocalStorage from "react-use/esm/useLocalStorage";
-import { SunIcon, MoonIcon } from "@chakra-ui/icons";
 import { safeRelayUrl } from "../../helpers/relay";
 import { useRelayInfo } from "../../hooks/use-relay-info";
 import { RelayFavicon } from "../relay-favicon";
@@ -22,6 +21,9 @@ import useCurrentAccount from "../../hooks/use-current-account";
 import accountService from "../../services/account";
 import UserName from "../user/user-name";
 import UserDnsIdentity from "../user/user-dns-identity-icon";
+import Compass01 from "../icons/components/compass-01";
+import Moon01 from "../icons/components/moon-01";
+import Sun from "../icons/components/sun";
 
 function CommunityButton({ relay }: { relay: string }) {
   const { info } = useRelayInfo(relay);
@@ -89,7 +91,7 @@ export default function CommunitiesNav() {
   };
 
   return (
-    <Flex direction="column" gap="2" px="2" py="4" shrink={0} borderRightWidth={1}>
+    <Flex direction="column" gap="2" px="2" py="2" shrink={0} borderRightWidth={1}>
       {account && (
         <>
           <UserAccount />
@@ -102,7 +104,7 @@ export default function CommunitiesNav() {
       <IconButton
         aria-label="Explore"
         title="Explore"
-        icon={<p>+</p>}
+        icon={<Compass01 boxSize={7} />}
         w="12"
         h="12"
         fontSize="24"
@@ -115,7 +117,7 @@ export default function CommunitiesNav() {
         title="Color Mode"
         onClick={toggleColorMode}
         mt="auto"
-        icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+        icon={colorMode === "light" ? <Moon01 boxSize={6} /> : <Sun boxSize={6} />}
       />
     </Flex>
   );

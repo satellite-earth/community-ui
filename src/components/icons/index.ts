@@ -1,7 +1,7 @@
 import { IconProps, createIcon } from "@chakra-ui/react";
-import CheckVerified01 from "./icons/check-verified-01";
-import AlertOctagon from "./icons/alert-octagon";
-import Zap from "./icons/zap";
+import CheckVerified01 from "./components/check-verified-01";
+import AlertOctagon from "./components/alert-octagon";
+import Zap from "./components/zap";
 
 export const VerifiedIcon = CheckVerified01;
 export const VerificationFailed = AlertOctagon;
