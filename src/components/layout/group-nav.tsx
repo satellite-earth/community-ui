@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Heading, Image } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, IconButton, Image, useDisclosure } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 
 import accountService from "../../services/account";
@@ -12,9 +12,12 @@ import { getGroupId, getGroupName } from "../../helpers/nostr/groups";
 import { useRelayInfo } from "../../hooks/use-relay-info";
 import useCommunityDefinition from "../../hooks/use-community-definition";
 import { getCommunityBanner, getCommunityName } from "../../helpers/nostr/communities";
+import Plus from "../icons/components/plus";
+import CreateGroupModal from "../group/create-group-modal";
 
 export default function GroupNav() {
   const account = useCurrentAccount();
+  const createGroupModal = useDisclosure();
   const relay = useSubject(clientRelaysService.community);
 
   // load community definition
@@ -54,6 +57,17 @@ export default function GroupNav() {
           Login
         </Button>
       )}
+      <Flex gap="2" alignItems="center">
+        <Heading size="sm">Chat Channels</Heading>
+        <IconButton
+          icon={<Plus boxSize={5} />}
+          aria-label="New Group"
+          size="sm"
+          ml="auto"
+          variant="ghost"
+          onClick={createGroupModal.onOpen}
+        />
+      </Flex>
       <Button as={RouterLink} to="/g/general" size="sm" justifyContent="flex-start" variant="ghost">
         General
       </Button>
@@ -62,6 +76,8 @@ export default function GroupNav() {
           {getGroupName(group)}
         </Button>
       ))}
+
+      {createGroupModal.isOpen && <CreateGroupModal isOpen onClose={createGroupModal.onClose} />}
     </Flex>
   );
 }

@@ -20,7 +20,7 @@ import UserAvatar from "../user/user-avatar";
 import useCurrentAccount from "../../hooks/use-current-account";
 import accountService from "../../services/account";
 import UserName from "../user/user-name";
-import UserDnsIdentity from "../user/user-dns-identity-icon";
+import UserDnsIdentity from "../user/user-dns-identity";
 import Compass01 from "../icons/components/compass-01";
 import Moon01 from "../icons/components/moon-01";
 import Sun from "../icons/components/sun";
