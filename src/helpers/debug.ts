@@ -1,2 +1,2 @@
-import debug from "debug";
-export const logger = debug("satellite");
+import debug from 'debug';
+export const logger = debug('satellite');

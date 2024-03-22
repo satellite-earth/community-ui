@@ -1,3 +1,3 @@
 interface Window {
-  COMMUNITY_RELAY: string;
+	COMMUNITY_RELAY: string;
 }

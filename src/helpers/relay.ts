@@ -1,35 +1,41 @@
-import { SimpleRelay, SubscriptionOptions } from "nostr-idb";
-import { Filter, NostrEvent } from "nostr-tools";
+import { SimpleRelay, SubscriptionOptions } from 'nostr-idb';
+import { Filter, NostrEvent } from 'nostr-tools';
 
 export function validateRelayURL(relay: string | URL) {
-  if (typeof relay === "string" && relay.includes(",ws")) throw new Error("Can not have multiple relays in one string");
-  const url = typeof relay === "string" ? new URL(relay) : relay;
-  if (url.protocol !== "wss:" && url.protocol !== "ws:") throw new Error("Incorrect protocol");
-  return url;
+	if (typeof relay === 'string' && relay.includes(',ws'))
+		throw new Error('Can not have multiple relays in one string');
+	const url = typeof relay === 'string' ? new URL(relay) : relay;
+	if (url.protocol !== 'wss:' && url.protocol !== 'ws:')
+		throw new Error('Incorrect protocol');
+	return url;
 }
 
 export function safeRelayUrl(relayUrl: string | URL) {
-  try {
-    return validateRelayURL(relayUrl).toString();
-  } catch (e) {
-    return null;
-  }
+	try {
+		return validateRelayURL(relayUrl).toString();
+	} catch (e) {
+		return null;
+	}
 }
 export function safeRelayUrls(urls: Iterable<string>): string[] {
-  return Array.from(urls).map(safeRelayUrl).filter(Boolean) as string[];
+	return Array.from(urls).map(safeRelayUrl).filter(Boolean) as string[];
 }
 
-export function relayRequest(relay: SimpleRelay, filters: Filter[], opts: SubscriptionOptions = {}) {
-  return new Promise<NostrEvent[]>((res) => {
-    const events: NostrEvent[] = [];
-    const sub = relay.subscribe(filters, {
-      ...opts,
-      onevent: (e) => events.push(e),
-      oneose: () => {
-        sub.close();
-        res(events);
-      },
-      onclose: () => res(events),
-    });
-  });
+export function relayRequest(
+	relay: SimpleRelay,
+	filters: Filter[],
+	opts: SubscriptionOptions = {},
+) {
+	return new Promise<NostrEvent[]>((res) => {
+		const events: NostrEvent[] = [];
+		const sub = relay.subscribe(filters, {
+			...opts,
+			onevent: (e) => events.push(e),
+			oneose: () => {
+				sub.close();
+				res(events);
+			},
+			onclose: () => res(events),
+		});
+	});
 }
