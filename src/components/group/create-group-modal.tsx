@@ -24,7 +24,7 @@ export default function CreateGroupModal({
 		defaultValues: { name: '' },
 	});
 
-	const submit = handleSubmit((values) => {});
+	const submit = handleSubmit((_values) => {});
 
 	return (
 		<Modal isOpen={isOpen} onClose={onClose} size="lg" {...props}>
