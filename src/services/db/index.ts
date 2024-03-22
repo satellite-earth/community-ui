@@ -7,7 +7,7 @@ import { localDatabase } from '../local-relay';
 
 const log = logger.extend('Database');
 
-const dbName = 'satellite-ui-storage';
+const dbName = 'community-storage';
 const version = 1;
 const db = await openDB<SchemaV1>(dbName, version, {
 	upgrade(db, oldVersion, _newVersion, _transaction, _event) {
