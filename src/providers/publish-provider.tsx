@@ -44,7 +44,9 @@ export default function PublishProvider({ children }: PropsWithChildren) {
 				let signed: NostrEvent;
 				if (!Object.hasOwn(event, 'sig')) {
 					signed = await requestSignature(event as EventTemplate);
-				} else signed = event as NostrEvent;
+				} else {
+					signed = event as NostrEvent;
+				}
 
 				for (const relay of relays) {
 					relayPoolService.requestRelay(relay).send(['EVENT', signed]);
