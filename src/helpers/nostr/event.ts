@@ -16,3 +16,7 @@ export function getEventCoordinate(event: NostrEvent) {
 		? `${event.kind}:${event.pubkey}:${d}`
 		: `${event.kind}:${event.pubkey}`;
 }
+
+export function getTagValue(event: NostrEvent, tag: string) {
+	return event.tags.find((t) => t[0] === tag)?.[1];
+}

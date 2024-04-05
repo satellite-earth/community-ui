@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
 	Box,
 	Button,
@@ -8,6 +9,7 @@ import {
 	useDisclosure,
 } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
+import { NostrEvent } from 'nostr-tools';
 
 import accountService from '../../services/account';
 import useCurrentAccount from '../../hooks/use-current-account';
@@ -24,22 +26,26 @@ import {
 	getCommunityName,
 } from '../../helpers/nostr/communities';
 import Plus from '../icons/components/plus';
-import CreateGroupModal from '../group/create-group-modal';
+import CreateGroupModal from '../group/create-channel-modal';
+import Edit01 from '../icons/components/edit-01';
+import EditChannelModal from '../group/edit-channel-modal';
 
-export default function GroupNav() {
+export default function ChannelNav() {
 	const account = useCurrentAccount();
 	const createGroupModal = useDisclosure();
 	const relay = useSubject(clientRelaysService.community);
+
+	const [editChannel, setEditChannel] = useState<NostrEvent>();
 
 	// load community definition
 	const { info } = useRelayInfo(relay);
 	const definition = useCommunityDefinition(info?.pubkey);
 
 	// load groups
-	const timeline = useTimelineLoader(`${relay}-groups`, relay, [
+	const timeline = useTimelineLoader(`${relay}-channels`, relay, [
 		{ kinds: [39000] },
 	]);
-	const groups = useSubject(timeline.timeline);
+	const channels = useSubject(timeline.timeline);
 
 	return (
 		<Flex
@@ -104,29 +110,38 @@ export default function GroupNav() {
 					onClick={createGroupModal.onOpen}
 				/>
 			</Flex>
-			<Button
-				as={RouterLink}
-				to="/g/general"
-				size="sm"
-				justifyContent="flex-start"
-				variant="ghost"
-			>
-				General
-			</Button>
-			{groups.map((group) => (
-				<Button
-					as={RouterLink}
-					to={`/g/${getGroupId(group)}`}
-					size="sm"
-					justifyContent="flex-start"
-					variant="ghost"
-				>
-					{getGroupName(group)}
-				</Button>
+			{channels.map((channel) => (
+				<Flex gap="1" key={channel.id}>
+					<Button
+						as={RouterLink}
+						to={`/g/${getGroupId(channel)}`}
+						size="sm"
+						justifyContent="flex-start"
+						variant="ghost"
+						flex={1}
+					>
+						{getGroupName(channel)}
+					</Button>
+					<IconButton
+						icon={<Edit01 />}
+						aria-label="Edit channel"
+						size="sm"
+						variant="ghost"
+						onClick={() => setEditChannel(channel)}
+					/>
+				</Flex>
 			))}
 
 			{createGroupModal.isOpen && (
 				<CreateGroupModal isOpen onClose={createGroupModal.onClose} />
+			)}
+
+			{editChannel && (
+				<EditChannelModal
+					isOpen
+					onClose={() => setEditChannel(undefined)}
+					channel={editChannel}
+				/>
 			)}
 		</Flex>
 	);
