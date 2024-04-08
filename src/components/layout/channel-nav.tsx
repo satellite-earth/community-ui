@@ -33,18 +33,20 @@ import EditChannelModal from '../group/edit-channel-modal';
 export default function ChannelNav() {
 	const account = useCurrentAccount();
 	const createGroupModal = useDisclosure();
-	const relay = useSubject(clientRelaysService.community);
+	const communityRelay = useSubject(clientRelaysService.community);
 
 	const [editChannel, setEditChannel] = useState<NostrEvent>();
 
 	// load community definition
-	const { info } = useRelayInfo(relay);
+	const { info } = useRelayInfo(communityRelay);
 	const definition = useCommunityDefinition(info?.pubkey);
 
 	// load groups
-	const timeline = useTimelineLoader(`${relay}-channels`, relay, [
-		{ kinds: [39000] },
-	]);
+	const timeline = useTimelineLoader(
+		`${communityRelay}-channels`,
+		[{ kinds: [39000] }],
+		communityRelay,
+	);
 	const channels = useSubject(timeline.timeline);
 
 	return (

@@ -2,16 +2,15 @@ import {
 	Divider,
 	Flex,
 	IconButton,
+	Image,
 	Menu,
 	MenuButton,
 	MenuDivider,
 	MenuItem,
 	MenuList,
 	useColorMode,
+	useDisclosure,
 } from '@chakra-ui/react';
-import useLocalStorage from 'react-use/esm/useLocalStorage';
-import { safeRelayUrl } from '../../helpers/relay';
-import { useRelayInfo } from '../../hooks/use-relay-info';
 import { RelayFavicon } from '../relay-favicon';
 import clientRelaysService from '../../services/client-relays';
 import useSubject from '../../hooks/use-subject';
@@ -24,29 +23,10 @@ import UserDnsIdentity from '../user/user-dns-identity';
 import Compass01 from '../icons/components/compass-01';
 import Moon01 from '../icons/components/moon-01';
 import Sun from '../icons/components/sun';
-
-function CommunityButton({ relay }: { relay: string }) {
-	const { info } = useRelayInfo(relay);
-	const community = useSubject(clientRelaysService.community);
-
-	const select = () => {
-		timelineCacheService.clear();
-		clientRelaysService.community.next(relay);
-	};
-
-	return (
-		<IconButton
-			aria-label={info?.name || 'Community'}
-			title={info?.name}
-			icon={<RelayFavicon borderRadius="lg" relay={relay} w="10" h="10" />}
-			onClick={select}
-			h="12"
-			w="12"
-			colorScheme={relay === community ? 'brand' : undefined}
-			variant="outline"
-		/>
-	);
-}
+import ExploreCommunitiesModal from '../explore/expore-communities-modal';
+import communitiesService from '../../services/communities';
+import useReplaceableEvent from '../../hooks/use-replaceable-event';
+import { getTagValue } from '../../helpers/nostr/event';
 
 function UserAccount() {
 	const account = useCurrentAccount()!;
@@ -76,22 +56,43 @@ function UserAccount() {
 	);
 }
 
+function CommunityButton({ pubkey }: { pubkey: string }) {
+	const community = useReplaceableEvent({ kind: 12012, pubkey });
+	const selected = useSubject(clientRelaysService.community);
+
+	const select = () => {
+		timelineCacheService.clear();
+		clientRelaysService.community.next('ws://127.0.0.1:2012/' + pubkey);
+	};
+
+	const name = community
+		? getTagValue(community, 'name') ?? 'Community'
+		: 'Community';
+	const image = community && getTagValue(community, 'image');
+
+	return (
+		<IconButton
+			aria-label={name}
+			title={name}
+			icon={
+				image ? (
+					<Image borderRadius="lg" src={image} w="10" h="10" />
+				) : undefined
+			}
+			onClick={select}
+			h="12"
+			w="12"
+			colorScheme={selected.includes(pubkey) ? 'brand' : undefined}
+			variant="outline"
+		/>
+	);
+}
+
 export default function CommunitiesNav() {
 	const account = useCurrentAccount();
+	const explore = useDisclosure();
 	const { colorMode, toggleColorMode } = useColorMode();
-	const [communities = [], setCommunities] = useLocalStorage<string[]>(
-		'communities',
-		[],
-	);
-
-	const manuallyAdd = () => {
-		let url = prompt('Relay URL');
-		if (!url) return;
-		let safeUrl = safeRelayUrl(url);
-		if (safeUrl) {
-			setCommunities([...communities, safeUrl]);
-		}
-	};
+	const communities = useSubject(communitiesService.communities);
 
 	return (
 		<Flex
@@ -108,8 +109,8 @@ export default function CommunitiesNav() {
 					<Divider />
 				</>
 			)}
-			{communities.map((url) => (
-				<CommunityButton key={url} relay={url} />
+			{communities.map((pubkey) => (
+				<CommunityButton key={pubkey} pubkey={pubkey} />
 			))}
 			<IconButton
 				aria-label="Explore"
@@ -118,7 +119,7 @@ export default function CommunitiesNav() {
 				w="12"
 				h="12"
 				fontSize="24"
-				onClick={manuallyAdd}
+				onClick={explore.onOpen}
 			/>
 			<IconButton
 				w="12"
@@ -131,6 +132,10 @@ export default function CommunitiesNav() {
 					colorMode === 'light' ? <Moon01 boxSize={6} /> : <Sun boxSize={6} />
 				}
 			/>
+
+			{explore.isOpen && (
+				<ExploreCommunitiesModal isOpen onClose={explore.onClose} />
+			)}
 		</Flex>
 	);
 }

@@ -1,5 +1,6 @@
 import { CacheRelay, openDB } from 'nostr-idb';
 import { logger } from '../helpers/debug';
+import { Relay } from 'nostr-tools';
 
 const log = logger.extend(`LocalRelay`);
 export const localDatabase = await openDB();
@@ -10,11 +11,9 @@ function createInternalRelay() {
 }
 
 async function connectRelay() {
-	const relay = createInternalRelay();
 	try {
-		await relay.connect();
-		log('Connected');
-		return relay;
+		// TODO: don't hardcore local node address
+		return await Relay.connect('ws://127.0.0.1:2012');
 	} catch (e) {
 		log('Failed to connect to local relay, falling back to internal');
 		return createInternalRelay();

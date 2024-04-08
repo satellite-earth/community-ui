@@ -7,10 +7,12 @@ import useSubject from '../../../hooks/use-subject';
 import TextMessage from './text-message';
 
 export default function TextChannelView({ groupId }: { groupId: string }) {
-	const relay = useSubject(clientRelaysService.community);
-	const timeline = useTimelineLoader(`${relay}-${groupId}-messages`, relay, [
-		{ kinds: [COMMUNITY_CHAT_MESSAGE], '#h': [groupId] },
-	]);
+	const communityRelay = useSubject(clientRelaysService.community);
+	const timeline = useTimelineLoader(
+		`${communityRelay}-${groupId}-messages`,
+		[{ kinds: [COMMUNITY_CHAT_MESSAGE], '#h': [groupId] }],
+		communityRelay,
+	);
 
 	const messages = useSubject(timeline.timeline);
 

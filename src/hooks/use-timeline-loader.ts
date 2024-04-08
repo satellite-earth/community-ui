@@ -12,8 +12,8 @@ type Options = {
 
 export default function useTimelineLoader(
 	key: string,
-	relay: string,
 	filters: Filter[] | undefined,
+	relay: string,
 	opts?: Options,
 ) {
 	const timeline = useMemo(
@@ -23,7 +23,7 @@ export default function useTimelineLoader(
 
 	useEffect(() => {
 		if (filters) {
-			timeline.setRelay(relay);
+			if (relay) timeline.setRelay(relay);
 			timeline.setFilters(filters);
 			timeline.start();
 		} else timeline.stop();
