@@ -1,1 +1,1 @@
-# Satellite UI (WIP)
+# Satellite Community UI

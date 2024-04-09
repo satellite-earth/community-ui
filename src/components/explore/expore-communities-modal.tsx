@@ -15,9 +15,10 @@ import {
 	Stack,
 	Text,
 } from '@chakra-ui/react';
+import { NostrEvent } from 'nostr-tools';
+
 import useTimelineLoader from '../../hooks/use-timeline-loader';
 import useSubject from '../../hooks/use-subject';
-import { NostrEvent } from 'nostr-tools';
 import { getTagValue } from '../../helpers/nostr/event';
 import communitiesService from '../../services/communities';
 
@@ -73,11 +74,11 @@ export default function ExploreCommunitiesModal({
 	);
 
 	const communities = useSubject(timeline.timeline).filter(
-		(e) => !joined.includes(e.pubkey),
+		(e) => !joined.some((i) => i.pubkey === e.pubkey),
 	);
 
-	const joinCommunity = (pubkey: string) => {
-		communitiesService.addCommunity(pubkey);
+	const joinCommunity = (community: NostrEvent) => {
+		communitiesService.addCommunity(community);
 		onClose();
 	};
 
@@ -92,7 +93,7 @@ export default function ExploreCommunitiesModal({
 						<CommunityCard
 							key={community.id}
 							community={community}
-							onJoin={() => joinCommunity(community.pubkey)}
+							onJoin={() => joinCommunity(community)}
 						/>
 					))}
 				</ModalBody>

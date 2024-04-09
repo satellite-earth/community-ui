@@ -1,15 +1,42 @@
-import { PersistentSubject } from '../classes/subject';
+import { NostrEvent } from 'nostr-tools';
+import Subject, { PersistentSubject } from '../classes/subject';
 
-const communities = new PersistentSubject<string[]>([]);
+class CommunitiesService {
+	communities = new PersistentSubject<NostrEvent[]>([]);
 
-function addCommunity(pubkey: string) {
-	communities.next([...communities.value, pubkey]);
+	community = new Subject<NostrEvent>();
+	relay = new Subject<string>();
+
+	constructor() {
+		this.communities.subscribe((v) =>
+			localStorage.setItem('communities', JSON.stringify(v)),
+		);
+
+		const cached = localStorage.getItem('communities');
+		if (cached) {
+			try {
+				const arr = JSON.parse(cached);
+				this.communities.next(
+					arr.filter((e: string | NostrEvent) => typeof e === 'object'),
+				);
+			} catch (e) {}
+		}
+	}
+
+	addCommunity(community: NostrEvent) {
+		this.communities.next([...this.communities.value, community]);
+	}
+
+	switch(pubkey: string) {
+		const community = this.communities.value.find((e) => (e.pubkey = pubkey));
+		if (!community) return;
+
+		this.community.next(community);
+		this.relay.next(`ws://127.0.0.1:2012/${community.pubkey}`);
+	}
 }
 
-const communitiesService = {
-	communities,
-	addCommunity,
-};
+const communitiesService = new CommunitiesService();
 
 if (import.meta.env.DEV) {
 	// @ts-expect-error

@@ -10,11 +10,11 @@ import { EventTemplate, NostrEvent } from 'nostr-tools';
 
 import { useSigningContext } from './signing-provider';
 import RelaySet from '../classes/relay-set';
-import clientRelaysService from '../services/client-relays';
-import { localRelay } from '../services/local-relay';
+// import { localRelay } from '../services/local-relay';
 import { isReplaceable } from '../helpers/nostr/event';
 import replaceableEventsService from '../services/replaceable-events';
 import relayPoolService from '../services/relay-pool';
+import communitiesService from '../services/communities';
 
 type PublishContextType = {
 	publishEvent(
@@ -39,7 +39,8 @@ export default function PublishProvider({ children }: PropsWithChildren) {
 	const publishEvent = useCallback<PublishContextType['publishEvent']>(
 		async (event: EventTemplate | NostrEvent, quite = true) => {
 			try {
-				const relays = RelaySet.from([clientRelaysService.community.value]);
+				const communityRelay = communitiesService.relay.value;
+				const relays = RelaySet.from(communityRelay ? [communityRelay] : []);
 
 				let signed: NostrEvent;
 				if (!Object.hasOwn(event, 'sig')) {
@@ -53,7 +54,7 @@ export default function PublishProvider({ children }: PropsWithChildren) {
 				}
 
 				// send it to the local relay
-				localRelay.publish(signed);
+				// localRelay.publish(signed);
 
 				// pass it to other services
 				if (isReplaceable(signed.kind))

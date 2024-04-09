@@ -8,8 +8,6 @@ import { logger } from '../helpers/debug';
 import EventStore from './event-store';
 import { isReplaceable } from '../helpers/nostr/event';
 import replaceableEventsService from '../services/replaceable-events';
-import { localRelay } from '../services/local-relay';
-import { relayRequest } from '../helpers/relay';
 import ChunkedRequest from './chunked-request';
 import NostrSubscription from './nostr-subscription';
 import relayPoolService from '../services/relay-pool';
@@ -57,13 +55,13 @@ export default class TimelineLoader {
 			);
 		} else this.timeline.next(this.events.getSortedEvents());
 	}
-	private handleEvent(event: NostrEvent, cache = true) {
+	private handleEvent(event: NostrEvent, _cache = true) {
 		// if this is a replaceable event, mirror it over to the replaceable event service
 		if (isReplaceable(event.kind)) replaceableEventsService.handleEvent(event);
 		if (!matchFilters(this.filters, event)) return;
 
 		this.events.addEvent(event);
-		if (cache) localRelay.publish(event);
+		// if (cache) localRelay.publish(event);
 	}
 	private handleChunkFinished() {
 		this.updateLoading();
@@ -136,13 +134,13 @@ export default class TimelineLoader {
 		this.closeSubscription();
 	}
 
-	loadEventsFromCache(filters: Filter[] = this.filters) {
-		if (filters.length > 0) {
-			relayRequest(localRelay, filters).then((events) => {
-				for (const e of events) this.handleEvent(e, false);
-			});
-		}
-	}
+	// loadEventsFromCache(filters: Filter[] = this.filters) {
+	// 	if (filters.length > 0) {
+	// 		relayRequest(localRelay, filters).then((events) => {
+	// 			for (const e of events) this.handleEvent(e, false);
+	// 		});
+	// 	}
+	// }
 
 	setRelay(url: string | URL) {
 		this.log('Setting relay', url);

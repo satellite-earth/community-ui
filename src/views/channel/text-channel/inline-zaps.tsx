@@ -11,21 +11,20 @@ import { NostrEvent, nip57 } from 'nostr-tools';
 import { ZapIcon } from '../../../components/icons';
 import UserAvatar from '../../../components/user/user-avatar';
 import useEventZaps from '../../../hooks/use-event-zaps';
-import useSubject from '../../../hooks/use-subject';
-import clientRelaysService from '../../../services/client-relays';
 import { useSigningContext } from '../../../providers/signing-provider';
 import useUserMetadata from '../../../hooks/use-user-metadata';
 import { getZapEndpoint } from '../../../helpers/nostr/zaps';
 import { getInvoiceFromCallbackUrl } from '../../../helpers/nostr/lnurl';
 import eventZapsService from '../../../services/event-zaps';
 import { readablizeSats } from '../../../helpers/bolt11';
+import useCurrentCommunity from '../../../hooks/use-current-community';
 
 export function InlineZapButton({
 	event,
 	...props
 }: { event: NostrEvent } & Omit<IconButtonProps, 'aria-label' | 'icon'>) {
 	const toast = useToast();
-	const relay = useSubject(clientRelaysService.community);
+	const { relay } = useCurrentCommunity();
 	const { requestSignature } = useSigningContext();
 	const metadata = useUserMetadata(event.pubkey);
 

@@ -1,17 +1,18 @@
 import { Flex, Heading } from '@chakra-ui/react';
+
 import { COMMUNITY_CHAT_MESSAGE } from '../../../helpers/nostr/kinds';
-import SendMessageForm from './send-message-form';
 import useTimelineLoader from '../../../hooks/use-timeline-loader';
-import clientRelaysService from '../../../services/client-relays';
 import useSubject from '../../../hooks/use-subject';
+import useCurrentCommunity from '../../../hooks/use-current-community';
+import SendMessageForm from './send-message-form';
 import TextMessage from './text-message';
 
 export default function TextChannelView({ groupId }: { groupId: string }) {
-	const communityRelay = useSubject(clientRelaysService.community);
+	const { relay, community } = useCurrentCommunity();
 	const timeline = useTimelineLoader(
-		`${communityRelay}-${groupId}-messages`,
+		`${community.pubkey}-${groupId}-messages`,
 		[{ kinds: [COMMUNITY_CHAT_MESSAGE], '#h': [groupId] }],
-		communityRelay,
+		relay,
 	);
 
 	const messages = useSubject(timeline.timeline);

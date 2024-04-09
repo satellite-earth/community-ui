@@ -17,10 +17,7 @@ import UserAvatar from '../user/user-avatar';
 import UserName from '../user/user-name';
 import useTimelineLoader from '../../hooks/use-timeline-loader';
 import useSubject from '../../hooks/use-subject';
-import clientRelaysService from '../../services/client-relays';
 import { getGroupId, getGroupName } from '../../helpers/nostr/groups';
-import { useRelayInfo } from '../../hooks/use-relay-info';
-import useCommunityDefinition from '../../hooks/use-community-definition';
 import {
 	getCommunityBanner,
 	getCommunityName,
@@ -29,23 +26,20 @@ import Plus from '../icons/components/plus';
 import CreateGroupModal from '../group/create-channel-modal';
 import Edit01 from '../icons/components/edit-01';
 import EditChannelModal from '../group/edit-channel-modal';
+import useCurrentCommunity from '../../hooks/use-current-community';
 
 export default function ChannelNav() {
 	const account = useCurrentAccount();
 	const createGroupModal = useDisclosure();
-	const communityRelay = useSubject(clientRelaysService.community);
+	const { community, relay } = useCurrentCommunity();
 
 	const [editChannel, setEditChannel] = useState<NostrEvent>();
 
-	// load community definition
-	const { info } = useRelayInfo(communityRelay);
-	const definition = useCommunityDefinition(info?.pubkey);
-
 	// load groups
 	const timeline = useTimelineLoader(
-		`${communityRelay}-channels`,
+		`${community.pubkey}-channels`,
 		[{ kinds: [39000] }],
-		communityRelay,
+		relay,
 	);
 	const channels = useSubject(timeline.timeline);
 
@@ -59,7 +53,7 @@ export default function ChannelNav() {
 			w="xs"
 			borderRightWidth={1}
 		>
-			{definition && (
+			{community && (
 				<Box
 					as={RouterLink}
 					to="/"
@@ -67,10 +61,10 @@ export default function ChannelNav() {
 					bg="black"
 					overflow="hidden"
 				>
-					{getCommunityBanner(definition) ? (
+					{getCommunityBanner(community) ? (
 						<Image
 							src={
-								getCommunityBanner(definition) ||
+								getCommunityBanner(community) ||
 								'https://satellite.earth/assets/branding-94b401c7.png'
 							}
 							w="full"
@@ -82,8 +76,9 @@ export default function ChannelNav() {
 							my="1em"
 							textAlign="center"
 							lineHeight={0}
+							whiteSpace="nowrap"
 						>
-							{getCommunityName(definition)}
+							{getCommunityName(community)}
 						</Heading>
 					)}
 				</Box>

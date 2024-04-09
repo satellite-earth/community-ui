@@ -1,13 +1,14 @@
 import { PropsWithChildren } from 'react';
 import { Center, Flex, Heading } from '@chakra-ui/react';
+
 import ErrorBoundary from '../error-boundary';
 import ChannelNav from './channel-nav';
 import CommunitiesNav from './communities-nav';
 import useSubject from '../../hooks/use-subject';
-import clientRelaysService from '../../services/client-relays';
+import communitiesService from '../../services/communities';
 
 export default function Layout({ children }: PropsWithChildren) {
-	const community = useSubject(clientRelaysService.community);
+	const community = useSubject(communitiesService.community);
 
 	return (
 		<>

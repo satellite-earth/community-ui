@@ -4,8 +4,6 @@ import _throttle from 'lodash.throttle';
 import NostrRequest from '../classes/nostr-request';
 import Subject from '../classes/subject';
 import SuperMap from '../classes/super-map';
-import { relayRequest } from '../helpers/relay';
-import { localRelay } from './local-relay';
 
 type eventUID = string;
 type relay = string;
@@ -33,7 +31,7 @@ class EventZapsService {
 		return subject;
 	}
 
-	handleEvent(event: NostrEvent, cache = true) {
+	handleEvent(event: NostrEvent, _cache = true) {
 		if (event.kind !== kinds.Zap) return;
 		const eventUID =
 			event.tags.find((t) => t[0] === 'e')?.[1] ??
@@ -47,7 +45,7 @@ class EventZapsService {
 			subject.next([...subject.value, event]);
 		}
 
-		if (cache) localRelay.publish(event);
+		// if (cache) localRelay.publish(event);
 	}
 
 	throttleBatchRequest = _throttle(this.batchRequests, 2000);
@@ -61,10 +59,10 @@ class EventZapsService {
 		const filters: Filter[] = [];
 		if (ids.length > 0) filters.push({ '#e': ids, kinds: [kinds.Zap] });
 		if (cords.length > 0) filters.push({ '#a': cords, kinds: [kinds.Zap] });
-		if (filters.length > 0)
-			relayRequest(localRelay, filters).then((events) =>
-				events.forEach((e) => this.handleEvent(e, false)),
-			);
+		// if (filters.length > 0)
+		// 	relayRequest(localRelay, filters).then((events) =>
+		// 		events.forEach((e) => this.handleEvent(e, false)),
+		// 	);
 
 		const idsFromRelays: Record<relay, eventUID[]> = {};
 		for (const [id, relays] of this.pending) {

@@ -11,8 +11,8 @@ import {
 	useColorMode,
 	useDisclosure,
 } from '@chakra-ui/react';
-import { RelayFavicon } from '../relay-favicon';
-import clientRelaysService from '../../services/client-relays';
+import { NostrEvent } from 'nostr-tools';
+
 import useSubject from '../../hooks/use-subject';
 import timelineCacheService from '../../services/timeline-cache';
 import UserAvatar from '../user/user-avatar';
@@ -25,7 +25,6 @@ import Moon01 from '../icons/components/moon-01';
 import Sun from '../icons/components/sun';
 import ExploreCommunitiesModal from '../explore/expore-communities-modal';
 import communitiesService from '../../services/communities';
-import useReplaceableEvent from '../../hooks/use-replaceable-event';
 import { getTagValue } from '../../helpers/nostr/event';
 
 function UserAccount() {
@@ -56,13 +55,12 @@ function UserAccount() {
 	);
 }
 
-function CommunityButton({ pubkey }: { pubkey: string }) {
-	const community = useReplaceableEvent({ kind: 12012, pubkey });
-	const selected = useSubject(clientRelaysService.community);
+function CommunityButton({ community }: { community: NostrEvent }) {
+	const selected = useSubject(communitiesService.community);
 
 	const select = () => {
 		timelineCacheService.clear();
-		clientRelaysService.community.next('ws://127.0.0.1:2012/' + pubkey);
+		communitiesService.switch(community.pubkey);
 	};
 
 	const name = community
@@ -82,7 +80,7 @@ function CommunityButton({ pubkey }: { pubkey: string }) {
 			onClick={select}
 			h="12"
 			w="12"
-			colorScheme={selected.includes(pubkey) ? 'brand' : undefined}
+			colorScheme={selected?.pubkey === community.pubkey ? 'brand' : undefined}
 			variant="outline"
 		/>
 	);
@@ -109,8 +107,8 @@ export default function CommunitiesNav() {
 					<Divider />
 				</>
 			)}
-			{communities.map((pubkey) => (
-				<CommunityButton key={pubkey} pubkey={pubkey} />
+			{communities.map((community) => (
+				<CommunityButton key={community.pubkey} community={community} />
 			))}
 			<IconButton
 				aria-label="Explore"

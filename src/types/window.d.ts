@@ -1,3 +1,1 @@
-interface Window {
-	COMMUNITY_RELAY: string;
-}
+interface Window {}
