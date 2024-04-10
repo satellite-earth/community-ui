@@ -1,6 +1,12 @@
 import dayjs from 'dayjs';
 import { Debugger } from 'debug';
-import { Filter, NostrEvent, matchFilters } from 'nostr-tools';
+import {
+	Filter,
+	NostrEvent,
+	Relay,
+	Subscription,
+	matchFilters,
+} from 'nostr-tools';
 import _throttle from 'lodash.throttle';
 
 import { PersistentSubject } from './subject';
@@ -9,9 +15,8 @@ import EventStore from './event-store';
 import { isReplaceable } from '../helpers/nostr/event';
 import replaceableEventsService from '../services/replaceable-events';
 import ChunkedRequest from './chunked-request';
-import NostrSubscription from './nostr-subscription';
 import relayPoolService from '../services/relay-pool';
-import Relay from './relay';
+import { mergeFilter } from '../helpers/nostr/filter';
 
 export type EventFilter = (event: NostrEvent, store: EventStore) => boolean;
 
@@ -31,7 +36,7 @@ export default class TimelineLoader {
 
 	name: string;
 	log: Debugger;
-	subscription: NostrSubscription | null = null;
+	subscription: Subscription | null = null;
 	chunkLoader: ChunkedRequest | null = null;
 
 	constructor(name: string) {
@@ -55,13 +60,12 @@ export default class TimelineLoader {
 			);
 		} else this.timeline.next(this.events.getSortedEvents());
 	}
-	private handleEvent(event: NostrEvent, _cache = true) {
+	private handleEvent(event: NostrEvent) {
 		// if this is a replaceable event, mirror it over to the replaceable event service
 		if (isReplaceable(event.kind)) replaceableEventsService.handleEvent(event);
 		if (!matchFilters(this.filters, event)) return;
 
 		this.events.addEvent(event);
-		// if (cache) localRelay.publish(event);
 	}
 	private handleChunkFinished() {
 		this.updateLoading();
@@ -75,7 +79,7 @@ export default class TimelineLoader {
 		if (this.filters.length === 0) throw new Error('Filters not set');
 
 		this.chunkLoader = new ChunkedRequest(
-			this.relay.url,
+			this.relay,
 			this.filters,
 			this.log.extend('ChunkedRequest'),
 		);
@@ -97,24 +101,23 @@ export default class TimelineLoader {
 		this.chunkLoader = null;
 	}
 
-	private subscriptionSub: ZenObservable.Subscription | null = null;
 	private openSubscription() {
 		if (this.subscription) return;
 		if (!this.relay) throw new Error('Relay not set');
 		if (this.filters.length === 0) throw new Error('Filters not set');
 
-		this.subscription = new NostrSubscription(this.relay.url, this.filters);
-		this.subscriptionSub = this.subscription.onEvent.subscribe((e) =>
-			this.handleEvent(e),
-		);
-		this.subscription.open();
+		const filters = mergeFilter(this.filters, {
+			limit: 10,
+		});
+		this.subscription = this.relay.subscribe(filters, {
+			onevent: (event) => this.handleEvent(event),
+		});
 	}
 	private closeSubscription() {
 		if (!this.subscription) return;
 
-		this.subscriptionSub?.unsubscribe();
 		this.subscription.close();
-		this.subscription = this.subscriptionSub = null;
+		this.subscription = null;
 	}
 
 	start() {
@@ -123,8 +126,6 @@ export default class TimelineLoader {
 		this.running = true;
 		this.createChunkLoader();
 		this.openSubscription();
-		// NOTE: disabled until cached events can be tagged by relay
-		// this.loadEventsFromCache();
 	}
 	stop() {
 		if (!this.running) return;
@@ -134,17 +135,11 @@ export default class TimelineLoader {
 		this.closeSubscription();
 	}
 
-	// loadEventsFromCache(filters: Filter[] = this.filters) {
-	// 	if (filters.length > 0) {
-	// 		relayRequest(localRelay, filters).then((events) => {
-	// 			for (const e of events) this.handleEvent(e, false);
-	// 		});
-	// 	}
-	// }
+	setRelay(url: string | URL | Relay) {
+		if (url instanceof Relay) this.relay = url;
+		else this.relay = relayPoolService.requestRelay(url);
 
-	setRelay(url: string | URL) {
-		this.log('Setting relay', url);
-		this.relay = relayPoolService.requestRelay(url);
+		this.log('Setting relay', this.relay.url);
 	}
 	setFilters(filters: Filter[]) {
 		this.log('Setting filters', filters);

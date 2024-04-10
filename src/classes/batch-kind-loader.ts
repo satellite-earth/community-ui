@@ -1,9 +1,8 @@
 import dayjs from 'dayjs';
-import { Filter, NostrEvent } from 'nostr-tools';
+import { Filter, NostrEvent, Relay, Subscription } from 'nostr-tools';
 import _throttle from 'lodash.throttle';
 import debug, { Debugger } from 'debug';
 
-import NostrSubscription from './nostr-subscription';
 import EventStore from './event-store';
 import { getEventCoordinate } from '../helpers/nostr/event';
 
@@ -15,25 +14,18 @@ const RELAY_REQUEST_BATCH_TIME = 500;
 
 /** This class is ued to batch requests by kind to a single relay */
 export default class BatchKindLoader {
-	private subscription: NostrSubscription;
+	private subscription: Subscription | null = null;
 	events = new EventStore();
+	relay: Relay;
 
 	private requestNext = new Set<string>();
 	private requested = new Map<string, Date>();
 
 	log: Debugger;
 
-	constructor(relay: string, log?: Debugger) {
-		this.subscription = new NostrSubscription(
-			relay,
-			undefined,
-			`replaceable-event-loader`,
-		);
-
-		this.subscription.onEvent.subscribe(this.handleEvent.bind(this));
-		this.subscription.onEOSE.subscribe(this.handleEOSE.bind(this));
-
-		this.log = log || debug('RelayBatchLoader');
+	constructor(relay: Relay, log?: Debugger) {
+		this.log = log || debug('BatchKindLoader');
+		this.relay = relay;
 	}
 
 	private handleEvent(event: NostrEvent) {
@@ -114,12 +106,17 @@ export default class BatchKindLoader {
 						)
 						.join(', '),
 				);
-				this.subscription.setFilters(query);
 
-				if (this.subscription.state !== NostrSubscription.OPEN) {
-					this.subscription.open();
+				if (!this.subscription || this.subscription.closed) {
+					this.subscription = this.relay.subscribe(query, {
+						onevent: (event) => this.handleEvent(event),
+						oneose: () => this.handleEOSE(),
+					});
+				} else {
+					this.subscription.filters = query;
+					this.subscription.fire();
 				}
-			} else if (this.subscription.state === NostrSubscription.OPEN) {
+			} else if (this.subscription && !this.subscription.closed) {
 				this.subscription.close();
 			}
 		}

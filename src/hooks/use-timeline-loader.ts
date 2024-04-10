@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from 'react';
-import { Filter } from 'nostr-tools';
+import { Filter, Relay } from 'nostr-tools';
 
 import timelineCacheService from '../services/timeline-cache';
 import { EventFilter } from '../classes/timeline-loader';
@@ -13,7 +13,7 @@ type Options = {
 export default function useTimelineLoader(
 	key: string,
 	filters: Filter[] | undefined,
-	relay: string,
+	relay: string | URL | Relay,
 	opts?: Options,
 ) {
 	const timeline = useMemo(

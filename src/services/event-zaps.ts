@@ -1,9 +1,9 @@
 import { Filter, NostrEvent, kinds } from 'nostr-tools';
 import _throttle from 'lodash.throttle';
 
-import NostrRequest from '../classes/nostr-request';
 import Subject from '../classes/subject';
 import SuperMap from '../classes/super-map';
+import relayPoolService from './relay-pool';
 
 type eventUID = string;
 type relay = string;
@@ -44,8 +44,6 @@ class EventZapsService {
 		} else if (!subject.value.some((e) => e.id === event.id)) {
 			subject.next([...subject.value, event]);
 		}
-
-		// if (cache) localRelay.publish(event);
 	}
 
 	throttleBatchRequest = _throttle(this.batchRequests, 2000);
@@ -59,10 +57,6 @@ class EventZapsService {
 		const filters: Filter[] = [];
 		if (ids.length > 0) filters.push({ '#e': ids, kinds: [kinds.Zap] });
 		if (cords.length > 0) filters.push({ '#a': cords, kinds: [kinds.Zap] });
-		// if (filters.length > 0)
-		// 	relayRequest(localRelay, filters).then((events) =>
-		// 		events.forEach((e) => this.handleEvent(e, false)),
-		// 	);
 
 		const idsFromRelays: Record<relay, eventUID[]> = {};
 		for (const [id, relays] of this.pending) {
@@ -82,9 +76,10 @@ class EventZapsService {
 				filter.push({ '#a': coordinates, kinds: [kinds.Zap] });
 
 			if (filter.length > 0) {
-				const request = new NostrRequest([relay]);
-				request.onEvent.subscribe((e) => this.handleEvent(e));
-				request.start(filter);
+				const sub = relayPoolService.requestRelay(relay).subscribe(filter, {
+					onevent: (event) => this.handleEvent(event),
+					oneose: () => sub.close(),
+				});
 			}
 		}
 		this.pending.clear();

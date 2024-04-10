@@ -5,7 +5,6 @@ const relayPoolService = new RelayPool();
 setInterval(() => {
 	if (document.visibilityState === 'visible') {
 		relayPoolService.reconnectRelays();
-		relayPoolService.pruneRelays();
 	}
 }, 1000 * 15);
 
