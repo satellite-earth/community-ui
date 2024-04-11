@@ -5,11 +5,7 @@ import { useReadRelays } from './use-client-relays';
 import useSubject from './use-subject';
 import { parseZapEvent } from '../helpers/nostr/zaps';
 
-export default function useEventZaps(
-	eventUID: string,
-	additionalRelays?: Iterable<string>,
-	alwaysRequest = true,
-) {
+export default function useEventZaps(eventUID: string, additionalRelays?: Iterable<string>, alwaysRequest = true) {
 	const readRelays = useReadRelays(additionalRelays);
 
 	const subject = useMemo(

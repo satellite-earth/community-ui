@@ -55,13 +55,13 @@ export function SigningProvider({ children }: { children: React.ReactNode }) {
 	);
 
 	const context = useMemo(
-		() => ({ requestSignature, requestDecrypt, requestEncrypt }),
+		() => ({
+			requestSignature,
+			requestDecrypt,
+			requestEncrypt,
+		}),
 		[requestSignature, requestDecrypt, requestEncrypt],
 	);
 
-	return (
-		<SigningContext.Provider value={context}>
-			{children}
-		</SigningContext.Provider>
-	);
+	return <SigningContext.Provider value={context}>{children}</SigningContext.Provider>;
 }

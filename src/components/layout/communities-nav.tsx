@@ -63,20 +63,14 @@ function CommunityButton({ community }: { community: NostrEvent }) {
 		communitiesService.switch(community.pubkey);
 	};
 
-	const name = community
-		? getTagValue(community, 'name') ?? 'Community'
-		: 'Community';
+	const name = community ? getTagValue(community, 'name') ?? 'Community' : 'Community';
 	const image = community && getTagValue(community, 'image');
 
 	return (
 		<IconButton
 			aria-label={name}
 			title={name}
-			icon={
-				image ? (
-					<Image borderRadius="lg" src={image} w="10" h="10" />
-				) : undefined
-			}
+			icon={image ? <Image borderRadius="lg" src={image} w="10" h="10" /> : undefined}
 			onClick={select}
 			h="12"
 			w="12"
@@ -93,14 +87,7 @@ export default function CommunitiesNav() {
 	const communities = useSubject(communitiesService.communities);
 
 	return (
-		<Flex
-			direction="column"
-			gap="2"
-			px="2"
-			py="2"
-			shrink={0}
-			borderRightWidth={1}
-		>
+		<Flex direction="column" gap="2" px="2" py="2" shrink={0} borderRightWidth={1}>
 			{account && (
 				<>
 					<UserAccount />
@@ -126,14 +113,10 @@ export default function CommunitiesNav() {
 				title="Color Mode"
 				onClick={toggleColorMode}
 				mt="auto"
-				icon={
-					colorMode === 'light' ? <Moon01 boxSize={6} /> : <Sun boxSize={6} />
-				}
+				icon={colorMode === 'light' ? <Moon01 boxSize={6} /> : <Sun boxSize={6} />}
 			/>
 
-			{explore.isOpen && (
-				<ExploreCommunitiesModal isOpen onClose={explore.onClose} />
-			)}
+			{explore.isOpen && <ExploreCommunitiesModal isOpen onClose={explore.onClose} />}
 		</Flex>
 	);
 }

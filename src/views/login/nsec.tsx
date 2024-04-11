@@ -1,13 +1,5 @@
 import { useCallback, useState } from 'react';
-import {
-	Button,
-	Flex,
-	FormControl,
-	FormLabel,
-	Input,
-	InputGroup,
-	InputRightElement,
-} from '@chakra-ui/react';
+import { Button, Flex, FormControl, FormLabel, Input, InputGroup, InputRightElement } from '@chakra-ui/react';
 import { generateSecretKey, getPublicKey, nip19 } from 'nostr-tools';
 import { useNavigate } from 'react-router-dom';
 
@@ -38,33 +30,32 @@ export default function LoginNsecView() {
 		setShow(true);
 	}, [setHexKey, setInputValue, setShow]);
 
-	const handleInputChange: React.ChangeEventHandler<HTMLInputElement> =
-		useCallback(
-			(e) => {
-				setInputValue(e.target.value);
+	const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = useCallback(
+		(e) => {
+			setInputValue(e.target.value);
 
-				try {
-					let hex: string | null = null;
-					if (isHexKey(e.target.value)) hex = e.target.value;
-					else {
-						const decode = nip19.decode(e.target.value);
-						if (decode && decode.type === 'nsec') hex = bytesToHex(decode.data);
-					}
+			try {
+				let hex: string | null = null;
+				if (isHexKey(e.target.value)) hex = e.target.value;
+				else {
+					const decode = nip19.decode(e.target.value);
+					if (decode && decode.type === 'nsec') hex = bytesToHex(decode.data);
+				}
 
-					if (hex) {
-						const pubkey = getPublicKey(hexToBytes(hex));
-						setHexKey(hex);
-						setNpub(nip19.npubEncode(pubkey));
-						setError(false);
-					} else {
-						setError(true);
-					}
-				} catch (e) {
+				if (hex) {
+					const pubkey = getPublicKey(hexToBytes(hex));
+					setHexKey(hex);
+					setNpub(nip19.npubEncode(pubkey));
+					setError(false);
+				} else {
 					setError(true);
 				}
-			},
-			[setInputValue, setHexKey, setNpub, setError],
-		);
+			} catch (e) {
+				setError(true);
+			}
+		},
+		[setInputValue, setHexKey, setNpub, setError],
+	);
 
 	const handleSubmit: React.FormEventHandler<HTMLDivElement> = async (e) => {
 		e.preventDefault();

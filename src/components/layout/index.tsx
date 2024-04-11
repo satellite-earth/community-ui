@@ -12,7 +12,13 @@ export default function Layout({ children }: PropsWithChildren) {
 
 	return (
 		<>
-			<Flex direction={{ base: 'column', md: 'row' }} minH="100vh">
+			<Flex
+				direction={{
+					base: 'column',
+					md: 'row',
+				}}
+				minH="100vh"
+			>
 				<CommunitiesNav />
 				{community ? (
 					<>

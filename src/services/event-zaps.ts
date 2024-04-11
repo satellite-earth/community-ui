@@ -9,16 +9,10 @@ type eventUID = string;
 type relay = string;
 
 class EventZapsService {
-	subjects = new SuperMap<eventUID, Subject<NostrEvent[]>>(
-		() => new Subject<NostrEvent[]>([]),
-	);
+	subjects = new SuperMap<eventUID, Subject<NostrEvent[]>>(() => new Subject<NostrEvent[]>([]));
 	pending = new SuperMap<eventUID, Set<relay>>(() => new Set());
 
-	requestZaps(
-		eventUID: eventUID,
-		relays: Iterable<string>,
-		alwaysRequest = true,
-	) {
+	requestZaps(eventUID: eventUID, relays: Iterable<string>, alwaysRequest = true) {
 		const subject = this.subjects.get(eventUID);
 
 		if (!subject.value || alwaysRequest) {
@@ -33,9 +27,7 @@ class EventZapsService {
 
 	handleEvent(event: NostrEvent, _cache = true) {
 		if (event.kind !== kinds.Zap) return;
-		const eventUID =
-			event.tags.find((t) => t[0] === 'e')?.[1] ??
-			event.tags.find((t) => t[0] === 'a')?.[1];
+		const eventUID = event.tags.find((t) => t[0] === 'e')?.[1] ?? event.tags.find((t) => t[0] === 'a')?.[1];
 		if (!eventUID) return;
 
 		const subject = this.subjects.get(eventUID);
@@ -55,8 +47,16 @@ class EventZapsService {
 		const ids = uids.filter((id) => !id.includes(':'));
 		const cords = uids.filter((id) => id.includes(':'));
 		const filters: Filter[] = [];
-		if (ids.length > 0) filters.push({ '#e': ids, kinds: [kinds.Zap] });
-		if (cords.length > 0) filters.push({ '#a': cords, kinds: [kinds.Zap] });
+		if (ids.length > 0)
+			filters.push({
+				'#e': ids,
+				kinds: [kinds.Zap],
+			});
+		if (cords.length > 0)
+			filters.push({
+				'#a': cords,
+				kinds: [kinds.Zap],
+			});
 
 		const idsFromRelays: Record<relay, eventUID[]> = {};
 		for (const [id, relays] of this.pending) {
@@ -71,9 +71,15 @@ class EventZapsService {
 			const coordinates = ids.filter((id) => id.includes(':'));
 			const filter: Filter[] = [];
 			if (eventIds.length > 0)
-				filter.push({ '#e': eventIds, kinds: [kinds.Zap] });
+				filter.push({
+					'#e': eventIds,
+					kinds: [kinds.Zap],
+				});
 			if (coordinates.length > 0)
-				filter.push({ '#a': coordinates, kinds: [kinds.Zap] });
+				filter.push({
+					'#a': coordinates,
+					kinds: [kinds.Zap],
+				});
 
 			if (filter.length > 0) {
 				const sub = relayPoolService.requestRelay(relay).subscribe(filter, {

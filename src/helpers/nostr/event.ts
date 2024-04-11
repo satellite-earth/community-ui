@@ -1,9 +1,7 @@
 import { NostrEvent, kinds } from 'nostr-tools';
 
 export function isReplaceable(kind: number) {
-	return (
-		kinds.isReplaceableKind(kind) || kinds.isParameterizedReplaceableKind(kind)
-	);
+	return kinds.isReplaceableKind(kind) || kinds.isParameterizedReplaceableKind(kind);
 }
 
 export function sortByDate(a: NostrEvent, b: NostrEvent) {
@@ -12,9 +10,7 @@ export function sortByDate(a: NostrEvent, b: NostrEvent) {
 
 export function getEventCoordinate(event: NostrEvent) {
 	const d = event.tags.find((t) => t[0] === 'd')?.[1];
-	return d
-		? `${event.kind}:${event.pubkey}:${d}`
-		: `${event.kind}:${event.pubkey}`;
+	return d ? `${event.kind}:${event.pubkey}:${d}` : `${event.kind}:${event.pubkey}`;
 }
 
 export function getTagValue(event: NostrEvent, tag: string) {

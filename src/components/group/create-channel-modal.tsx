@@ -19,14 +19,14 @@ import { EventTemplate } from 'nostr-tools';
 import { useForm } from 'react-hook-form';
 import { usePublishEvent } from '../../providers/publish-provider';
 
-export default function CreateGroupModal({
-	isOpen,
-	onClose,
-	...props
-}: Omit<ModalProps, 'children'>) {
+export default function CreateGroupModal({ isOpen, onClose, ...props }: Omit<ModalProps, 'children'>) {
 	const publish = usePublishEvent();
 	const { handleSubmit, register, formState } = useForm({
-		defaultValues: { name: '', about: '', picture: '' },
+		defaultValues: {
+			name: '',
+			about: '',
+			picture: '',
+		},
 	});
 
 	const submit = handleSubmit(async (values) => {
@@ -58,14 +58,14 @@ export default function CreateGroupModal({
 					<FormControl isRequired>
 						<FormLabel>Channel Name</FormLabel>
 						<Input
-							{...register('name', { required: true })}
+							{...register('name', {
+								required: true,
+							})}
 							isRequired
 							placeholder="New Group"
 							autoComplete="off"
 						/>
-						<FormHelperText>
-							The name of the group that your about to create
-						</FormHelperText>
+						<FormHelperText>The name of the group that your about to create</FormHelperText>
 					</FormControl>
 
 					<FormControl>
@@ -80,12 +80,7 @@ export default function CreateGroupModal({
 				</ModalBody>
 				<ModalFooter gap="2" display="flex">
 					<Button onClick={onClose}>Cancel</Button>
-					<Button
-						type="submit"
-						colorScheme="brand"
-						isLoading={formState.isLoading}
-						isDisabled={!formState.isValid}
-					>
+					<Button type="submit" colorScheme="brand" isLoading={formState.isLoading} isDisabled={!formState.isValid}>
 						Create Channel
 					</Button>
 				</ModalFooter>

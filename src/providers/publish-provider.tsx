@@ -1,10 +1,4 @@
-import {
-	PropsWithChildren,
-	createContext,
-	useCallback,
-	useContext,
-	useMemo,
-} from 'react';
+import { PropsWithChildren, createContext, useCallback, useContext, useMemo } from 'react';
 import { useToast } from '@chakra-ui/react';
 import { EventTemplate, NostrEvent } from 'nostr-tools';
 
@@ -17,10 +11,7 @@ import relayPoolService from '../services/relay-pool';
 import communitiesService from '../services/communities';
 
 type PublishContextType = {
-	publishEvent(
-		event: EventTemplate | NostrEvent,
-		quite?: boolean,
-	): Promise<void>;
+	publishEvent(event: EventTemplate | NostrEvent, quite?: boolean): Promise<void>;
 };
 export const PublishContext = createContext<PublishContextType>({
 	publishEvent: async () => {
@@ -57,11 +48,13 @@ export default function PublishProvider({ children }: PropsWithChildren) {
 				// localRelay.publish(signed);
 
 				// pass it to other services
-				if (isReplaceable(signed.kind))
-					replaceableEventsService.handleEvent(signed);
+				if (isReplaceable(signed.kind)) replaceableEventsService.handleEvent(signed);
 			} catch (e) {
 				if (e instanceof Error)
-					toast({ description: e.message, status: 'error' });
+					toast({
+						description: e.message,
+						status: 'error',
+					});
 				if (!quite) throw e;
 			}
 		},
@@ -75,9 +68,5 @@ export default function PublishProvider({ children }: PropsWithChildren) {
 		[publishEvent],
 	);
 
-	return (
-		<PublishContext.Provider value={context}>
-			{children}
-		</PublishContext.Provider>
-	);
+	return <PublishContext.Provider value={context}>{children}</PublishContext.Provider>;
 }

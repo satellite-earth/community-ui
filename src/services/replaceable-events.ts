@@ -6,9 +6,7 @@ import { logger } from '../helpers/debug';
 import { getEventCoordinate } from '../helpers/nostr/event';
 import EventStore from '../classes/event-store';
 import Subject from '../classes/subject';
-import BatchKindLoader, {
-	createCoordinate,
-} from '../classes/batch-kind-loader';
+import BatchKindLoader, { createCoordinate } from '../classes/batch-kind-loader';
 import relayPoolService from './relay-pool';
 
 export type RequestOptions = {
@@ -19,14 +17,9 @@ export type RequestOptions = {
 };
 
 class ReplaceableEventsService {
-	private subjects = new SuperMap<string, Subject<NostrEvent>>(
-		() => new Subject<NostrEvent>(),
-	);
+	private subjects = new SuperMap<string, Subject<NostrEvent>>(() => new Subject<NostrEvent>());
 	private loaders = new SuperMap<string, BatchKindLoader>((url) => {
-		const loader = new BatchKindLoader(
-			relayPoolService.requestRelay(url),
-			this.log.extend(url),
-		);
+		const loader = new BatchKindLoader(relayPoolService.requestRelay(url), this.log.extend(url));
 		loader.events.onEvent.subscribe((e) => this.handleEvent(e));
 		return loader;
 	});
@@ -52,28 +45,16 @@ class ReplaceableEventsService {
 		return this.subjects.get(createCoordinate(kind, pubkey, d));
 	}
 
-	private requestEventFromRelays(
-		relays: Iterable<string>,
-		kind: number,
-		pubkey: string,
-		d?: string,
-	) {
+	private requestEventFromRelays(relays: Iterable<string>, kind: number, pubkey: string, d?: string) {
 		const cord = createCoordinate(kind, pubkey, d);
 		const sub = this.subjects.get(cord);
 
-		for (const relay of relays)
-			this.loaders.get(relay).requestEvent(kind, pubkey, d);
+		for (const relay of relays) this.loaders.get(relay).requestEvent(kind, pubkey, d);
 
 		return sub;
 	}
 
-	requestEvent(
-		relays: Iterable<string>,
-		kind: number,
-		pubkey: string,
-		d?: string,
-		opts: RequestOptions = {},
-	) {
+	requestEvent(relays: Iterable<string>, kind: number, pubkey: string, d?: string, opts: RequestOptions = {}) {
 		const key = createCoordinate(kind, pubkey, d);
 		const sub = this.subjects.get(key);
 

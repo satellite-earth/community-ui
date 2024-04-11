@@ -5,7 +5,9 @@ import camelcase from 'camelcase';
 import * as prettier from 'prettier';
 
 const prettierConfig = JSON.parse(
-	await fs.readFile('.prettierrc', { encoding: 'utf-8' }),
+	await fs.readFile('.prettierrc', {
+		encoding: 'utf-8',
+	}),
 );
 
 const iconsSrc = './src/components/icons/svg/untitledui-icons';
@@ -60,10 +62,15 @@ const ${componentName} = createIcon({
 
 export default ${componentName};
 	`,
-		{ ...prettierConfig, parser: 'typescript' },
+		{
+			...prettierConfig,
+			parser: 'typescript',
+		},
 	);
 
 	const outputPath = path.join(iconsDist, filename.replace('.svg', '.tsx'));
-	fs.writeFile(outputPath, outputCode, { encoding: 'utf-8' });
+	fs.writeFile(outputPath, outputCode, {
+		encoding: 'utf-8',
+	});
 	console.log(`Wrote ${outputPath}`);
 }

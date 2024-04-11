@@ -23,8 +23,7 @@ export function parseKind0Event(event: NostrEvent): Kind0ParsedContent {
 		metadata.pubkey = event.pubkey;
 
 		// ensure nip05 is a string
-		if (metadata.nip05 && typeof metadata.nip05 !== 'string')
-			metadata.nip05 = String(metadata.nip05);
+		if (metadata.nip05 && typeof metadata.nip05 !== 'string') metadata.nip05 = String(metadata.nip05);
 
 		// fix user website
 		if (metadata.website) metadata.website = fixWebsiteUrl(metadata.website);
@@ -37,21 +36,11 @@ export function parseKind0Event(event: NostrEvent): Kind0ParsedContent {
 export function getSearchNames(metadata: Kind0ParsedContent) {
 	if (!metadata) return [];
 
-	return [metadata.displayName, metadata.display_name, metadata.name].filter(
-		Boolean,
-	) as string[];
+	return [metadata.displayName, metadata.display_name, metadata.name].filter(Boolean) as string[];
 }
 
-export function getUserDisplayName(
-	metadata: Kind0ParsedContent | undefined,
-	pubkey: string,
-) {
-	return (
-		metadata?.displayName ||
-		metadata?.display_name ||
-		metadata?.name ||
-		nip19.npubEncode(pubkey).slice(0, 8)
-	);
+export function getUserDisplayName(metadata: Kind0ParsedContent | undefined, pubkey: string) {
+	return metadata?.displayName || metadata?.display_name || metadata?.name || nip19.npubEncode(pubkey).slice(0, 8);
 }
 
 export function fixWebsiteUrl(website: string) {

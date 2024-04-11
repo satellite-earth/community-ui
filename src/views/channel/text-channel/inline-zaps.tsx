@@ -1,11 +1,4 @@
-import {
-	Flex,
-	IconButton,
-	IconButtonProps,
-	Tag,
-	TagLabel,
-	useToast,
-} from '@chakra-ui/react';
+import { Flex, IconButton, IconButtonProps, Tag, TagLabel, useToast } from '@chakra-ui/react';
 import { NostrEvent, nip57 } from 'nostr-tools';
 
 import { ZapIcon } from '../../../components/icons';
@@ -62,7 +55,10 @@ export function InlineZapButton({
 			}
 		} catch (e) {
 			if (e instanceof Error)
-				toast({ status: 'error', description: e.message });
+				toast({
+					status: 'error',
+					description: e.message,
+				});
 			console.log(e);
 		}
 	};
@@ -89,22 +85,15 @@ export default function InlineZaps({ event }: { event: NostrEvent }) {
 			gap="2"
 			overflowY="hidden"
 			overflowX="auto"
-			style={{ scrollbarWidth: 'none' }}
+			style={{
+				scrollbarWidth: 'none',
+			}}
 		>
 			<InlineZapButton event={event} />
 			{zaps.map((zap) => (
-				<Tag
-					key={zap.receipt.id}
-					size="lg"
-					variant="outline"
-					colorScheme="yellow"
-					borderRadius="full"
-					flexShrink={0}
-				>
+				<Tag key={zap.receipt.id} size="lg" variant="outline" colorScheme="yellow" borderRadius="full" flexShrink={0}>
 					<ZapIcon ml={-1} mr={2} />
-					<TagLabel>
-						{readablizeSats((zap.payment.amount || 0) / 1000)}
-					</TagLabel>
+					<TagLabel>{readablizeSats((zap.payment.amount || 0) / 1000)}</TagLabel>
 					<UserAvatar pubkey={zap.request.pubkey} size="xs" ml={2} mr={-2} />
 				</Tag>
 			))}

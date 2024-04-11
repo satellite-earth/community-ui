@@ -5,12 +5,8 @@ import { safeRelayUrls } from '../helpers/relay';
 import RelaySet from '../classes/relay-set';
 
 class ClientRelayService {
-	readRelays = new PersistentSubject(
-		new RelaySet(safeRelayUrls(['wss://nostrue.com'])),
-	);
-	writeRelays = new PersistentSubject(
-		new RelaySet(safeRelayUrls(['wss://nostrue.com'])),
-	);
+	readRelays = new PersistentSubject(new RelaySet(safeRelayUrls(['wss://nostrue.com'])));
+	writeRelays = new PersistentSubject(new RelaySet(safeRelayUrls(['wss://nostrue.com'])));
 
 	log = logger.extend('ClientRelays');
 

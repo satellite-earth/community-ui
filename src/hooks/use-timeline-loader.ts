@@ -16,10 +16,7 @@ export default function useTimelineLoader(
 	relay: string | URL | Relay,
 	opts?: Options,
 ) {
-	const timeline = useMemo(
-		() => timelineCacheService.createTimeline(key),
-		[key],
-	);
+	const timeline = useMemo(() => timelineCacheService.createTimeline(key), [key]);
 
 	useEffect(() => {
 		if (filters) {

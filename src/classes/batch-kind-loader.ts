@@ -80,9 +80,7 @@ export default class BatchKindLoader {
 				const filters: Record<number, Filter> = {};
 
 				for (const [cord] of this.requested) {
-					const [kindStr, pubkey, d] = cord.split(':') as
-						| [string, string]
-						| [string, string, string];
+					const [kindStr, pubkey, d] = cord.split(':') as [string, string] | [string, string, string];
 					const kind = parseInt(kindStr);
 					filters[kind] = filters[kind] || { kinds: [kind] };
 
@@ -100,10 +98,7 @@ export default class BatchKindLoader {
 				this.log(
 					`Updating query`,
 					Array.from(Object.keys(filters))
-						.map(
-							(kind: string) =>
-								`kind ${kind}: ${filters[parseInt(kind)].authors?.length}`,
-						)
+						.map((kind: string) => `kind ${kind}: ${filters[parseInt(kind)].authors?.length}`)
 						.join(', '),
 				);
 

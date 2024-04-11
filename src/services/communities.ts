@@ -8,17 +8,13 @@ class CommunitiesService {
 	relay = new Subject<string>();
 
 	constructor() {
-		this.communities.subscribe((v) =>
-			localStorage.setItem('communities', JSON.stringify(v)),
-		);
+		this.communities.subscribe((v) => localStorage.setItem('communities', JSON.stringify(v)));
 
 		const cached = localStorage.getItem('communities');
 		if (cached) {
 			try {
 				const arr = JSON.parse(cached);
-				this.communities.next(
-					arr.filter((e: string | NostrEvent) => typeof e === 'object'),
-				);
+				this.communities.next(arr.filter((e: string | NostrEvent) => typeof e === 'object'));
 			} catch (e) {}
 		}
 	}

@@ -3,10 +3,7 @@ import { Text, TextProps } from '@chakra-ui/react';
 import { getUserDisplayName } from '../../helpers/nostr/user-metadata';
 import useUserMetadata from '../../hooks/use-user-metadata';
 
-export default function UserName({
-	pubkey,
-	...props
-}: Omit<TextProps, 'children'> & { pubkey: string }) {
+export default function UserName({ pubkey, ...props }: Omit<TextProps, 'children'> & { pubkey: string }) {
 	const metadata = useUserMetadata(pubkey);
 
 	return (

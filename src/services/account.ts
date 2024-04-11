@@ -49,8 +49,7 @@ class AccountService {
 		};
 
 		const lastPubkey = this.current.value?.pubkey;
-		if (lastPubkey && this.hasAccount(lastPubkey))
-			localStorage.setItem('lastAccount', lastPubkey);
+		if (lastPubkey && this.hasAccount(lastPubkey)) localStorage.setItem('lastAccount', lastPubkey);
 		this.current.next(ghostAccount);
 	}
 	stopGhost() {
@@ -66,11 +65,7 @@ class AccountService {
 	addAccount(account: Account) {
 		if (this.hasAccount(account.pubkey)) {
 			// replace account
-			this.accounts.next(
-				this.accounts.value.map((acc) =>
-					acc.pubkey === account.pubkey ? account : acc,
-				),
-			);
+			this.accounts.next(this.accounts.value.map((acc) => (acc.pubkey === account.pubkey ? account : acc)));
 
 			// if this is the current account. update it
 			if (this.current.value?.pubkey === account.pubkey) {
@@ -84,9 +79,7 @@ class AccountService {
 		db.put('accounts', account);
 	}
 	removeAccount(pubkey: string) {
-		this.accounts.next(
-			this.accounts.value.filter((acc) => acc.pubkey !== pubkey),
-		);
+		this.accounts.next(this.accounts.value.filter((acc) => acc.pubkey !== pubkey));
 
 		db.delete('accounts', pubkey);
 	}

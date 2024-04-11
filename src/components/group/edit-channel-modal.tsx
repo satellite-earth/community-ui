@@ -87,14 +87,14 @@ export default function EditChannelModal({
 					<FormControl isRequired>
 						<FormLabel>Channel Name</FormLabel>
 						<Input
-							{...register('name', { required: true })}
+							{...register('name', {
+								required: true,
+							})}
 							isRequired
 							placeholder="New Group"
 							autoComplete="off"
 						/>
-						<FormHelperText>
-							The name of the group that your about to create
-						</FormHelperText>
+						<FormHelperText>The name of the group that your about to create</FormHelperText>
 					</FormControl>
 
 					<FormControl>
@@ -108,20 +108,11 @@ export default function EditChannelModal({
 					</FormControl>
 				</ModalBody>
 				<ModalFooter gap="2" display="flex">
-					<Button
-						onClick={deleteChannel}
-						colorScheme="red"
-						mr="auto"
-						isLoading={loading}
-					>
+					<Button onClick={deleteChannel} colorScheme="red" mr="auto" isLoading={loading}>
 						Delete Channel
 					</Button>
 					<Button onClick={onClose}>Cancel</Button>
-					<Button
-						type="submit"
-						colorScheme="brand"
-						isLoading={formState.isLoading}
-					>
+					<Button type="submit" colorScheme="brand" isLoading={formState.isLoading}>
 						Update Channel
 					</Button>
 				</ModalFooter>

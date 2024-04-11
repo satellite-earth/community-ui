@@ -4,7 +4,12 @@ import { Image, ImageProps } from '@chakra-ui/react';
 import { useRelayInfo } from '../hooks/use-relay-info';
 
 export const RelayFavicon = React.memo(
-	({ relay, ...props }: Omit<ImageProps, 'src'> & { relay: string }) => {
+	({
+		relay,
+		...props
+	}: Omit<ImageProps, 'src'> & {
+		relay: string;
+	}) => {
 		const { info } = useRelayInfo(relay);
 
 		const url = useMemo(() => {

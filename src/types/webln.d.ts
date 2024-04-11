@@ -5,9 +5,7 @@ declare global {
 		webln?: WebLNProvider & {
 			enabled?: boolean;
 			isEnabled?: boolean;
-			lnurl?: (
-				lnurl: string,
-			) => Promise<{ paymentHash: string; preimage: string }>;
+			lnurl?: (lnurl: string) => Promise<{ paymentHash: string; preimage: string }>;
 		};
 	}
 }

@@ -40,7 +40,9 @@ export default class ChunkedRequest {
 		});
 		let oldestEvent = this.getLastEvent();
 		if (oldestEvent) {
-			filters = mergeFilter(filters, { until: oldestEvent.created_at - 1 });
+			filters = mergeFilter(filters, {
+				until: oldestEvent.created_at - 1,
+			});
 		}
 
 		let gotEvents = 0;

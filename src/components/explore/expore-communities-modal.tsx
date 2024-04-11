@@ -22,26 +22,26 @@ import useSubject from '../../hooks/use-subject';
 import { getTagValue } from '../../helpers/nostr/event';
 import communitiesService from '../../services/communities';
 
-function CommunityCard({
-	community,
-	onJoin,
-}: {
-	community: NostrEvent;
-	onJoin?: () => void;
-}) {
+function CommunityCard({ community, onJoin }: { community: NostrEvent; onJoin?: () => void }) {
 	const name = getTagValue(community, 'name');
 	const about = getTagValue(community, 'about');
 	const image = getTagValue(community, 'image');
 
 	return (
 		<Card
-			direction={{ base: 'column', sm: 'row' }}
+			direction={{
+				base: 'column',
+				sm: 'row',
+			}}
 			overflow="hidden"
 			variant="outline"
 		>
 			<Image
 				objectFit="cover"
-				maxW={{ base: '100%', sm: '200px' }}
+				maxW={{
+					base: '100%',
+					sm: '200px',
+				}}
 				src={image}
 			/>
 
@@ -62,20 +62,19 @@ function CommunityCard({
 	);
 }
 
-export default function ExploreCommunitiesModal({
-	isOpen,
-	onClose,
-}: Omit<ModalProps, 'children'>) {
+export default function ExploreCommunitiesModal({ isOpen, onClose }: Omit<ModalProps, 'children'>) {
 	const joined = useSubject(communitiesService.communities);
 	const timeline = useTimelineLoader(
 		'explore-communities',
-		[{ kinds: [12012] }],
+		[
+			{
+				kinds: [12012],
+			},
+		],
 		'ws://127.0.0.1:2012',
 	);
 
-	const communities = useSubject(timeline.timeline).filter(
-		(e) => !joined.some((i) => i.pubkey === e.pubkey),
-	);
+	const communities = useSubject(timeline.timeline).filter((e) => !joined.some((i) => i.pubkey === e.pubkey));
 
 	const joinCommunity = (community: NostrEvent) => {
 		communitiesService.addCommunity(community);
@@ -90,11 +89,7 @@ export default function ExploreCommunitiesModal({
 				<ModalCloseButton />
 				<ModalBody>
 					{communities.map((community) => (
-						<CommunityCard
-							key={community.id}
-							community={community}
-							onJoin={() => joinCommunity(community)}
-						/>
+						<CommunityCard key={community.id} community={community} onJoin={() => joinCommunity(community)} />
 					))}
 				</ModalBody>
 			</ModalContent>

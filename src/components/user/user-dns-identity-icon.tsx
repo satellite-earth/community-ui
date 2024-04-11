@@ -3,11 +3,7 @@ import { IconProps, useColorMode } from '@chakra-ui/react';
 
 import useDnsIdentity from '../../hooks/use-dns-identity';
 import useUserMetadata from '../../hooks/use-user-metadata';
-import {
-	VerificationFailed,
-	VerificationMissing,
-	VerifiedIcon,
-} from '../icons';
+import { VerificationFailed, VerificationMissing, VerifiedIcon } from '../icons';
 
 export function useDnsIdentityColor(pubkey: string) {
 	const metadata = useUserMetadata(pubkey);
@@ -29,10 +25,7 @@ export function useDnsIdentityColor(pubkey: string) {
 	}
 }
 
-const UserDnsIdentityIcon = forwardRef<
-	SVGSVGElement,
-	{ pubkey: string } & IconProps
->(({ pubkey, ...props }, ref) => {
+const UserDnsIdentityIcon = forwardRef<SVGSVGElement, { pubkey: string } & IconProps>(({ pubkey, ...props }, ref) => {
 	const metadata = useUserMetadata(pubkey);
 	const identity = useDnsIdentity(metadata?.nip05);
 

@@ -5,9 +5,15 @@ export function mergeFilter(filter: Filter, query: Filter): Filter;
 export function mergeFilter(filter: Filter[], query: Filter): Filter[];
 export function mergeFilter(filter: Filter | Filter[], query: Filter) {
 	if (Array.isArray(filter)) {
-		return filter.map((f) => ({ ...f, ...query }));
+		return filter.map((f) => ({
+			...f,
+			...query,
+		}));
 	}
-	return { ...filter, ...query };
+	return {
+		...filter,
+		...query,
+	};
 }
 
 export function stringifyFilter(filter: Filter | Filter[]) {

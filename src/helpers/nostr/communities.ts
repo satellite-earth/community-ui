@@ -1,7 +1,6 @@
 import { NostrEvent } from 'nostr-tools';
 
-const tagValue = (e: NostrEvent, k: string) =>
-	e.tags.find((t) => t[0] === k)?.[1];
+const tagValue = (e: NostrEvent, k: string) => e.tags.find((t) => t[0] === k)?.[1];
 export function getCommunityName(definition: NostrEvent) {
 	return tagValue(definition, 'name');
 }

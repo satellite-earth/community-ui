@@ -30,14 +30,12 @@ export default function SendMessageForm({ groupId }: { groupId: string }) {
 			<Input
 				type="text"
 				placeholder="Send a message"
-				{...register('message', { required: true })}
+				{...register('message', {
+					required: true,
+				})}
 				autoComplete="off"
 			/>
-			<Button
-				type="submit"
-				colorScheme="brand"
-				isLoading={formState.isSubmitting}
-			>
+			<Button type="submit" colorScheme="brand" isLoading={formState.isSubmitting}>
 				Send
 			</Button>
 		</Flex>

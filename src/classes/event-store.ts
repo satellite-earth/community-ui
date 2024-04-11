@@ -56,9 +56,7 @@ export default class EventStore {
 		this.onClear.next(undefined);
 	}
 
-	private storeSubs = new SuperMap<EventStore, ZenObservable.Subscription[]>(
-		() => [],
-	);
+	private storeSubs = new SuperMap<EventStore, ZenObservable.Subscription[]>(() => []);
 	connect(other: EventStore, fullSync = true) {
 		const subs = this.storeSubs.get(other);
 		subs.push(

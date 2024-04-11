@@ -1,14 +1,17 @@
 import { useMemo } from 'react';
 
 import { useReadRelays } from './use-client-relays';
-import replaceableEventsService, {
-	RequestOptions,
-} from '../services/replaceable-events';
+import replaceableEventsService, { RequestOptions } from '../services/replaceable-events';
 import useSubject from './use-subject';
 
 export default function useReplaceableEvent(
 	cord:
-		| { kind: number; pubkey: string; identifier?: string; relays?: string[] }
+		| {
+				kind: number;
+				pubkey: string;
+				identifier?: string;
+				relays?: string[];
+		  }
 		| undefined,
 	additionalRelays?: Iterable<string>,
 	opts: RequestOptions = {},

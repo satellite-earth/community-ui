@@ -10,7 +10,10 @@ export function parseAddress(address: string): {
 	domain?: string;
 } {
 	const parts = address.trim().toLowerCase().split('@');
-	return { name: parts[0], domain: parts[1] };
+	return {
+		name: parts[0],
+		domain: parts[1],
+	};
 }
 
 type IdentityJson = {
@@ -27,32 +30,31 @@ export type DnsIdentity = {
 	nip46Relays?: string[];
 };
 
-function getIdentityFromJson(
-	name: string,
-	domain: string,
-	json: IdentityJson,
-): DnsIdentity | undefined {
+function getIdentityFromJson(name: string, domain: string, json: IdentityJson): DnsIdentity | undefined {
 	const pubkey = json.names[name];
 	if (!pubkey) return;
 
 	const relays: string[] = json.relays?.[pubkey] ?? [];
 	const hasNip46 = !!json.nip46;
 	const nip46Relays = json.nip46?.[pubkey];
-	return { name, domain, pubkey, relays, nip46Relays, hasNip46 };
+	return {
+		name,
+		domain,
+		pubkey,
+		relays,
+		nip46Relays,
+		hasNip46,
+	};
 }
 
 class DnsIdentityService {
-	identities = new SuperMap<string, Subject<DnsIdentity | null>>(
-		() => new Subject(),
-	);
+	identities = new SuperMap<string, Subject<DnsIdentity | null>>(() => new Subject());
 
 	async fetchIdentity(address: string) {
 		const { name, domain } = parseAddress(address);
 		if (!name || !domain) throw new Error('invalid address');
 
-		const json = await fetch(
-			`https://${domain}/.well-known/nostr.json?name=${name}`,
-		)
+		const json = await fetch(`https://${domain}/.well-known/nostr.json?name=${name}`)
 			.then((res) => res.json() as Promise<IdentityJson>)
 			.then((json) => {
 				// convert all keys in names, and relays to lower case
@@ -90,7 +92,13 @@ class DnsIdentityService {
 
 				// ad to db cache
 				if (transaction.store.put) {
-					await transaction.store.put({ ...identity, updated: now }, address);
+					await transaction.store.put(
+						{
+							...identity,
+							updated: now,
+						},
+						address,
+					);
 				}
 			}
 		}

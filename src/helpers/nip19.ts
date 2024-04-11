@@ -9,12 +9,7 @@ export function isHexKey(str?: string) {
 export function safeDecode(str: string) {
 	try {
 		const result = nip19.decode(str);
-		if (
-			(result.type === 'nevent' ||
-				result.type === 'nprofile' ||
-				result.type === 'naddr') &&
-			result.data.relays
-		)
+		if ((result.type === 'nevent' || result.type === 'nprofile' || result.type === 'naddr') && result.data.relays)
 			result.data.relays = safeRelayUrls(result.data.relays);
 		return result;
 	} catch (e) {}
@@ -95,7 +90,10 @@ export function getPointerFromTag(tag: string[]): nip19.DecodeResult | null {
 		if (!pubkey) return null;
 		return {
 			type: 'nprofile',
-			data: { pubkey, relays: relay ? [relay] : undefined },
+			data: {
+				pubkey,
+				relays: relay ? [relay] : undefined,
+			},
 		};
 	}
 	return null;

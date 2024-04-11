@@ -23,6 +23,11 @@ export interface SchemaV1 {
 			relays: string[];
 			updated: number;
 		};
-		indexes: { name: string; domain: string; pubkey: string; updated: number };
+		indexes: {
+			name: string;
+			domain: string;
+			pubkey: string;
+			updated: number;
+		};
 	};
 }

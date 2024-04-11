@@ -1,10 +1,4 @@
-import {
-	nip04,
-	getPublicKey,
-	finalizeEvent,
-	EventTemplate,
-	NostrEvent,
-} from 'nostr-tools';
+import { nip04, getPublicKey, finalizeEvent, EventTemplate, NostrEvent } from 'nostr-tools';
 
 import { Account } from './account';
 import db from './db';
@@ -30,13 +24,7 @@ class SigningService {
 		);
 		if (!password) throw new Error('Password required');
 		const enc = new TextEncoder();
-		return window.crypto.subtle.importKey(
-			'raw',
-			enc.encode(password),
-			'PBKDF2',
-			false,
-			['deriveBits', 'deriveKey'],
-		);
+		return window.crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveBits', 'deriveKey']);
 	}
 	private async getEncryptionKey() {
 		const salt = await this.getSalt();
@@ -49,7 +37,10 @@ class SigningService {
 				hash: 'SHA-256',
 			},
 			keyMaterial,
-			{ name: 'AES-GCM', length: 256 },
+			{
+				name: 'AES-GCM',
+				length: 256,
+			},
 			true,
 			['encrypt', 'decrypt'],
 		);
@@ -61,7 +52,10 @@ class SigningService {
 		const iv = window.crypto.getRandomValues(new Uint8Array(96));
 
 		const encrypted = await window.crypto.subtle.encrypt(
-			{ name: 'AES-GCM', iv },
+			{
+				name: 'AES-GCM',
+				iv,
+			},
 			key,
 			encode.encode(secKey),
 		);
@@ -76,8 +70,7 @@ class SigningService {
 	}
 
 	async decryptSecKey(account: Account) {
-		if (account.type !== 'local')
-			throw new Error('Account dose not have a secret key');
+		if (account.type !== 'local') throw new Error('Account dose not have a secret key');
 
 		const cache = decryptedKeys.get(account.pubkey);
 		if (cache) return cache;
@@ -87,7 +80,10 @@ class SigningService {
 
 		try {
 			const decrypted = await window.crypto.subtle.decrypt(
-				{ name: 'AES-GCM', iv: account.iv },
+				{
+					name: 'AES-GCM',
+					iv: account.iv,
+				},
 				key,
 				account.secKey,
 			);
@@ -101,8 +97,7 @@ class SigningService {
 
 	async requestSignature(draft: EventTemplate, account: Account) {
 		const checkSig = (signed: NostrEvent) => {
-			if (signed.pubkey !== account.pubkey)
-				throw new Error('Signed with the wrong pubkey');
+			if (signed.pubkey !== account.pubkey) throw new Error('Signed with the wrong pubkey');
 		};
 
 		if (account.readonly) throw new Error('Cant sign in readonly mode');
@@ -110,7 +105,10 @@ class SigningService {
 		switch (account.type) {
 			case 'local': {
 				const secKey = await this.decryptSecKey(account);
-				const tmpDraft = { ...draft, pubkey: getPublicKey(hexToBytes(secKey)) };
+				const tmpDraft = {
+					...draft,
+					pubkey: getPublicKey(hexToBytes(secKey)),
+				};
 				const event = finalizeEvent(tmpDraft, hexToBytes(secKey)) as NostrEvent;
 				return event;
 			}

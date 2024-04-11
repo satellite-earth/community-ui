@@ -19,11 +19,7 @@ export default function LoginStartView() {
 				if (!accountService.hasAccount(pubkey)) {
 					let relays: string[] = [];
 					if (relays.length === 0) {
-						relays = safeRelayUrls([
-							'wss://relay.damus.io/',
-							'wss://relay.snort.social/',
-							'wss://nostr.wine/',
-						]);
+						relays = safeRelayUrls(['wss://relay.damus.io/', 'wss://relay.snort.social/', 'wss://nostr.wine/']);
 					}
 
 					accountService.addAccount({

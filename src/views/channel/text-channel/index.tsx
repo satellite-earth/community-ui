@@ -11,7 +11,12 @@ export default function TextChannelView({ groupId }: { groupId: string }) {
 	const { relay, community } = useCurrentCommunity();
 	const timeline = useTimelineLoader(
 		`${community.pubkey}-${groupId}-messages`,
-		[{ kinds: [COMMUNITY_CHAT_MESSAGE], '#h': [groupId] }],
+		[
+			{
+				kinds: [COMMUNITY_CHAT_MESSAGE],
+				'#h': [groupId],
+			},
+		],
 		relay,
 	);
 
@@ -19,22 +24,12 @@ export default function TextChannelView({ groupId }: { groupId: string }) {
 
 	return (
 		<Flex direction="column" overflow="hidden" flex={1}>
-			<Flex
-				p="4"
-				borderBottom="1px solid var(--chakra-colors-chakra-border-color)"
-			>
+			<Flex p="4" borderBottom="1px solid var(--chakra-colors-chakra-border-color)">
 				<Heading fontWeight="bold" size="md">
 					{groupId}
 				</Heading>
 			</Flex>
-			<Flex
-				overflowX="hidden"
-				overflowY="auto"
-				flex={1}
-				direction="column-reverse"
-				p="2"
-				gap="2"
-			>
+			<Flex overflowX="hidden" overflowY="auto" flex={1} direction="column-reverse" p="2" gap="2">
 				{messages.map((message) => (
 					<TextMessage key={message.id} message={message} />
 				))}

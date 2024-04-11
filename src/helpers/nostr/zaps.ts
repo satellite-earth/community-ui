@@ -5,9 +5,7 @@ import { ParsedInvoice, parsePaymentRequest } from '../bolt11';
 import { Kind0ParsedContent } from './user-metadata';
 
 // based on https://github.com/nbd-wtf/nostr-tools/blob/master/nip57.ts
-export async function getZapEndpoint(
-	metadata: Kind0ParsedContent,
-): Promise<null | string> {
+export async function getZapEndpoint(metadata: Kind0ParsedContent): Promise<null | string> {
 	try {
 		let lnurl: string = '';
 		let { lud06, lud16 } = metadata;

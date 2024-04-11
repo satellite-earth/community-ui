@@ -1,13 +1,5 @@
 import { useState } from 'react';
-import {
-	Box,
-	Button,
-	Flex,
-	Heading,
-	IconButton,
-	Image,
-	useDisclosure,
-} from '@chakra-ui/react';
+import { Box, Button, Flex, Heading, IconButton, Image, useDisclosure } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 import { NostrEvent } from 'nostr-tools';
 
@@ -18,10 +10,7 @@ import UserName from '../user/user-name';
 import useTimelineLoader from '../../hooks/use-timeline-loader';
 import useSubject from '../../hooks/use-subject';
 import { getGroupId, getGroupName } from '../../helpers/nostr/groups';
-import {
-	getCommunityBanner,
-	getCommunityName,
-} from '../../helpers/nostr/communities';
+import { getCommunityBanner, getCommunityName } from '../../helpers/nostr/communities';
 import Plus from '../icons/components/plus';
 import CreateGroupModal from '../group/create-channel-modal';
 import Edit01 from '../icons/components/edit-01';
@@ -38,46 +27,26 @@ export default function ChannelNav() {
 	// load groups
 	const timeline = useTimelineLoader(
 		`${community.pubkey}-channels`,
-		[{ kinds: [39000] }],
+		[
+			{
+				kinds: [39000],
+			},
+		],
 		relay,
 	);
 	const channels = useSubject(timeline.timeline);
 
 	return (
-		<Flex
-			direction="column"
-			gap="2"
-			px="2"
-			py="2"
-			shrink={0}
-			w="xs"
-			borderRightWidth={1}
-		>
+		<Flex direction="column" gap="2" px="2" py="2" shrink={0} w="xs" borderRightWidth={1}>
 			{community && (
-				<Box
-					as={RouterLink}
-					to="/"
-					borderRadius="lg"
-					bg="black"
-					overflow="hidden"
-				>
+				<Box as={RouterLink} to="/" borderRadius="lg" bg="black" overflow="hidden">
 					{getCommunityBanner(community) ? (
 						<Image
-							src={
-								getCommunityBanner(community) ||
-								'https://satellite.earth/assets/branding-94b401c7.png'
-							}
+							src={getCommunityBanner(community) || 'https://satellite.earth/assets/branding-94b401c7.png'}
 							w="full"
 						/>
 					) : (
-						<Heading
-							color="white"
-							mx="4"
-							my="1em"
-							textAlign="center"
-							lineHeight={0}
-							whiteSpace="nowrap"
-						>
+						<Heading color="white" mx="4" my="1em" textAlign="center" lineHeight={0} whiteSpace="nowrap">
 							{getCommunityName(community)}
 						</Heading>
 					)}
@@ -129,17 +98,9 @@ export default function ChannelNav() {
 				</Flex>
 			))}
 
-			{createGroupModal.isOpen && (
-				<CreateGroupModal isOpen onClose={createGroupModal.onClose} />
-			)}
+			{createGroupModal.isOpen && <CreateGroupModal isOpen onClose={createGroupModal.onClose} />}
 
-			{editChannel && (
-				<EditChannelModal
-					isOpen
-					onClose={() => setEditChannel(undefined)}
-					channel={editChannel}
-				/>
-			)}
+			{editChannel && <EditChannelModal isOpen onClose={() => setEditChannel(undefined)} channel={editChannel} />}
 		</Flex>
 	);
 }

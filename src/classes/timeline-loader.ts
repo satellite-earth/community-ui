@@ -1,12 +1,6 @@
 import dayjs from 'dayjs';
 import { Debugger } from 'debug';
-import {
-	Filter,
-	NostrEvent,
-	Relay,
-	Subscription,
-	matchFilters,
-} from 'nostr-tools';
+import { Filter, NostrEvent, Relay, Subscription, matchFilters } from 'nostr-tools';
 import _throttle from 'lodash.throttle';
 
 import { PersistentSubject } from './subject';
@@ -55,9 +49,7 @@ export default class TimelineLoader {
 	private updateTimeline() {
 		if (this.eventFilter) {
 			const filter = this.eventFilter;
-			this.timeline.next(
-				this.events.getSortedEvents().filter((e) => filter(e, this.events)),
-			);
+			this.timeline.next(this.events.getSortedEvents().filter((e) => filter(e, this.events)));
 		} else this.timeline.next(this.events.getSortedEvents());
 	}
 	private handleEvent(event: NostrEvent) {
@@ -78,18 +70,10 @@ export default class TimelineLoader {
 		if (!this.relay) throw new Error('Relay not set');
 		if (this.filters.length === 0) throw new Error('Filters not set');
 
-		this.chunkLoader = new ChunkedRequest(
-			this.relay,
-			this.filters,
-			this.log.extend('ChunkedRequest'),
-		);
+		this.chunkLoader = new ChunkedRequest(this.relay, this.filters, this.log.extend('ChunkedRequest'));
 		this.events.connect(this.chunkLoader.events);
 		const subs = this.chunkLoaderSubs;
-		subs.push(
-			this.chunkLoader.onChunkFinish.subscribe(
-				this.handleChunkFinished.bind(this),
-			),
-		);
+		subs.push(this.chunkLoader.onChunkFinish.subscribe(this.handleChunkFinished.bind(this)));
 	}
 	private destroyChunkLoader() {
 		if (!this.chunkLoader) return;
@@ -158,10 +142,7 @@ export default class TimelineLoader {
 		if (!this.chunkLoader) return;
 		let triggeredLoad = false;
 		if (this.chunkLoader.complete || this.chunkLoader.loading) return;
-		const event = this.chunkLoader.getLastEvent(
-			this.loadNextBlockBuffer,
-			this.eventFilter,
-		);
+		const event = this.chunkLoader.getLastEvent(this.loadNextBlockBuffer, this.eventFilter);
 		if (!event || event.created_at >= this.cursor) {
 			this.chunkLoader.loadNextChunk();
 			triggeredLoad = true;
