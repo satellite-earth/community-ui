@@ -1,8 +1,14 @@
-import { RelayMode } from '../classes/relay';
 import { PersistentSubject } from '../classes/subject';
 import { logger } from '../helpers/debug';
 import { safeRelayUrls } from '../helpers/relay';
 import RelaySet from '../classes/relay-set';
+
+export enum RelayMode {
+	NONE = 0,
+	READ = 1,
+	WRITE = 2,
+	ALL = 1 | 2,
+}
 
 class ClientRelayService {
 	readRelays = new PersistentSubject(new RelaySet(safeRelayUrls(['wss://nostrue.com'])));

@@ -41,7 +41,7 @@ export default function PublishProvider({ children }: PropsWithChildren) {
 				}
 
 				for (const relay of relays) {
-					relayPoolService.requestRelay(relay).send(['EVENT', signed]);
+					relayPoolService.requestRelay(relay).publish(signed);
 				}
 
 				// send it to the local relay
