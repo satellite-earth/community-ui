@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { Debugger } from 'debug';
+import debug, { Debugger } from 'debug';
 import { Filter, NostrEvent, Relay, Subscription, matchFilters } from 'nostr-tools';
 import _throttle from 'lodash.throttle';
 
@@ -95,7 +95,29 @@ export default class TimelineLoader {
 		});
 		this.subscription = this.relay.subscribe(filters, {
 			onevent: (event) => this.handleEvent(event),
+			onclose: () => this.handleSubscriptionClose(),
 		});
+	}
+	private handleSubscriptionClose() {
+		if (this.relay?.connected) {
+			this.subscription = null;
+
+			if (this.running) {
+				this.log('Resubscribing in 10s');
+				setTimeout(() => {
+					this.openSubscription();
+				}, 10_000);
+			}
+		} else if (this.relay?.connected === false) {
+			this.log('Relay closed, removing subscription');
+			this.running = false;
+			this.subscription = null;
+
+			this.log('Reconnecting in 10s');
+			setTimeout(() => {
+				this.start();
+			}, 10_000);
+		}
 	}
 	private closeSubscription() {
 		if (!this.subscription) return;
@@ -104,12 +126,30 @@ export default class TimelineLoader {
 		this.subscription = null;
 	}
 
-	start() {
+	async start() {
 		if (this.running) return;
-		this.log('Starting');
+		if (!this.relay) throw new Error('Cant start without relay');
+
+		this.log('Starting', this.filters, this.relay.url);
 		this.running = true;
-		this.createChunkLoader();
-		this.openSubscription();
+
+		if (this.relay.connected === false) {
+			try {
+				// connect to relay first
+				await this.relay.connect();
+				this.log('Connected to relay');
+
+				this.createChunkLoader();
+				this.openSubscription();
+			} catch (error) {
+				this.log('Failed to connect');
+				this.running = false;
+			}
+		} else {
+			// relay is already connected, create subscription
+			this.createChunkLoader();
+			this.openSubscription();
+		}
 	}
 	stop() {
 		if (!this.running) return;
@@ -122,11 +162,8 @@ export default class TimelineLoader {
 	setRelay(url: string | URL | Relay) {
 		if (url instanceof Relay) this.relay = url;
 		else this.relay = relayPoolService.requestRelay(url);
-
-		this.log('Setting relay', this.relay.url);
 	}
 	setFilters(filters: Filter[]) {
-		this.log('Setting filters', filters);
 		this.filters = filters;
 	}
 	setEventFilter(filter?: EventFilter) {
