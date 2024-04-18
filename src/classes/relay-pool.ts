@@ -44,17 +44,14 @@ export default class RelayPool {
 		return relay;
 	}
 
-	reconnectRelays() {
-		for (const [url, relay] of this.relays.entries()) {
-			const claims = this.getRelayClaims(url).size;
-			if (!relay.connected && claims > 0) {
-				try {
-					relay.connect();
-				} catch (e) {
-					this.log(`Failed to connect to ${relay.url}`);
-					this.log(e);
-				}
-			}
+	removeRelay(url: string | URL) {
+		url = validateRelayURL(url);
+
+		const key = url.toString();
+		const relay = this.relays.get(key);
+		if (relay) {
+			relay.close();
+			this.relays.delete(key);
 		}
 	}
 }

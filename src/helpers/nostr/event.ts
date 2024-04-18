@@ -16,3 +16,11 @@ export function getEventCoordinate(event: NostrEvent) {
 export function getTagValue(event: NostrEvent, tag: string) {
 	return event.tags.find((t) => t[0] === tag)?.[1];
 }
+
+export function doesEventMatchCoordinate(event: NostrEvent, coordinate: string) {
+	const [kind, pubkey, d] = coordinate.split(':');
+	if (!kind || !pubkey || !d) return false;
+	return (
+		event.kind === parseInt(kind) && event.pubkey === event.pubkey && event.tags.find((t) => t[0] === 'd')?.[1] === d
+	);
+}

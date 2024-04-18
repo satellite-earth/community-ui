@@ -1,16 +1,17 @@
 import dayjs from 'dayjs';
-import debug, { Debugger } from 'debug';
+import { Debugger } from 'debug';
 import { Filter, NostrEvent, Relay, Subscription, matchFilters } from 'nostr-tools';
 import _throttle from 'lodash.throttle';
+import type Observable from 'zen-observable';
 
-import { PersistentSubject } from './subject';
-import { logger } from '../helpers/debug';
-import EventStore from './event-store';
-import { isReplaceable } from '../helpers/nostr/event';
-import replaceableEventsService from '../services/replaceable-events';
-import ChunkedRequest from './chunked-request';
-import relayPoolService from '../services/relay-pool';
 import { mergeFilter } from '../helpers/nostr/filter';
+import { isReplaceable } from '../helpers/nostr/event';
+import { logger } from '../helpers/debug';
+import { PersistentSubject } from './subject';
+import EventStore from './event-store';
+import ChunkedRequest from './chunked-request';
+import replaceableEventsService from '../services/replaceable-events';
+import relayPoolService from '../services/relay-pool';
 
 export type EventFilter = (event: NostrEvent, store: EventStore) => boolean;
 
@@ -204,6 +205,12 @@ export default class TimelineLoader {
 		if (this.chunkLoader && this.chunkLoader.complete !== this.complete.value)
 			this.complete.next(this.chunkLoader.complete);
 		else this.complete.next(false);
+	}
+
+	private deleteStreamSub: ZenObservable.Subscription | null = null;
+	setDeleteStream(stream: Observable<NostrEvent>, extraCheck?: (event: NostrEvent) => boolean) {
+		if (this.deleteStreamSub) this.deleteStreamSub.unsubscribe();
+		this.deleteStreamSub = stream.subscribe((event) => this.events.handleDeleteEvent(event, extraCheck));
 	}
 
 	forgetEvents() {

@@ -1,10 +1,10 @@
 import { nanoid } from 'nanoid';
-import { NostrEvent } from 'nostr-tools';
+import { Filter, NostrEvent, kinds } from 'nostr-tools';
+import { getEventUID } from 'nostr-idb';
 
 import ControlledObservable from './controlled-observable';
 import SuperMap from './super-map';
-import { sortByDate } from '../helpers/nostr/event';
-import { getEventUID } from 'nostr-idb';
+import { doesEventMatchCoordinate, sortByDate } from '../helpers/nostr/event';
 
 export type EventFilter = (event: NostrEvent, store: EventStore) => boolean;
 
@@ -102,6 +102,28 @@ export default class EventStore {
 			if (filter && !filter(event, this)) continue;
 			if (i === nth) return event;
 			i++;
+		}
+	}
+
+	handleDeleteEvent(deleteEvent: NostrEvent, extraCheck?: (event: NostrEvent) => boolean) {
+		if (deleteEvent.kind !== kinds.EventDeletion) return [];
+
+		const ids = deleteEvent.tags.filter((t) => t[0] === 'e' && t[1]).map((t) => t[1]);
+		const cords = deleteEvent.tags.filter((t) => t[0] === 'a' && t[1]).map((t) => t[1]);
+
+		for (const [id, event] of this.events) {
+			// make sure the events original author is the same as the delete event
+			if (event.pubkey === deleteEvent.pubkey || extraCheck?.(event)) {
+				// if the event id is in ids OR the event is a replaceable event and is in cords
+				if (
+					(ids.includes(id) ||
+						(kinds.isParameterizedReplaceableKind(event.kind) &&
+							cords.some((cord) => doesEventMatchCoordinate(event, cord)))) &&
+					event.created_at < deleteEvent.created_at
+				) {
+					this.deleteEvent(id);
+				}
+			}
 		}
 	}
 }

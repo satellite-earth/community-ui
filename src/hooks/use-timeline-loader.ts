@@ -1,9 +1,11 @@
 import { useEffect, useMemo } from 'react';
-import { Filter, Relay } from 'nostr-tools';
+import { Filter, NostrEvent, Relay } from 'nostr-tools';
 
 import timelineCacheService from '../services/timeline-cache';
 import { EventFilter } from '../classes/timeline-loader';
 import { stringifyFilter } from '../helpers/nostr/filter';
+import { useCommunityContext } from '../providers/community-context';
+import communityDeleteStreams from '../services/delete-events';
 
 type Options = {
 	eventFilter?: EventFilter;
@@ -17,14 +19,23 @@ export default function useTimelineLoader(
 	opts?: Options,
 ) {
 	const timeline = useMemo(() => timelineCacheService.createTimeline(key), [key]);
+	const community = useCommunityContext();
 
 	useEffect(() => {
-		if (filters) {
-			if (relay) timeline.setRelay(relay);
+		if (filters && relay) {
+			timeline.setRelay(relay);
 			timeline.setFilters(filters);
+
+			// if this timeline is in the context of a community, subscribe to the delete stream
+			if (community) {
+				const deleteStream = communityDeleteStreams.getStream(community.pubkey);
+				const extraCheck = (event: NostrEvent) => event.pubkey === community.pubkey;
+				timeline.setDeleteStream(deleteStream, extraCheck);
+			}
+
 			timeline.start();
 		} else timeline.stop();
-	}, [timeline, filters && stringifyFilter(filters), relay]);
+	}, [timeline, filters && stringifyFilter(filters), relay, community]);
 
 	// update event filter
 	useEffect(() => {
