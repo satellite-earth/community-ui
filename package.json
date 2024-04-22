@@ -9,6 +9,7 @@
 		"prepack": "yarn build",
 		"dev": "vite",
 		"build": "tsc && vite build",
+		"test": "echo no tests",
 		"analyze": "npx vite-bundle-visualizer -o ./stats.html",
 		"preview": "vite preview",
 		"build-icons": "node ./scripts/build-icons.mjs",
