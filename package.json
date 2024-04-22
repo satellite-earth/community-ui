@@ -5,6 +5,11 @@
 	"files": [
 		"dist"
 	],
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/satellite-earth/community-ui.git"
+	},
 	"scripts": {
 		"prepack": "yarn build",
 		"dev": "vite",
