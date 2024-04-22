@@ -1,9 +1,12 @@
 {
-	"name": "community-ui",
-	"private": true,
+	"name": "@satellite-earth/community-ui",
 	"version": "0.1.0",
 	"type": "module",
+	"files": [
+		"dist"
+	],
 	"scripts": {
+		"prepack": "yarn build",
 		"dev": "vite",
 		"build": "tsc && vite build",
 		"analyze": "npx vite-bundle-visualizer -o ./stats.html",

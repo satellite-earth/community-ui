@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid';
-import { Filter, NostrEvent, kinds } from 'nostr-tools';
+import { NostrEvent, kinds } from 'nostr-tools';
 import { getEventUID } from 'nostr-idb';
 
 import ControlledObservable from './controlled-observable';
