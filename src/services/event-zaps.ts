@@ -1,94 +1,56 @@
-import { Filter, NostrEvent, kinds } from 'nostr-tools';
+import { Relay, NostrEvent, kinds } from 'nostr-tools';
 import _throttle from 'lodash.throttle';
 
 import Subject from '../classes/subject';
 import SuperMap from '../classes/super-map';
-import relayPoolService from './relay-pool';
-
-type eventUID = string;
-type relay = string;
+import BatchRelationLoader from '../classes/batch-relation-loader';
+import { logger } from '../helpers/debug';
+import RelaySet, { RelaySetFrom } from '../classes/relay-set';
 
 class EventZapsService {
-	subjects = new SuperMap<eventUID, Subject<NostrEvent[]>>(() => new Subject<NostrEvent[]>([]));
-	pending = new SuperMap<eventUID, Set<relay>>(() => new Set());
+	log = logger.extend('EventZapsService');
 
-	requestZaps(eventUID: eventUID, relays: Iterable<string>, alwaysRequest = true) {
-		const subject = this.subjects.get(eventUID);
+	subjects = new SuperMap<string, Subject<NostrEvent[]>>(() => new Subject<NostrEvent[]>([]));
 
-		if (!subject.value || alwaysRequest) {
-			for (const relay of relays) {
-				this.pending.get(eventUID).add(relay);
+	loaders = new SuperMap<Relay, BatchRelationLoader>((relay) => {
+		const loader = new BatchRelationLoader(relay, [kinds.Zap], this.log.extend(relay.url));
+		loader.onEventUpdate.subscribe((id) => {
+			this.updateSubject(id);
+		});
+		return loader;
+	});
+
+	// merged results from all loaders for a single event
+	private updateSubject(id: string) {
+		const ids = new Set<string>();
+		const events: NostrEvent[] = [];
+		const subject = this.subjects.get(id);
+
+		for (const [relay, loader] of this.loaders) {
+			if (loader.references.has(id)) {
+				const other = loader.references.get(id);
+				for (const [_, e] of other) {
+					if (!ids.has(e.id)) {
+						ids.add(e.id);
+						events.push(e);
+					}
+				}
 			}
 		}
-		this.throttleBatchRequest();
+
+		subject.next(events);
+	}
+
+	requestZaps(eventUID: string, urls: RelaySetFrom, alwaysRequest = true) {
+		const subject = this.subjects.get(eventUID);
+		if (subject.value && !alwaysRequest) return subject;
+
+		const relays = RelaySet.from(urls);
+		for (const relay of relays) {
+			this.loaders.get(relay).requestEvents(eventUID);
+		}
 
 		return subject;
-	}
-
-	handleEvent(event: NostrEvent, _cache = true) {
-		if (event.kind !== kinds.Zap) return;
-		const eventUID = event.tags.find((t) => t[0] === 'e')?.[1] ?? event.tags.find((t) => t[0] === 'a')?.[1];
-		if (!eventUID) return;
-
-		const subject = this.subjects.get(eventUID);
-		if (!subject.value) {
-			subject.next([event]);
-		} else if (!subject.value.some((e) => e.id === event.id)) {
-			subject.next([...subject.value, event]);
-		}
-	}
-
-	throttleBatchRequest = _throttle(this.batchRequests, 2000);
-	batchRequests() {
-		if (this.pending.size === 0) return;
-
-		// load events from cache
-		const uids = Array.from(this.pending.keys());
-		const ids = uids.filter((id) => !id.includes(':'));
-		const cords = uids.filter((id) => id.includes(':'));
-		const filters: Filter[] = [];
-		if (ids.length > 0)
-			filters.push({
-				'#e': ids,
-				kinds: [kinds.Zap],
-			});
-		if (cords.length > 0)
-			filters.push({
-				'#a': cords,
-				kinds: [kinds.Zap],
-			});
-
-		const idsFromRelays: Record<relay, eventUID[]> = {};
-		for (const [id, relays] of this.pending) {
-			for (const relay of relays) {
-				idsFromRelays[relay] = idsFromRelays[relay] ?? [];
-				idsFromRelays[relay].push(id);
-			}
-		}
-
-		for (const [relay, ids] of Object.entries(idsFromRelays)) {
-			const eventIds = ids.filter((id) => !id.includes(':'));
-			const coordinates = ids.filter((id) => id.includes(':'));
-			const filter: Filter[] = [];
-			if (eventIds.length > 0)
-				filter.push({
-					'#e': eventIds,
-					kinds: [kinds.Zap],
-				});
-			if (coordinates.length > 0)
-				filter.push({
-					'#a': coordinates,
-					kinds: [kinds.Zap],
-				});
-
-			if (filter.length > 0) {
-				const sub = relayPoolService.requestRelay(relay).subscribe(filter, {
-					onevent: (event) => this.handleEvent(event),
-					oneose: () => sub.close(),
-				});
-			}
-		}
-		this.pending.clear();
 	}
 }
 

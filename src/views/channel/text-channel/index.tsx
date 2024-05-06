@@ -3,9 +3,9 @@ import { Flex, Heading } from '@chakra-ui/react';
 import { COMMUNITY_CHAT_MESSAGE } from '../../../helpers/nostr/kinds';
 import useTimelineLoader from '../../../hooks/use-timeline-loader';
 import useSubject from '../../../hooks/use-subject';
-import useCurrentCommunity from '../../../hooks/use-current-community';
 import SendMessageForm from './send-message-form';
 import TextMessage from './text-message';
+import { useCurrentCommunity } from '../../../providers/community-context';
 
 export default function TextChannelView({ groupId }: { groupId: string }) {
 	const { relay, community } = useCurrentCommunity();

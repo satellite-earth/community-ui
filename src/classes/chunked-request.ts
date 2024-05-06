@@ -68,15 +68,15 @@ export default class ChunkedRequest {
 		return this.events.addEvent(event);
 	}
 
-	cleanup() {
-		for (const sub of this.subs) sub.unsubscribe();
-		this.subs = [];
-	}
-
 	getFirstEvent(nth = 0, eventFilter?: EventFilter) {
 		return this.events.getFirstEvent(nth, eventFilter);
 	}
 	getLastEvent(nth = 0, eventFilter?: EventFilter) {
 		return this.events.getLastEvent(nth, eventFilter);
+	}
+
+	destroy() {
+		for (const sub of this.subs) sub.unsubscribe();
+		this.subs = [];
 	}
 }

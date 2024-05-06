@@ -15,7 +15,7 @@ import Plus from '../icons/components/plus';
 import CreateGroupModal from '../group/create-channel-modal';
 import Edit01 from '../icons/components/edit-01';
 import EditChannelModal from '../group/edit-channel-modal';
-import useCurrentCommunity from '../../hooks/use-current-community';
+import { useCurrentCommunity } from '../../providers/community-context';
 
 export default function ChannelNav() {
 	const account = useCurrentAccount();

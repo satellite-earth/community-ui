@@ -1,4 +1,4 @@
-import { NostrEvent } from 'nostr-tools';
+import { NostrEvent, Relay } from 'nostr-tools';
 import _throttle from 'lodash.throttle';
 
 import SuperMap from '../classes/super-map';
@@ -7,7 +7,7 @@ import { getEventCoordinate } from '../helpers/nostr/event';
 import EventStore from '../classes/event-store';
 import Subject from '../classes/subject';
 import BatchKindLoader, { createCoordinate } from '../classes/batch-kind-loader';
-import relayPoolService from './relay-pool';
+import RelaySet, { RelaySetFrom } from '../classes/relay-set';
 
 export type RequestOptions = {
 	/** Always request the event from the relays */
@@ -18,8 +18,8 @@ export type RequestOptions = {
 
 class ReplaceableEventsService {
 	private subjects = new SuperMap<string, Subject<NostrEvent>>(() => new Subject<NostrEvent>());
-	private loaders = new SuperMap<string, BatchKindLoader>((url) => {
-		const loader = new BatchKindLoader(relayPoolService.requestRelay(url), this.log.extend(url));
+	private loaders = new SuperMap<Relay, BatchKindLoader>((relay) => {
+		const loader = new BatchKindLoader(relay, this.log.extend(relay.url));
 		loader.events.onEvent.subscribe((e) => this.handleEvent(e));
 		return loader;
 	});
@@ -27,7 +27,6 @@ class ReplaceableEventsService {
 	events = new EventStore();
 
 	log = logger.extend('ReplaceableEventLoader');
-	dbLog = this.log.extend('database');
 
 	handleEvent(event: NostrEvent, _saveToCache = true) {
 		const cord = getEventCoordinate(event);
@@ -37,7 +36,6 @@ class ReplaceableEventsService {
 		if (!current || event.created_at > current.created_at) {
 			subject.next(event);
 			this.events.addEvent(event);
-			// if (saveToCache) this.saveToCache(cord, event);
 		}
 	}
 
@@ -45,8 +43,9 @@ class ReplaceableEventsService {
 		return this.subjects.get(createCoordinate(kind, pubkey, d));
 	}
 
-	private requestEventFromRelays(relays: Iterable<string>, kind: number, pubkey: string, d?: string) {
+	private requestEventFromRelays(urls: RelaySetFrom, kind: number, pubkey: string, d?: string) {
 		const cord = createCoordinate(kind, pubkey, d);
+		const relays = RelaySet.from(urls);
 		const sub = this.subjects.get(cord);
 
 		for (const relay of relays) this.loaders.get(relay).requestEvent(kind, pubkey, d);
@@ -54,17 +53,20 @@ class ReplaceableEventsService {
 		return sub;
 	}
 
-	requestEvent(relays: Iterable<string>, kind: number, pubkey: string, d?: string, opts: RequestOptions = {}) {
+	requestEvent(urls: RelaySetFrom, kind: number, pubkey: string, d?: string, opts: RequestOptions = {}) {
 		const key = createCoordinate(kind, pubkey, d);
 		const sub = this.subjects.get(key);
+		const relays = RelaySet.from(urls);
 
-		if (!sub.value) {
-			this.requestEventFromRelays(relays, kind, pubkey, d);
-		}
+		// if (!sub.value && privateNode) {
+		//   privateNode.requestEvent(kind, pubkey, d).then((loaded) => {
+		//     if (!loaded && !sub.value) this.requestEventFromRelays(urls, kind, pubkey, d);
+		//   });
+		// }
 
-		if (opts?.alwaysRequest || (!sub.value && opts.ignoreCache)) {
-			this.requestEventFromRelays(relays, kind, pubkey, d);
-		}
+		// if (opts?.alwaysRequest || !this.cacheLoader || (!sub.value && opts.ignoreCache)) {
+		this.requestEventFromRelays(relays, kind, pubkey, d);
+		// }
 
 		return sub;
 	}

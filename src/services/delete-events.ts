@@ -1,33 +1,35 @@
-import { NostrEvent, Subscription, kinds } from 'nostr-tools';
+import { NostrEvent, kinds } from 'nostr-tools';
 
 import ControlledObservable from '../classes/controlled-observable';
 import communityRelaysService from './community-relays';
+import PersistentSubscription from '../classes/persistent-subscription';
 
 class CommunityDeleteStreams {
 	streams = new Map<string, ControlledObservable<NostrEvent>>();
-	subscriptions = new Map<string, Subscription>();
+	subscriptions = new Map<string, PersistentSubscription>();
 
 	getStream(pubkey: string) {
 		let stream = this.streams.get(pubkey);
 		if (stream) return stream;
 
 		stream = new ControlledObservable<NostrEvent>();
-		const sub = communityRelaysService.getRelay(pubkey).subscribe([{ kinds: [kinds.EventDeletion], limit: 10 }], {
-			onevent: (event) => {
-				stream?.next(event);
-			},
-			onclose: () => {
-				// TODO: reconnect
-			},
+
+		const sub = new PersistentSubscription(communityRelaysService.getRelay(pubkey), {
+			onevent: (event) => stream.next(event),
 		});
+		sub.filters = [{ kinds: [kinds.EventDeletion], limit: 10 }];
+		sub.update();
+
 		this.streams.set(pubkey, stream);
 		this.subscriptions.set(pubkey, sub);
 		return stream;
 	}
+
 	closeStream(pubkey: string) {
 		this.streams.delete(pubkey);
 		const sub = this.subscriptions.get(pubkey);
-		if (sub && !sub.closed) sub.close();
+		if (sub) sub.close();
+		this.subscriptions.delete(pubkey);
 	}
 }
 

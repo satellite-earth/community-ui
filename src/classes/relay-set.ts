@@ -1,31 +1,35 @@
-import { safeRelayUrl } from '../helpers/relay';
+import { Relay } from 'nostr-tools';
 import relayPoolService from '../services/relay-pool';
 
-export default class RelaySet extends Set<string> {
+export type RelaySetFrom = Iterable<string | URL | Relay> | Relay | string | URL;
+
+export default class RelaySet extends Set<Relay> {
 	get urls() {
 		return Array.from(this);
-	}
-	getRelays() {
-		return this.urls.map((url) => relayPoolService.requestRelay(url, false));
 	}
 
 	clone() {
 		return new RelaySet(this);
 	}
-	merge(src: Iterable<string>): this {
-		for (const url of src) this.add(url);
+	merge(...sources: (RelaySetFrom | undefined)[]): this {
+		for (const src of sources) {
+			if (!src) continue;
+			if (src instanceof Relay || src instanceof URL || typeof src === 'string') {
+				const relay = relayPoolService.getRelay(src);
+				if (relay) this.add(relay);
+			} else {
+				const relays = relayPoolService.getRelays(src);
+
+				for (const relay of relays) {
+					this.add(relay);
+				}
+			}
+		}
 		return this;
 	}
 
-	static from(...sources: (Iterable<string> | undefined)[]) {
+	static from(...sources: (RelaySetFrom | undefined)[]) {
 		const set = new RelaySet();
-		for (const src of sources) {
-			if (!src) continue;
-			for (const url of src) {
-				const safe = safeRelayUrl(url);
-				if (safe) set.add(safe);
-			}
-		}
-		return set;
+		return set.merge(...sources);
 	}
 }
