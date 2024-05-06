@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { useWithLocalRelay } from './use-client-relays';
 import replaceableEventsService, { RequestOptions } from '../services/replaceable-events';
 import useSubject from './use-subject';
+import { RelaySetFrom } from '../classes/relay-set';
 
 export default function useReplaceableEvent(
 	cord:
@@ -13,7 +14,7 @@ export default function useReplaceableEvent(
 				relays?: string[];
 		  }
 		| undefined,
-	additionalRelays?: Iterable<string>,
+	additionalRelays?: RelaySetFrom,
 	opts: RequestOptions = {},
 ) {
 	const readRelays = useWithLocalRelay(additionalRelays);

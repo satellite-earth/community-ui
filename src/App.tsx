@@ -1,7 +1,9 @@
-import { Suspense } from 'react';
+import { PropsWithChildren, Suspense, useEffect, useState } from 'react';
+import { ChakraProvider, Code, Flex, Spinner, useForceUpdate, useInterval } from '@chakra-ui/react';
 import ErrorBoundary from './components/error-boundary';
 import { Outlet, RouterProvider, createHashRouter } from 'react-router-dom';
-import { ChakraProvider } from '@chakra-ui/react';
+
+import './styles.css';
 
 import LoginView from './views/login';
 import LoginStartView from './views/login/start';
@@ -10,6 +12,39 @@ import LoginNsecView from './views/login/nsec';
 import { theme } from './theme';
 import { ChannelView } from './views/channel';
 import { GlobalProviders } from './providers';
+import ConnectView from './views/connect';
+import privateNode from './services/private-node';
+
+function InitialConnection({ children }: PropsWithChildren) {
+	const mode = 'private';
+
+	const update = useForceUpdate();
+	useInterval(update, 100);
+
+	const [done, setDone] = useState(false);
+	useEffect(() => {
+		if (!done && privateNode?.connected) setDone(true);
+	}, [privateNode?.connected, done]);
+
+	if (done) return <>{children}</>;
+
+	if (mode === 'private') {
+		if (!privateNode) return <ConnectView />;
+
+		if (!privateNode.connected)
+			return (
+				<Flex alignItems="center" justifyContent="center" gap="2" direction="column" h="full" w="full">
+					<Flex gap="4" alignItems="center">
+						<Spinner /> Connecting...
+					</Flex>
+
+					<Code>{privateNode.url}</Code>
+				</Flex>
+			);
+	}
+
+	return <>{children}</>;
+}
 
 const router = createHashRouter([
 	{
@@ -35,9 +70,11 @@ const App = () => (
 	<ErrorBoundary>
 		<ChakraProvider theme={theme}>
 			<GlobalProviders>
-				<Suspense fallback={<h1>Loading...</h1>}>
-					<RouterProvider router={router} />
-				</Suspense>
+				<InitialConnection>
+					<Suspense fallback={<h1>Loading...</h1>}>
+						<RouterProvider router={router} />
+					</Suspense>
+				</InitialConnection>
 			</GlobalProviders>
 		</ChakraProvider>
 	</ErrorBoundary>

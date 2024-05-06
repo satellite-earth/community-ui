@@ -72,7 +72,7 @@ export default function ExploreCommunitiesModal({ isOpen, onClose }: Omit<ModalP
 				kinds: [12012],
 			},
 		],
-		privateNode,
+		privateNode!,
 	);
 
 	const communities = useSubject(timeline.timeline).filter((e) => !joined.some((i) => i.pubkey === e.pubkey));
