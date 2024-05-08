@@ -19,6 +19,7 @@
 		"analyze": "npx vite-bundle-visualizer -o ./stats.html",
 		"preview": "vite preview",
 		"build-icons": "node ./scripts/build-icons.mjs",
+		"generate-pwa-icons": "npx @vite-pwa/assets-generator --preset minimal-2023 public/logo.svg",
 		"format": "prettier -w ."
 	},
 	"dependencies": {
@@ -63,6 +64,7 @@
 		"postcss": "^8.4.35",
 		"prettier": "^3.2.5",
 		"typescript": "^5.4.5",
-		"vite": "^5.1.0"
+		"vite": "^5.1.0",
+		"vite-plugin-pwa": "^0.20.0"
 	}
 }
