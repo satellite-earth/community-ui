@@ -17,7 +17,8 @@ export default function DesktopLayout() {
 					base: 'column',
 					md: 'row',
 				}}
-				minH="100vh"
+				overflow="hidden"
+				h="full"
 			>
 				<CommunitiesNav />
 				{community ? (
