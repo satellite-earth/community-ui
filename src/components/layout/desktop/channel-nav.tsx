@@ -3,19 +3,18 @@ import { Box, Button, Flex, Heading, IconButton, Image, useDisclosure } from '@c
 import { Link as RouterLink } from 'react-router-dom';
 import { NostrEvent } from 'nostr-tools';
 
-import accountService from '../../services/account';
-import useCurrentAccount from '../../hooks/use-current-account';
-import UserAvatar from '../user/user-avatar';
-import UserName from '../user/user-name';
-import useTimelineLoader from '../../hooks/use-timeline-loader';
-import useSubject from '../../hooks/use-subject';
-import { getGroupId, getGroupName } from '../../helpers/nostr/groups';
-import { getCommunityBanner, getCommunityName } from '../../helpers/nostr/communities';
-import Plus from '../icons/components/plus';
-import CreateGroupModal from '../group/create-channel-modal';
-import Edit01 from '../icons/components/edit-01';
-import EditChannelModal from '../group/edit-channel-modal';
-import { useCurrentCommunity } from '../../providers/community-context';
+import accountService from '../../../services/account';
+import useCurrentAccount from '../../../hooks/use-current-account';
+import UserAvatar from '../../user/user-avatar';
+import UserName from '../../user/user-name';
+import { getCommunityBanner, getCommunityName } from '../../../helpers/nostr/communities';
+import Plus from '../../icons/components/plus';
+import CreateGroupModal from '../../group/create-channel-modal';
+import Edit01 from '../../icons/components/edit-01';
+import EditChannelModal from '../../group/edit-channel-modal';
+import { useCurrentCommunity } from '../../../providers/community-context';
+import useCommunityChannels from '../../../hooks/use-community-channels';
+import { getChannelId, getChannelName, getChannelPicture } from '../../../helpers/nostr/channel';
 
 export default function ChannelNav() {
 	const account = useCurrentAccount();
@@ -23,18 +22,7 @@ export default function ChannelNav() {
 	const { community, relay } = useCurrentCommunity();
 
 	const [editChannel, setEditChannel] = useState<NostrEvent>();
-
-	// load groups
-	const timeline = useTimelineLoader(
-		`${community.pubkey}-channels`,
-		[
-			{
-				kinds: [39000],
-			},
-		],
-		relay,
-	);
-	const channels = useSubject(timeline.timeline);
+	const { channels } = useCommunityChannels(community, relay);
 
 	return (
 		<Flex direction="column" gap="2" px="2" py="2" shrink={0} w="xs" borderRightWidth={1}>
@@ -80,13 +68,14 @@ export default function ChannelNav() {
 				<Flex gap="1" key={channel.id}>
 					<Button
 						as={RouterLink}
-						to={`/g/${getGroupId(channel)}`}
+						to={`/g/${getChannelId(channel)}`}
 						size="sm"
 						justifyContent="flex-start"
 						variant="ghost"
 						flex={1}
+						leftIcon={getChannelPicture(channel) ? <Image w="5" h="5" src={getChannelPicture(channel)} /> : undefined}
 					>
-						{getGroupName(channel)}
+						{getChannelName(channel)}
 					</Button>
 					<IconButton
 						icon={<Edit01 />}

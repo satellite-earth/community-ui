@@ -1,4 +1,3 @@
-import { PropsWithChildren } from 'react';
 import { Button, Flex, FormControl, FormHelperText, FormLabel, Heading, Input, Spinner, Text } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 
@@ -30,13 +29,7 @@ function ConnectForm() {
 			<FormControl>
 				<FormLabel>Satellite Node URL</FormLabel>
 				<Flex gap="2">
-					<Input
-						type="url"
-						{...register('url', { required: true })}
-						isRequired
-						placeholder="ws://127.0.0.1:2012"
-						w="sm"
-					/>
+					<Input type="url" {...register('url', { required: true })} isRequired placeholder="ws://127.0.0.1:2012" />
 					<QRCodeScannerButton onData={(url) => setValue('url', url)} />
 				</Flex>
 				<FormHelperText>This is the URL to your personal satellite node</FormHelperText>
@@ -48,10 +41,10 @@ function ConnectForm() {
 	);
 }
 
-export default function ConnectView({ children }: PropsWithChildren) {
+export default function ConnectView() {
 	return (
 		<Flex w="full" h="full" alignItems="center" justifyContent="center">
-			<Flex direction="column" gap="2">
+			<Flex direction="column" gap="2" w="full" maxW="sm" m="4">
 				<Heading size="lg">Satellite Communities</Heading>
 				<ConnectForm />
 			</Flex>

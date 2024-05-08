@@ -1,41 +1,11 @@
-import { PropsWithChildren } from 'react';
-import { Center, Flex, Heading } from '@chakra-ui/react';
+import { useBreakpointValue } from '@chakra-ui/react';
 
-import ErrorBoundary from '../error-boundary';
-import ChannelNav from './channel-nav';
-import CommunitiesNav from './communities-nav';
-import useSubject from '../../hooks/use-subject';
-import communitiesService from '../../services/communities';
-import CommunityContextProvider from '../../providers/community-context';
+import MobileLayout from './mobile';
+import DesktopLayout from './desktop';
 
-export default function Layout({ children }: PropsWithChildren) {
-	const community = useSubject(communitiesService.community);
+export default function AppLayout() {
+	const mobile = useBreakpointValue({ base: true, md: false });
 
-	return (
-		<>
-			<Flex
-				direction={{
-					base: 'column',
-					md: 'row',
-				}}
-				minH="100vh"
-			>
-				<CommunitiesNav />
-				{community ? (
-					<>
-						<CommunityContextProvider community={community}>
-							<ChannelNav />
-							<Flex direction="column" overflow="hidden" grow={1}>
-								<ErrorBoundary>{children}</ErrorBoundary>
-							</Flex>
-						</CommunityContextProvider>
-					</>
-				) : (
-					<Center flex={1}>
-						<Heading>Select Community</Heading>
-					</Center>
-				)}
-			</Flex>
-		</>
-	);
+	if (mobile) return <MobileLayout />;
+	else return <DesktopLayout />;
 }

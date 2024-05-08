@@ -7,7 +7,7 @@ import './styles.css';
 
 import LoginView from './views/login';
 import LoginStartView from './views/login/start';
-import Layout from './components/layout';
+import AppLayout from './components/layout';
 import LoginNsecView from './views/login/nsec';
 import { theme } from './theme';
 import { ChannelView } from './views/channel';
@@ -57,11 +57,7 @@ const router = createHashRouter([
 	},
 	{
 		path: '',
-		element: (
-			<Layout>
-				<Outlet />
-			</Layout>
-		),
+		element: <AppLayout />,
 		children: [{ path: 'g/:id', element: <ChannelView /> }],
 	},
 ]);
