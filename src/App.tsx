@@ -1,7 +1,7 @@
 import { PropsWithChildren, Suspense, useEffect, useState } from 'react';
-import { ChakraProvider, Code, Flex, Spinner, useForceUpdate, useInterval } from '@chakra-ui/react';
+import { Button, ChakraProvider, Code, Flex, Spinner, useForceUpdate, useInterval } from '@chakra-ui/react';
 import ErrorBoundary from './components/error-boundary';
-import { Outlet, RouterProvider, createHashRouter } from 'react-router-dom';
+import { RouterProvider, createHashRouter } from 'react-router-dom';
 
 import './styles.css';
 
@@ -13,7 +13,7 @@ import { theme } from './theme';
 import { ChannelView } from './views/channel';
 import { GlobalProviders } from './providers';
 import ConnectView from './views/connect';
-import privateNode from './services/private-node';
+import privateNode, { resetPrivateNodeURL } from './services/private-node';
 
 function InitialConnection({ children }: PropsWithChildren) {
 	const mode = 'private';
@@ -37,8 +37,11 @@ function InitialConnection({ children }: PropsWithChildren) {
 					<Flex gap="4" alignItems="center">
 						<Spinner /> Connecting...
 					</Flex>
-
 					<Code>{privateNode.url}</Code>
+
+					<Button variant="link" onClick={resetPrivateNodeURL}>
+						Cancel
+					</Button>
 				</Flex>
 			);
 	}

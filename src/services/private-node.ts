@@ -7,6 +7,10 @@ export function setPrivateNodeURL(url: string) {
 	localStorage.setItem('private-node-url', url);
 	location.reload();
 }
+export function resetPrivateNodeURL() {
+	localStorage.removeItem('private-node-url');
+	location.reload();
+}
 
 let privateNode: Relay | null = null;
 
