@@ -100,8 +100,6 @@ class SigningService {
 			if (signed.pubkey !== account.pubkey) throw new Error('Signed with the wrong pubkey');
 		};
 
-		if (account.readonly) throw new Error('Cant sign in readonly mode');
-
 		switch (account.type) {
 			case 'local': {
 				const secKey = await this.decryptSecKey(account);
@@ -124,8 +122,6 @@ class SigningService {
 	}
 
 	async requestDecrypt(data: string, pubkey: string, account: Account) {
-		if (account.readonly) throw new Error('Cant decrypt in readonly mode');
-
 		switch (account.type) {
 			case 'local':
 				const secKey = await this.decryptSecKey(account);
@@ -142,8 +138,6 @@ class SigningService {
 	}
 
 	async requestEncrypt(text: string, pubkey: string, account: Account) {
-		if (account.readonly) throw new Error('Cant encrypt in readonly mode');
-
 		switch (account.type) {
 			case 'local':
 				const secKey = await this.decryptSecKey(account);
