@@ -61,6 +61,7 @@
 		"autoprefixer": "^10.4.17",
 		"camelcase": "^8.0.0",
 		"cheerio": "^1.0.0-rc.12",
+		"nostr-wasm": "^0.1.0",
 		"postcss": "^8.4.35",
 		"prettier": "^3.2.5",
 		"typescript": "^5.4.5",

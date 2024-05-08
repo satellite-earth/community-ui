@@ -13,7 +13,7 @@ export default function LoginView() {
 		<Flex justifyContent="center" w="full">
 			<Flex direction="column" alignItems="center" gap="2" maxW="md" w="full" px="4" py="10">
 				<Heading size="lg" mb="2">
-					Satellite UI
+					Satellite Communities
 				</Heading>
 				<Outlet />
 			</Flex>

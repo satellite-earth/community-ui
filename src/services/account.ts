@@ -7,20 +7,17 @@ type CommonAccount = {
 };
 export type LocalAccount = CommonAccount & {
 	type: 'local';
-	readonly: false;
 	secKey: ArrayBuffer;
 	iv: Uint8Array;
 };
-export type PubkeyAccount = CommonAccount & {
-	type: 'pubkey';
-	readonly: true;
-};
 export type ExtensionAccount = CommonAccount & {
 	type: 'extension';
-	readonly: false;
+};
+export type AmberAccount = CommonAccount & {
+	type: 'amber';
 };
 
-export type Account = ExtensionAccount | LocalAccount | PubkeyAccount;
+export type Account = ExtensionAccount | LocalAccount | AmberAccount;
 
 /** Global service for managing accounts */
 class AccountService {
@@ -39,24 +36,6 @@ class AccountService {
 
 			this.loading.next(false);
 		});
-	}
-
-	startGhost(pubkey: string) {
-		const ghostAccount: Account = {
-			type: 'pubkey',
-			pubkey,
-			readonly: true,
-		};
-
-		const lastPubkey = this.current.value?.pubkey;
-		if (lastPubkey && this.hasAccount(lastPubkey)) localStorage.setItem('lastAccount', lastPubkey);
-		this.current.next(ghostAccount);
-	}
-	stopGhost() {
-		const lastAccount = localStorage.getItem('lastAccount');
-		if (lastAccount && this.hasAccount(lastAccount)) {
-			this.switchAccount(lastAccount);
-		} else this.logout();
 	}
 
 	hasAccount(pubkey: string) {
