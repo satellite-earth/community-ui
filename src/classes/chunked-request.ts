@@ -6,12 +6,14 @@ import Subject from './subject';
 import { logger } from '../helpers/debug';
 import EventStore from './event-store';
 import { mergeFilter } from '../helpers/nostr/filter';
+import { nanoid } from 'nanoid';
 
 const DEFAULT_CHUNK_SIZE = 100;
 
 export type EventFilter = (event: NostrEvent, store: EventStore) => boolean;
 
 export default class ChunkedRequest {
+	id = nanoid(8);
 	relay: Relay;
 	filters: Filter[];
 	chunkSize = DEFAULT_CHUNK_SIZE;
@@ -23,6 +25,7 @@ export default class ChunkedRequest {
 	/** set to true when the next chunk produces 0 events */
 	complete = false;
 
+	private lastChunkIdx = 0;
 	onChunkFinish = new Subject<number>();
 
 	constructor(relay: Relay, filters: Filter[], log?: Debugger) {
@@ -47,6 +50,8 @@ export default class ChunkedRequest {
 
 		let gotEvents = 0;
 		const sub = this.relay.subscribe(filters, {
+			// @ts-expect-error
+			id: this.id + '-' + this.lastChunkIdx++,
 			onevent: (event) => {
 				this.handleEvent(event);
 				gotEvents++;
