@@ -1,6 +1,7 @@
 import {
 	Box,
 	Button,
+	ButtonGroup,
 	Center,
 	Drawer,
 	DrawerBody,
@@ -10,6 +11,7 @@ import {
 	Flex,
 	Heading,
 	IconButton,
+	Spacer,
 	Tab,
 	TabList,
 	TabPanel,
@@ -35,6 +37,8 @@ import ChannelNav from './channel-nav';
 import CommunityContextProvider from '../../../providers/community-context';
 import ExploreCommunitiesModal from '../../explore/expore-communities-modal';
 import CommunityAbout from './community-about';
+import Database01 from '../../icons/components/database-01';
+import privateNode from '../../../services/private-node';
 
 export default function MobileLayout() {
 	const drawer = useDisclosure();
@@ -113,9 +117,15 @@ export default function MobileLayout() {
 							{communities.map((community) => (
 								<CommunityButton community={community} key={community.id} />
 							))}
-							<Button variant="link" p="4" w="full" mt="auto" onClick={explore.onOpen}>
+							<Spacer />
+							<Button variant="link" p="4" w="full" onClick={explore.onOpen}>
 								Explore Communities
 							</Button>
+							{privateNode && (
+								<Button variant="link" p="4" w="full" as={RouterLink} to="/dashboard">
+									Satellite Node
+								</Button>
+							)}
 						</DrawerBody>
 					</DrawerContent>
 				</Drawer>

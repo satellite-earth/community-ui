@@ -4,6 +4,7 @@ import ErrorBoundary from './components/error-boundary';
 import { RouterProvider, createHashRouter } from 'react-router-dom';
 
 import './styles.css';
+import privateNode, { resetPrivateNodeURL } from './services/private-node';
 
 import LoginView from './views/login';
 import LoginStartView from './views/login/start';
@@ -13,7 +14,8 @@ import { theme } from './theme';
 import { ChannelView } from './views/channel';
 import { GlobalProviders } from './providers';
 import ConnectView from './views/connect';
-import privateNode, { resetPrivateNodeURL } from './services/private-node';
+import DashboardHomeView from './views/dashboard';
+import DashboardAuthView from './views/dashboard/auth';
 
 function InitialConnection({ children }: PropsWithChildren) {
 	const mode = 'private';
@@ -62,6 +64,13 @@ const router = createHashRouter([
 		path: '',
 		element: <AppLayout />,
 		children: [{ path: 'g/:id', element: <ChannelView /> }],
+	},
+	{
+		path: 'dashboard',
+		children: [
+			{ path: '', element: <DashboardHomeView /> },
+			{ path: 'auth', element: <DashboardAuthView /> },
+		],
 	},
 ]);
 

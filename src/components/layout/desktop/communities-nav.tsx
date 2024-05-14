@@ -10,6 +10,7 @@ import {
 	useColorMode,
 	useDisclosure,
 } from '@chakra-ui/react';
+import { Link as RouterLink } from 'react-router-dom';
 
 import useSubject from '../../../hooks/use-subject';
 import UserAvatar from '../../user/user-avatar';
@@ -23,6 +24,7 @@ import Sun from '../../icons/components/sun';
 import ExploreCommunitiesModal from '../../explore/expore-communities-modal';
 import communitiesService from '../../../services/communities';
 import CommunityButton from './community-button';
+import Database01 from '../../icons/components/database-01';
 
 function UserAccount() {
 	const account = useCurrentAccount()!;
@@ -86,6 +88,15 @@ export default function CommunitiesNav() {
 				onClick={toggleColorMode}
 				mt="auto"
 				icon={colorMode === 'light' ? <Moon01 boxSize={6} /> : <Sun boxSize={6} />}
+			/>
+			<IconButton
+				w="12"
+				h="12"
+				as={RouterLink}
+				aria-label="Node Dashboard"
+				title="Node Dashboard"
+				icon={<Database01 boxSize={6} />}
+				to="/dashboard"
 			/>
 
 			{explore.isOpen && <ExploreCommunitiesModal isOpen onClose={explore.onClose} />}

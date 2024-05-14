@@ -23,6 +23,7 @@
 		"format": "prettier -w ."
 	},
 	"dependencies": {
+		"@satellite-earth/core": "^0.1.2",
 		"@chakra-ui/icons": "^2.1.1",
 		"@chakra-ui/react": "^2.8.2",
 		"@emotion/react": "^11.11.4",
