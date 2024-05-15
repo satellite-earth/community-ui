@@ -45,14 +45,13 @@ jobs:
           cd core
           yarn install
           yarn build
-          yarn link
 
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Install dependencies
         run: |
-          yarn link "@satellite-earth/core"
+          yarn add ./core
           yarn install
 
       - name: Build
