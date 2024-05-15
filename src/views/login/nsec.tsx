@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 
 import accountService from '../../services/account';
 import signingService from '../../services/signing';
-// import { COMMON_CONTACT_RELAY } from "../../const";
 import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
 import { isHexKey } from '../../helpers/nip19';
 
@@ -17,7 +16,6 @@ export default function LoginNsecView() {
 	const [inputValue, setInputValue] = useState('');
 
 	const [hexKey, setHexKey] = useState('');
-	const [relayUrl, _setRelayUrl] = useState('');
 
 	const [npub, setNpub] = useState('');
 
@@ -67,9 +65,7 @@ export default function LoginNsecView() {
 		accountService.addAccount({
 			type: 'local',
 			pubkey,
-			relays: [relayUrl],
 			...encrypted,
-			readonly: false,
 		});
 		accountService.switchAccount(pubkey);
 	};
@@ -101,16 +97,6 @@ export default function LoginNsecView() {
 				<Input type="text" readOnly isDisabled value={npub} />
 			</FormControl>
 
-			{/* <FormControl>
-        <FormLabel>Bootstrap relay</FormLabel>
-        <RelayUrlInput
-          placeholder="wss://nostr.example.com"
-          isRequired
-          value={relayUrl}
-          onChange={(e) => setRelayUrl(e.target.value)}
-        />
-        <FormHelperText>The first relay to connect to.</FormHelperText>
-      </FormControl> */}
 			<Flex justifyContent="space-between" gap="2">
 				<Button variant="link" onClick={() => navigate('../')}>
 					Back

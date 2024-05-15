@@ -4,8 +4,10 @@ import { EventTemplate } from 'nostr-tools';
 import { COMMUNITY_CHAT_MESSAGE } from '../../../helpers/nostr/kinds';
 import dayjs from 'dayjs';
 import { Button, Flex, Input } from '@chakra-ui/react';
+import { useCurrentCommunity } from '../../../providers/community-context';
 
 export default function SendMessageForm({ groupId }: { groupId: string }) {
+	const { relay } = useCurrentCommunity();
 	const publish = usePublishEvent();
 	const { register, handleSubmit, formState, reset } = useForm({
 		defaultValues: {
@@ -21,7 +23,7 @@ export default function SendMessageForm({ groupId }: { groupId: string }) {
 			tags: [['h', groupId]],
 		};
 
-		await publish(draft);
+		await publish(draft, relay);
 		reset();
 	});
 

@@ -3,15 +3,14 @@ import { useToast } from '@chakra-ui/react';
 import { EventTemplate, NostrEvent } from 'nostr-tools';
 
 import { useSigningContext } from './signing-provider';
-import RelaySet from '../classes/relay-set';
 // import { localRelay } from '../services/local-relay';
 import { isReplaceable } from '../helpers/nostr/event';
 import replaceableEventsService from '../services/replaceable-events';
 import relayPoolService from '../services/relay-pool';
-import communitiesService from '../services/communities';
+import RelaySet, { RelaySetFrom } from '../classes/relay-set';
 
 type PublishContextType = {
-	publishEvent(event: EventTemplate | NostrEvent, quite?: boolean): Promise<void>;
+	publishEvent(event: EventTemplate | NostrEvent, relays: RelaySetFrom, quite?: boolean): Promise<void>;
 };
 export const PublishContext = createContext<PublishContextType>({
 	publishEvent: async () => {
@@ -28,10 +27,9 @@ export default function PublishProvider({ children }: PropsWithChildren) {
 	const { requestSignature } = useSigningContext();
 
 	const publishEvent = useCallback<PublishContextType['publishEvent']>(
-		async (event: EventTemplate | NostrEvent, quite = true) => {
+		async (event: EventTemplate | NostrEvent, urls, quite = true) => {
 			try {
-				const communityRelay = communitiesService.relay.value;
-				const relays = RelaySet.from(communityRelay ? [communityRelay] : []);
+				const relays = relayPoolService.getRelays(RelaySet.from(urls));
 
 				let signed: NostrEvent;
 				if (!Object.hasOwn(event, 'sig')) {
@@ -41,7 +39,7 @@ export default function PublishProvider({ children }: PropsWithChildren) {
 				}
 
 				for (const relay of relays) {
-					relayPoolService.requestRelay(relay).publish(signed);
+					relayPoolService.waitForOpen(relay).then(() => relay.publish(signed));
 				}
 
 				// send it to the local relay

@@ -7,6 +7,9 @@ export function getCommunityName(definition: NostrEvent) {
 export function getCommunityBanner(definition: NostrEvent) {
 	return tagValue(definition, 'banner');
 }
+export function getCommunityImage(definition: NostrEvent) {
+	return tagValue(definition, 'image');
+}
 export function getCommunityRelay(definition: NostrEvent) {
 	return tagValue(definition, 'r');
 }

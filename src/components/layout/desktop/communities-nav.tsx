@@ -2,7 +2,6 @@ import {
 	Divider,
 	Flex,
 	IconButton,
-	Image,
 	Menu,
 	MenuButton,
 	MenuDivider,
@@ -11,21 +10,21 @@ import {
 	useColorMode,
 	useDisclosure,
 } from '@chakra-ui/react';
-import { NostrEvent } from 'nostr-tools';
+import { Link as RouterLink } from 'react-router-dom';
 
-import useSubject from '../../hooks/use-subject';
-import timelineCacheService from '../../services/timeline-cache';
-import UserAvatar from '../user/user-avatar';
-import useCurrentAccount from '../../hooks/use-current-account';
-import accountService from '../../services/account';
-import UserName from '../user/user-name';
-import UserDnsIdentity from '../user/user-dns-identity';
-import Compass01 from '../icons/components/compass-01';
-import Moon01 from '../icons/components/moon-01';
-import Sun from '../icons/components/sun';
-import ExploreCommunitiesModal from '../explore/expore-communities-modal';
-import communitiesService from '../../services/communities';
-import { getTagValue } from '../../helpers/nostr/event';
+import useSubject from '../../../hooks/use-subject';
+import UserAvatar from '../../user/user-avatar';
+import useCurrentAccount from '../../../hooks/use-current-account';
+import accountService from '../../../services/account';
+import UserName from '../../user/user-name';
+import UserDnsIdentity from '../../user/user-dns-identity';
+import Compass01 from '../../icons/components/compass-01';
+import Moon01 from '../../icons/components/moon-01';
+import Sun from '../../icons/components/sun';
+import ExploreCommunitiesModal from '../../explore/expore-communities-modal';
+import communitiesService from '../../../services/communities';
+import CommunityButton from './community-button';
+import Database01 from '../../icons/components/database-01';
 
 function UserAccount() {
 	const account = useCurrentAccount()!;
@@ -52,31 +51,6 @@ function UserAccount() {
 				<MenuItem onClick={() => accountService.logout()}>Logout</MenuItem>
 			</MenuList>
 		</Menu>
-	);
-}
-
-function CommunityButton({ community }: { community: NostrEvent }) {
-	const selected = useSubject(communitiesService.community);
-
-	const select = () => {
-		timelineCacheService.clear();
-		communitiesService.switch(community.pubkey);
-	};
-
-	const name = community ? getTagValue(community, 'name') ?? 'Community' : 'Community';
-	const image = community && getTagValue(community, 'image');
-
-	return (
-		<IconButton
-			aria-label={name}
-			title={name}
-			icon={image ? <Image borderRadius="lg" src={image} w="10" h="10" /> : undefined}
-			onClick={select}
-			h="12"
-			w="12"
-			colorScheme={selected?.pubkey === community.pubkey ? 'brand' : undefined}
-			variant="outline"
-		/>
 	);
 }
 
@@ -114,6 +88,15 @@ export default function CommunitiesNav() {
 				onClick={toggleColorMode}
 				mt="auto"
 				icon={colorMode === 'light' ? <Moon01 boxSize={6} /> : <Sun boxSize={6} />}
+			/>
+			<IconButton
+				w="12"
+				h="12"
+				as={RouterLink}
+				aria-label="Node Dashboard"
+				title="Node Dashboard"
+				icon={<Database01 boxSize={6} />}
+				to="/dashboard"
 			/>
 
 			{explore.isOpen && <ExploreCommunitiesModal isOpen onClose={explore.onClose} />}

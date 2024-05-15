@@ -4,9 +4,11 @@ import UserAvatar from '../../../components/user/user-avatar';
 import UserName from '../../../components/user/user-name';
 import useEventZaps from '../../../hooks/use-event-zaps';
 import InlineZaps, { InlineZapButton } from './inline-zaps';
+import { useCurrentCommunity } from '../../../providers/community-context';
 
 export default function TextMessage({ message }: { message: NostrEvent }) {
-	const zaps = useEventZaps(message.id);
+	const { relay } = useCurrentCommunity();
+	const zaps = useEventZaps(message.id, relay);
 
 	return (
 		<Flex direction="column" gap="2">

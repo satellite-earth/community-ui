@@ -18,8 +18,10 @@ import dayjs from 'dayjs';
 import { EventTemplate } from 'nostr-tools';
 import { useForm } from 'react-hook-form';
 import { usePublishEvent } from '../../providers/publish-provider';
+import { useCurrentCommunity } from '../../providers/community-context';
 
 export default function CreateGroupModal({ isOpen, onClose, ...props }: Omit<ModalProps, 'children'>) {
+	const {relay} = useCurrentCommunity()
 	const publish = usePublishEvent();
 	const { handleSubmit, register, formState } = useForm({
 		defaultValues: {
@@ -44,7 +46,7 @@ export default function CreateGroupModal({ isOpen, onClose, ...props }: Omit<Mod
 			created_at: dayjs().unix(),
 		};
 
-		await publish(draft);
+		await publish(draft, relay);
 		onClose();
 	});
 

@@ -10,7 +10,7 @@ import { getZapEndpoint } from '../../../helpers/nostr/zaps';
 import { getInvoiceFromCallbackUrl } from '../../../helpers/nostr/lnurl';
 import eventZapsService from '../../../services/event-zaps';
 import { readablizeSats } from '../../../helpers/bolt11';
-import useCurrentCommunity from '../../../hooks/use-current-community';
+import { useCurrentCommunity } from '../../../providers/community-context';
 
 export function InlineZapButton({
 	event,
@@ -32,7 +32,7 @@ export function InlineZapButton({
 					event: event.id,
 					amount,
 					profile: event.pubkey,
-					relays: [relay],
+					relays: [relay.url],
 					comment: '',
 				});
 
@@ -50,7 +50,7 @@ export function InlineZapButton({
 				await window.webln.sendPayment(invoice);
 
 				setTimeout(() => {
-					eventZapsService.requestZaps(event.id, [relay], true);
+					eventZapsService.requestZaps(event.id, relay, true);
 				}, 1000);
 			}
 		} catch (e) {
@@ -78,7 +78,8 @@ export function InlineZapButton({
 }
 
 export default function InlineZaps({ event }: { event: NostrEvent }) {
-	const zaps = useEventZaps(event.id);
+	const { relay } = useCurrentCommunity();
+	const zaps = useEventZaps(event.id, relay);
 
 	return (
 		<Flex

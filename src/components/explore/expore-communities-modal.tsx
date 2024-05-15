@@ -21,6 +21,7 @@ import useTimelineLoader from '../../hooks/use-timeline-loader';
 import useSubject from '../../hooks/use-subject';
 import { getTagValue } from '../../helpers/nostr/event';
 import communitiesService from '../../services/communities';
+import privateNode from '../../services/private-node';
 
 function CommunityCard({ community, onJoin }: { community: NostrEvent; onJoin?: () => void }) {
 	const name = getTagValue(community, 'name');
@@ -71,7 +72,7 @@ export default function ExploreCommunitiesModal({ isOpen, onClose }: Omit<ModalP
 				kinds: [12012],
 			},
 		],
-		'ws://127.0.0.1:2012',
+		privateNode!,
 	);
 
 	const communities = useSubject(timeline.timeline).filter((e) => !joined.some((i) => i.pubkey === e.pubkey));

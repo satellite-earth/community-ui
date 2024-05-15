@@ -1,6 +1,12 @@
-import RelaySet from '../classes/relay-set';
+import { useMemo } from 'react';
 
-const localNode = RelaySet.from(['ws://127.0.0.1:2012/']);
-export function useReadRelays(_additional?: Iterable<string>) {
-	return localNode;
+import privateNode from '../services/private-node';
+import RelaySet, { RelaySetFrom } from '../classes/relay-set';
+
+export function useWithLocalRelay(additional?: RelaySetFrom) {
+	return useMemo(() => {
+		const set = RelaySet.from(additional);
+		if (privateNode) set.add(privateNode);
+		return set;
+	}, [additional]);
 }

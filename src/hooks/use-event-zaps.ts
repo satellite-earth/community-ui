@@ -1,16 +1,14 @@
 import { useMemo } from 'react';
 
 import eventZapsService from '../services/event-zaps';
-import { useReadRelays } from './use-client-relays';
 import useSubject from './use-subject';
 import { parseZapEvent } from '../helpers/nostr/zaps';
+import { RelaySetFrom } from '../classes/relay-set';
 
-export default function useEventZaps(eventUID: string, additionalRelays?: Iterable<string>, alwaysRequest = true) {
-	const readRelays = useReadRelays(additionalRelays);
-
+export default function useEventZaps(eventUID: string, relays: RelaySetFrom, alwaysRequest = true) {
 	const subject = useMemo(
-		() => eventZapsService.requestZaps(eventUID, readRelays, alwaysRequest),
-		[eventUID, readRelays.urls.join('|'), alwaysRequest],
+		() => eventZapsService.requestZaps(eventUID, relays, alwaysRequest),
+		[eventUID, relays, alwaysRequest],
 	);
 
 	const events = useSubject(subject) || [];

@@ -1,8 +1,9 @@
 import { useMemo } from 'react';
 
-import { useReadRelays } from './use-client-relays';
+import { useWithLocalRelay } from './use-client-relays';
 import replaceableEventsService, { RequestOptions } from '../services/replaceable-events';
 import useSubject from './use-subject';
+import { RelaySetFrom } from '../classes/relay-set';
 
 export default function useReplaceableEvent(
 	cord:
@@ -13,10 +14,11 @@ export default function useReplaceableEvent(
 				relays?: string[];
 		  }
 		| undefined,
-	additionalRelays?: Iterable<string>,
+	additionalRelays?: RelaySetFrom,
 	opts: RequestOptions = {},
 ) {
-	const readRelays = useReadRelays(additionalRelays);
+	const readRelays = useWithLocalRelay(additionalRelays);
+
 	const sub = useMemo(() => {
 		if (!cord) return;
 		return replaceableEventsService.requestEvent(
@@ -26,7 +28,7 @@ export default function useReplaceableEvent(
 			cord.identifier,
 			opts,
 		);
-	}, [cord, readRelays.urls.join('|'), opts?.alwaysRequest, opts?.ignoreCache]);
+	}, [cord, readRelays, opts?.alwaysRequest, opts?.ignoreCache]);
 
 	return useSubject(sub);
 }

@@ -21,6 +21,7 @@ import dayjs from 'dayjs';
 import { getTagValue } from '../../helpers/nostr/event';
 import { usePublishEvent } from '../../providers/publish-provider';
 import { useState } from 'react';
+import { useCurrentCommunity } from '../../providers/community-context';
 
 export default function EditChannelModal({
 	isOpen,
@@ -28,6 +29,7 @@ export default function EditChannelModal({
 	channel,
 	...props
 }: Omit<ModalProps, 'children'> & { channel: NostrEvent }) {
+	const { relay } = useCurrentCommunity();
 	const publish = usePublishEvent();
 
 	const channelId = getTagValue(channel, 'd');
@@ -55,7 +57,7 @@ export default function EditChannelModal({
 			created_at: dayjs().unix(),
 		};
 
-		await publish(draft);
+		await publish(draft, relay);
 		onClose();
 	});
 
@@ -71,7 +73,7 @@ export default function EditChannelModal({
 			created_at: dayjs().unix(),
 		};
 
-		await publish(draft);
+		await publish(draft, relay);
 		onClose();
 
 		setLoading(false);
