@@ -23,7 +23,7 @@ export default function DashboardAuthView() {
 			if (!privateNode.connected) await privateNode.connect();
 			await privateNode.authenticate(auth);
 
-			if (privateNode.authenticated) navigate('/dashboard', { replace: true });
+			navigate('/dashboard', { replace: true });
 		} catch (error) {
 			if (error instanceof Error) alert(error.message);
 		}
@@ -58,7 +58,7 @@ export default function DashboardAuthView() {
 					<>
 						<FormControl>
 							<FormLabel htmlFor="auth">Auth Code</FormLabel>
-							<Input id="auth" {...register('auth', { required: true })} isRequired />
+							<Input id="auth" {...register('auth', { required: true })} isRequired autoComplete="off" />
 						</FormControl>
 						<TextButton type="submit" ml="auto" mt="2">
 							[Login]

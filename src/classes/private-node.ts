@@ -7,9 +7,6 @@ import ControlledObservable from './controlled-observable';
 import { PersistentSubject } from './subject';
 
 export default class PrivateNode extends Relay {
-	// public override ws?: WebSocket;
-	// public override challenge?: string;
-
 	log = logger.extend('PrivateNode');
 	authenticated = new PersistentSubject(false);
 	onControlResponse = new ControlledObservable<ControlResponse>();
@@ -17,7 +14,7 @@ export default class PrivateNode extends Relay {
 	sentAuthId = '';
 	authPromise: Deferred<string> | null = null;
 
-	async authenticate(auth: string | ((evt: EventTemplate) => Promise<VerifiedEvent>)) {
+	authenticate(auth: string | ((evt: EventTemplate) => Promise<VerifiedEvent>)) {
 		if (!this.connected) throw new Error('Not connected');
 
 		if (!this.authenticated.value && !this.authPromise) {
@@ -26,7 +23,7 @@ export default class PrivateNode extends Relay {
 			// CONTROL auth
 			if (typeof auth === 'string') {
 				this.sendControlMessage(['CONTROL', 'AUTH', 'CODE', auth]);
-				return;
+				return this.authPromise;
 			}
 
 			// NIP-42 auth
@@ -36,7 +33,10 @@ export default class PrivateNode extends Relay {
 					this.authPromise?.resolve(response);
 					this.authPromise = null;
 				})
-				.catch((err) => this.authPromise?.reject(err));
+				.catch((err) => {
+					this.authPromise?.reject(err);
+					this.authPromise = null;
+				});
 		}
 
 		return this.authPromise;
@@ -76,6 +76,7 @@ export default class PrivateNode extends Relay {
 				} else if (response[2] === 'INVALID') {
 					this.authPromise?.reject(new Error(response[3]));
 				}
+				this.authPromise = null;
 				break;
 			default:
 				this.onControlResponse.next(response);
