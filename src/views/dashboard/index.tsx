@@ -1,5 +1,6 @@
-import { Box, Button, Flex, Heading, Text, useBreakpointValue } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
+import { Button, Flex, Heading, useBreakpointValue } from '@chakra-ui/react';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
+
 import RequirePrivateNodeAuth from '../../components/dashboard/require-private-node-auth';
 import StatusLog from './status-log';
 import PanelItemString from '../../components/dashboard/panel-item-string';
@@ -15,14 +16,14 @@ function DashboardHome() {
 	return (
 		<Flex direction="column" gap="2" h="full" maxW="8xl" mx="auto" overflow="hidden">
 			<Flex p="2" rounded="lg" gap="4">
-				<Button onClick={() => navigate(-1)} variant="link">
+				<Heading size="md">Satellite Node</Heading>
+				<Button as={RouterLink} to="/" variant="link">
 					Back
 				</Button>
-				<Heading size="md">Satellite Node</Heading>
 			</Flex>
 
-			<Flex gap="2" flex={1}>
-				<Flex gap="2" flex={1} direction="column">
+			<Flex gap="2" flex={1} overflow="hidden">
+				<Flex gap="2" flex={1} direction="column" overflow="auto">
 					<Panel label="RELAY">
 						<PanelItemString label="URL" value={privateNode!.url} qr />
 					</Panel>

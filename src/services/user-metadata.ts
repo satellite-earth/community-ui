@@ -1,4 +1,4 @@
-import { kinds } from 'nostr-tools';
+import { NostrEvent, kinds } from 'nostr-tools';
 import _throttle from 'lodash.throttle';
 
 import { Kind0ParsedContent, parseKind0Event } from '../helpers/nostr/user-metadata';

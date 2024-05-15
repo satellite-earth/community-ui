@@ -9,6 +9,8 @@ import { PrivateNodeConfig } from '@satellite-earth/core/types/private-node-conf
 import Subject, { PersistentSubject } from './subject';
 import PrivateNode from './private-node';
 
+const MAX_LOG_LINES = 200;
+
 export default class PrivateNodeControlApi {
 	node: PrivateNode;
 
@@ -42,7 +44,11 @@ export default class PrivateNodeControlApi {
 		} else if (response[1] === 'LOG') {
 			switch (response[2]) {
 				case 'LINE':
-					this.logs.next([...this.logs.value, response[3]]);
+					const newArr = [...this.logs.value, response[3]];
+					while (newArr.length >= MAX_LOG_LINES) {
+						newArr.shift();
+					}
+					this.logs.next(newArr);
 					break;
 				case 'CLEAR':
 					this.logs.next([]);
@@ -53,5 +59,42 @@ export default class PrivateNodeControlApi {
 
 	send(message: ControlMessage) {
 		this.node.send(JSON.stringify(message));
+	}
+
+	async setConfigField(field: keyof PrivateNodeConfig, value: any) {
+		if (this.config.value === undefined) throw new Error('Config not synced');
+
+		await this.send(['CONTROL', 'CONFIG', 'SET', field, value]);
+
+		return new Promise<PrivateNodeConfig>((res) => {
+			const sub = this.config.subscribe((config) => {
+				res(config);
+				sub.unsubscribe();
+			});
+		});
+	}
+
+	async addExplicitRelay(relay: string | URL) {
+		const url = new URL(relay).toString();
+
+		if (this.config.value?.relays.some((r) => r.url === url)) return;
+
+		await this.setConfigField('relays', [...(this.config.value?.relays ?? []), { url }]);
+	}
+	async removeExplicitRelay(relay: string | URL) {
+		await this.setConfigField(
+			'relays',
+			this.config.value?.relays.filter((r) => r.url !== relay.toString()),
+		);
+	}
+	async addPubkey(pubkey: string) {
+		if (this.config.value?.pubkeys.some((p) => p === pubkey)) return;
+		await this.setConfigField('pubkeys', [...(this.config.value?.pubkeys ?? []), pubkey]);
+	}
+	async removePubkey(pubkey: string) {
+		await this.setConfigField(
+			'pubkeys',
+			this.config.value?.pubkeys.filter((p) => p !== pubkey),
+		);
 	}
 }

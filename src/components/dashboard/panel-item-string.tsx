@@ -21,26 +21,10 @@ export default function PanelItemString({
 
 	return (
 		<div>
-			<div
-				style={{
-					display: 'flex',
-					alignItems: 'center',
-					justifyContent: 'space-between',
-				}}
-			>
+			<Flex alignItems="center">
 				<Flex gap="2" w="full" alignItems="center">
 					<Text>{label}</Text>
-					<Code
-						style={{
-							width: '100%',
-							color: '#FFF',
-							background: 'transparent',
-							border: 'none',
-							outline: 'none',
-							fontFamily: 'monospace',
-						}}
-						userSelect="all"
-					>
+					<Code w="full" bg="none" userSelect="all" fontFamily="monospace">
 						{value}
 					</Code>
 					<CopyButton variant="link" value={value} fontFamily="monospace" />
@@ -51,7 +35,7 @@ export default function PanelItemString({
 					)}
 				</Flex>
 				{onConfigClicked ? <div onClick={onConfigClicked}>[config]</div> : null}
-			</div>
+			</Flex>
 			{/* @ts-expect-error */}
 			{showQR && <QrCodeSvg content={value} style={{ maxWidth: '3in', marginTop: '1em' }} />}
 			{children}

@@ -23,7 +23,7 @@ export default function DatabasePanel() {
 			</Flex>
 			<Flex justifyContent="space-between">
 				<div>EVENTS COUNT</div>
-				<div>{status.count}</div>
+				<div>{status.count.toLocaleString()}</div>
 			</Flex>
 			<div
 				style={{
