@@ -114,7 +114,11 @@ export default function ReceiverPanel() {
 				{config?.pubkeys.map((pubkey) => (
 					<Flex key={pubkey} gap="2">
 						<UserName as="div" pubkey={pubkey} />
-						<TextButton title="Remove Pubkey" ml="auto" onClick={() => controlApi?.removePubkey(pubkey)}>
+						<TextButton
+							title="Remove Pubkey"
+							ml="auto"
+							onClick={() => confirm(`Remove pubkey?`) && controlApi?.removePubkey(pubkey)}
+						>
 							[x]
 						</TextButton>
 					</Flex>
@@ -137,7 +141,11 @@ export default function ReceiverPanel() {
 						<Code bg="none" userSelect="all">
 							{url}
 						</Code>
-						<TextButton title="Remove Relay" ml="auto" onClick={() => controlApi?.removeExplicitRelay(url)}>
+						<TextButton
+							title="Remove Relay"
+							ml="auto"
+							onClick={() => confirm(`Do you want to remove ${url}`) && controlApi?.removeExplicitRelay(url)}
+						>
 							[x]
 						</TextButton>
 					</Flex>
