@@ -38,6 +38,9 @@ jobs:
           node-version: 20
           registry-url: https://npm.pkg.github.com/
 
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Checkout @satellite-earth/core
         uses: actions/checkout@v4
         with:
@@ -50,9 +53,6 @@ jobs:
           cd core
           yarn install
           yarn build
-
-      - name: Checkout
-        uses: actions/checkout@v4
 
       - name: Install dependencies
         run: |
