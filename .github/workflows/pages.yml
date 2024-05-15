@@ -28,16 +28,32 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
       - name: Set up Node
         uses: actions/setup-node@v3
         with:
           node-version: 20
 
+      - name: Checkout @satellite-earth/core
+        uses: actions/checkout@v4
+        with:
+          repository: satellite-earth/core
+          path: core
+          ref: dev
+
+      - name: Build @satellite-earth/core
+        run: |
+          cd core
+          yarn install
+          yarn build
+          yarn link
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Install dependencies
-        run: yarn install
+        run: |
+          yarn link "@satellite-earth/core"
+          yarn install
 
       - name: Build
         run: yarn build
