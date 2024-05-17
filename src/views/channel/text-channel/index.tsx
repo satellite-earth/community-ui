@@ -10,7 +10,8 @@ import TextMessage from './text-message';
 import { useCurrentCommunity } from '../../../providers/community-context';
 import ChevronLeft from '../../../components/icons/components/chevron-left';
 import Settings01 from '../../../components/icons/components/settings-01';
-import EditChannelModal from '../../../components/group/edit-channel-modal';
+import EditChannelModal from '../../../components/channel/edit-channel-modal';
+import { getChannelName } from '../../../helpers/nostr/channel';
 
 export default function TextChannelView({ channelId, channel }: { channelId: string; channel?: NostrEvent }) {
 	const edit = useDisclosure();
@@ -41,7 +42,7 @@ export default function TextChannelView({ channelId, channel }: { channelId: str
 					to="/"
 				/>
 				<Heading fontWeight="bold" size="md" ml={{ base: 0, md: '2' }}>
-					{channelId}
+					{channel && getChannelName(channel)}
 				</Heading>
 				<IconButton
 					icon={<Settings01 boxSize={5} />}

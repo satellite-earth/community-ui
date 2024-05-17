@@ -1,14 +1,11 @@
-import { NostrEvent, Relay } from 'nostr-tools';
+import { NostrEvent } from 'nostr-tools';
 
 import Subject, { PersistentSubject } from '../classes/subject';
-import privateNode from './private-node';
-import relayPoolService from './relay-pool';
 
 class CommunitiesService {
 	communities = new PersistentSubject<NostrEvent[]>([]);
 
 	community = new Subject<NostrEvent>();
-	relay = new Subject<Relay>();
 
 	constructor() {
 		this.communities.subscribe((v) => localStorage.setItem('communities', JSON.stringify(v)));
@@ -27,11 +24,10 @@ class CommunitiesService {
 	}
 
 	switch(pubkey: string) {
-		const community = this.communities.value.find((e) => (e.pubkey = pubkey));
+		const community = this.communities.value.find((e) => e.pubkey === pubkey);
 		if (!community) return;
 
 		this.community.next(community);
-		this.relay.next(relayPoolService.getRelay(new URL(community.pubkey, privateNode?.url))!);
 	}
 }
 
