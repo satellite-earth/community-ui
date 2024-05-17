@@ -1,7 +1,7 @@
 import { PropsWithChildren, Suspense, useEffect, useState } from 'react';
 import { Button, ChakraProvider, Code, Flex, Spinner, useForceUpdate, useInterval } from '@chakra-ui/react';
 import ErrorBoundary from './components/error-boundary';
-import { RouterProvider, createHashRouter } from 'react-router-dom';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import './styles.css';
 import privateNode, { resetPrivateNodeURL } from './services/private-node';
@@ -51,7 +51,7 @@ function InitialConnection({ children }: PropsWithChildren) {
 	return <>{children}</>;
 }
 
-const router = createHashRouter([
+const router = createBrowserRouter([
 	{
 		path: 'login',
 		element: <LoginView />,
