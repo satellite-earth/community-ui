@@ -21,7 +21,7 @@ import { usePublishEvent } from '../../providers/publish-provider';
 import { useCurrentCommunity } from '../../providers/community-context';
 
 export default function CreateGroupModal({ isOpen, onClose, ...props }: Omit<ModalProps, 'children'>) {
-	const {relay} = useCurrentCommunity()
+	const { relay, community } = useCurrentCommunity();
 	const publish = usePublishEvent();
 	const { handleSubmit, register, formState } = useForm({
 		defaultValues: {
@@ -34,7 +34,8 @@ export default function CreateGroupModal({ isOpen, onClose, ...props }: Omit<Mod
 	const submit = handleSubmit(async (values) => {
 		const tags: string[][] = [];
 
-		tags.push(['h', values.name.toLocaleLowerCase().replaceAll(/\s/g, '-')]);
+		const prefix = community.pubkey.slice(0, 8) + '-';
+		tags.push(['h', prefix + values.name.toLocaleLowerCase().replaceAll(/\s/g, '-')]);
 		if (values.name) tags.push(['name', values.name]);
 		if (values.about) tags.push(['about', values.about]);
 		if (values.picture) tags.push(['picture', values.picture]);

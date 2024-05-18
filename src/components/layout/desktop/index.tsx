@@ -1,11 +1,12 @@
 import { Center, Flex, Heading } from '@chakra-ui/react';
+import { Outlet } from 'react-router-dom';
+
 import useSubject from '../../../hooks/use-subject';
 import communitiesService from '../../../services/communities';
 import CommunitiesNav from './communities-nav';
 import CommunityContextProvider from '../../../providers/community-context';
 import ChannelNav from './channel-nav';
 import ErrorBoundary from '../../error-boundary';
-import { Outlet } from 'react-router-dom';
 
 export default function DesktopLayout() {
 	const community = useSubject(communitiesService.community);
