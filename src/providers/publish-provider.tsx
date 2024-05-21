@@ -3,14 +3,17 @@ import { useToast } from '@chakra-ui/react';
 import { EventTemplate, NostrEvent } from 'nostr-tools';
 
 import { useSigningContext } from './signing-provider';
-// import { localRelay } from '../services/local-relay';
 import { isReplaceable } from '../helpers/nostr/event';
 import replaceableEventsService from '../services/replaceable-events';
 import relayPoolService from '../services/relay-pool';
 import RelaySet, { RelaySetFrom } from '../classes/relay-set';
 
 type PublishContextType = {
-	publishEvent(event: EventTemplate | NostrEvent, relays: RelaySetFrom, quite?: boolean): Promise<void>;
+	publishEvent(
+		event: EventTemplate | NostrEvent,
+		relays: RelaySetFrom,
+		quite?: boolean,
+	): Promise<PromiseSettledResult<string>[]>;
 };
 export const PublishContext = createContext<PublishContextType>({
 	publishEvent: async () => {
@@ -38,15 +41,25 @@ export default function PublishProvider({ children }: PropsWithChildren) {
 					signed = event as NostrEvent;
 				}
 
-				for (const relay of relays) {
-					relayPoolService.waitForOpen(relay).then(() => relay.publish(signed));
-				}
+				let result: PromiseSettledResult<string>[] = [];
+				if (relays.length === 1) {
+					const value = await relays[0].publish(signed);
+					result = [{ status: 'fulfilled', value }];
+				} else {
+					result = await Promise.allSettled(
+						relays.map(async (relay) => {
+							await relayPoolService.waitForOpen(relay);
+							return await relay.publish(signed);
+						}),
+					);
 
-				// send it to the local relay
-				// localRelay.publish(signed);
+					if (!result.some((r) => r.status === 'fulfilled')) throw new Error('Failed to publish to any relay');
+				}
 
 				// pass it to other services
 				if (isReplaceable(signed.kind)) replaceableEventsService.handleEvent(signed);
+
+				return result;
 			} catch (e) {
 				if (e instanceof Error)
 					toast({
@@ -54,6 +67,7 @@ export default function PublishProvider({ children }: PropsWithChildren) {
 						status: 'error',
 					});
 				if (!quite) throw e;
+				else return [];
 			}
 		},
 		[toast, requestSignature],

@@ -13,14 +13,17 @@ import {
 	ModalOverlay,
 	ModalProps,
 	Textarea,
+	useToast,
 } from '@chakra-ui/react';
 import dayjs from 'dayjs';
 import { EventTemplate } from 'nostr-tools';
 import { useForm } from 'react-hook-form';
+
 import { usePublishEvent } from '../../providers/publish-provider';
 import { useCurrentCommunity } from '../../providers/community-context';
 
 export default function CreateGroupModal({ isOpen, onClose, ...props }: Omit<ModalProps, 'children'>) {
+	const toast = useToast();
 	const { relay, community } = useCurrentCommunity();
 	const publish = usePublishEvent();
 	const { handleSubmit, register, formState } = useForm({
@@ -32,23 +35,27 @@ export default function CreateGroupModal({ isOpen, onClose, ...props }: Omit<Mod
 	});
 
 	const submit = handleSubmit(async (values) => {
-		const tags: string[][] = [];
+		try {
+			const tags: string[][] = [];
 
-		const prefix = community.pubkey.slice(0, 8) + '-';
-		tags.push(['h', prefix + values.name.toLocaleLowerCase().replaceAll(/\s/g, '-')]);
-		if (values.name) tags.push(['name', values.name]);
-		if (values.about) tags.push(['about', values.about]);
-		if (values.picture) tags.push(['picture', values.picture]);
+			const prefix = community.pubkey.slice(0, 8) + '-';
+			tags.push(['h', prefix + values.name.toLocaleLowerCase().replaceAll(/\s/g, '-')]);
+			if (values.name) tags.push(['name', values.name]);
+			if (values.about) tags.push(['about', values.about]);
+			if (values.picture) tags.push(['picture', values.picture]);
 
-		const draft: EventTemplate = {
-			kind: 9002,
-			content: '',
-			tags,
-			created_at: dayjs().unix(),
-		};
+			const draft: EventTemplate = {
+				kind: 9002,
+				content: '',
+				tags,
+				created_at: dayjs().unix(),
+			};
 
-		await publish(draft, relay);
-		onClose();
+			await publish(draft, relay);
+			onClose();
+		} catch (err) {
+			if (err instanceof Error) toast({ status: 'error', description: err.message });
+		}
 	});
 
 	return (
