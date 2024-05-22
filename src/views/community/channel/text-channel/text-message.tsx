@@ -1,10 +1,11 @@
 import { Box, Flex } from '@chakra-ui/react';
 import { NostrEvent } from 'nostr-tools';
-import UserAvatar from '../../../components/user/user-avatar';
-import UserName from '../../../components/user/user-name';
-import useEventZaps from '../../../hooks/use-event-zaps';
+
+import UserAvatar from '../../../../components/user/user-avatar';
+import UserName from '../../../../components/user/user-name';
+import useEventZaps from '../../../../hooks/use-event-zaps';
 import InlineZaps, { InlineZapButton } from './inline-zaps';
-import { useCurrentCommunity } from '../../../providers/community-context';
+import { useCurrentCommunity } from '../../../../providers/community-context';
 
 export default function TextMessage({ message }: { message: NostrEvent }) {
 	const { relay } = useCurrentCommunity();

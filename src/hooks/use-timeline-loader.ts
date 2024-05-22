@@ -16,7 +16,7 @@ type Options = {
 export default function useTimelineLoader(
 	key: string,
 	filters: Filter[] | undefined,
-	relays: RelaySetFrom,
+	relays?: RelaySetFrom,
 	opts?: Options,
 ) {
 	const timeline = useMemo(() => timelineCacheService.createTimeline(key), [key]);

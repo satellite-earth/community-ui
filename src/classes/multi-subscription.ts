@@ -70,7 +70,7 @@ export default class MultiSubscription {
 		// else open and update subscriptions
 		for (const relay of this.relays) {
 			let subscription = this.subscriptions.get(relay);
-			if (!subscription || !isFilterEqual(subscription.filters, this.filters)) {
+			if (!subscription || !isFilterEqual(subscription.filters, this.filters) || subscription.closed) {
 				if (!subscription) {
 					subscription = new PersistentSubscription(relay, {
 						onevent: (event) => this.handleEvent(event),

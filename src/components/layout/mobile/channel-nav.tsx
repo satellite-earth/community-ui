@@ -5,7 +5,7 @@ import { Flex } from '@chakra-ui/react';
 import ChannelButton from './channel-button';
 import { getChannelId } from '../../../helpers/nostr/channel';
 
-export default function ChannelNav({ community }: { community: NostrEvent }) {
+export default function MobileChannelNav({ community }: { community: NostrEvent }) {
 	const relay = communityRelaysService.getRelay(community.pubkey);
 
 	const { channels } = useCommunityChannels(community, relay);

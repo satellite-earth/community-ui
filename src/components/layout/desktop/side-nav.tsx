@@ -25,6 +25,7 @@ import ExploreCommunitiesModal from '../../explore/expore-communities-modal';
 import communitiesService from '../../../services/communities';
 import CommunityButton from './community-button';
 import Database01 from '../../icons/components/database-01';
+import MessageSquare01 from '../../icons/components/message-square-01';
 
 function UserAccount() {
 	const account = useCurrentAccount()!;
@@ -54,7 +55,7 @@ function UserAccount() {
 	);
 }
 
-export default function CommunitiesNav() {
+export default function DesktopSideNav() {
 	const account = useCurrentAccount();
 	const explore = useDisclosure();
 	const { colorMode, toggleColorMode } = useColorMode();
@@ -62,12 +63,19 @@ export default function CommunitiesNav() {
 
 	return (
 		<Flex direction="column" gap="2" px="2" py="2" shrink={0} borderRightWidth={1}>
-			{account && (
-				<>
-					<UserAccount />
-					<Divider />
-				</>
-			)}
+			{account && <UserAccount />}
+			<IconButton
+				as={RouterLink}
+				aria-label="Messages"
+				title="Messages"
+				icon={<MessageSquare01 boxSize={7} />}
+				w="12"
+				h="12"
+				fontSize="24"
+				variant="outline"
+				to="/messages"
+			/>
+			<Divider />
 			{communities.map((community) => (
 				<CommunityButton key={community.pubkey} community={community} />
 			))}

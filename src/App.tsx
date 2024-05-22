@@ -1,7 +1,7 @@
 import { PropsWithChildren, Suspense, useEffect, useState } from 'react';
 import { Button, ChakraProvider, Code, Flex, Spinner, useForceUpdate, useInterval } from '@chakra-ui/react';
 import ErrorBoundary from './components/error-boundary';
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import './styles.css';
 import privateNode, { resetPrivateNodeURL } from './services/private-node';
@@ -11,11 +11,14 @@ import LoginStartView from './views/login/start';
 import AppLayout from './components/layout';
 import LoginNsecView from './views/login/nsec';
 import { theme } from './theme';
-import { ChannelView } from './views/channel';
+import ChannelView from './views/community/channel';
 import { GlobalProviders } from './providers';
 import ConnectView from './views/connect';
 import DashboardHomeView from './views/dashboard';
 import DashboardAuthView from './views/dashboard/auth';
+import MessagesView from './views/messages';
+import DMTimelineProvider from './providers/messages-provider';
+import CommunityView from './views/community';
 
 function InitialConnection({ children }: PropsWithChildren) {
 	const mode = 'private';
@@ -62,11 +65,25 @@ const router = createBrowserRouter([
 	},
 	{
 		path: '',
-		element: <AppLayout />,
-		children: [{ path: 'g/:id', element: <ChannelView /> }],
+		element: (
+			<InitialConnection>
+				<DMTimelineProvider>
+					<AppLayout />
+				</DMTimelineProvider>
+			</InitialConnection>
+		),
+		children: [
+			{ path: 'messages', element: <MessagesView /> },
+			{ path: '', element: <CommunityView />, children: [{ path: 'g/:id', element: <ChannelView /> }] },
+		],
 	},
 	{
 		path: 'dashboard',
+		element: (
+			<InitialConnection>
+				<Outlet />
+			</InitialConnection>
+		),
 		children: [
 			{ path: '', element: <DashboardHomeView /> },
 			{ path: 'auth', element: <DashboardAuthView /> },
@@ -78,11 +95,9 @@ const App = () => (
 	<ErrorBoundary>
 		<ChakraProvider theme={theme}>
 			<GlobalProviders>
-				<InitialConnection>
-					<Suspense fallback={<h1>Loading...</h1>}>
-						<RouterProvider router={router} />
-					</Suspense>
-				</InitialConnection>
+				<Suspense fallback={<h1>Loading...</h1>}>
+					<RouterProvider router={router} />
+				</Suspense>
 			</GlobalProviders>
 		</ChakraProvider>
 	</ErrorBoundary>

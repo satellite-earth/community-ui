@@ -16,7 +16,7 @@ import { useCurrentCommunity } from '../../../providers/community-context';
 import useCommunityChannels from '../../../hooks/use-community-channels';
 import { getChannelId, getChannelName, getChannelPicture } from '../../../helpers/nostr/channel';
 
-export default function ChannelNav() {
+export default function DesktopChannelNav() {
 	const account = useCurrentAccount();
 	const createGroupModal = useDisclosure();
 	const { community, relay } = useCurrentCommunity();

@@ -1,10 +1,11 @@
 import { useForm } from 'react-hook-form';
-import { usePublishEvent } from '../../../providers/publish-provider';
 import { EventTemplate } from 'nostr-tools';
-import { COMMUNITY_CHAT_MESSAGE } from '../../../helpers/nostr/kinds';
-import dayjs from 'dayjs';
 import { Button, Flex, Input } from '@chakra-ui/react';
-import { useCurrentCommunity } from '../../../providers/community-context';
+import dayjs from 'dayjs';
+
+import { usePublishEvent } from '../../../../providers/publish-provider';
+import { COMMUNITY_CHAT_MESSAGE } from '../../../../helpers/nostr/kinds';
+import { useCurrentCommunity } from '../../../../providers/community-context';
 
 export default function SendMessageForm({ groupId }: { groupId: string }) {
 	const { relay } = useCurrentCommunity();
