@@ -1,7 +1,7 @@
 import { PropsWithChildren, createContext, useContext, useMemo } from 'react';
 import { NostrEvent, Relay } from 'nostr-tools';
 
-import communityRelaysService from '../services/community-relays';
+import communityRelaysService from '../../services/community-relays';
 
 const CommunityContext = createContext<{ community: NostrEvent; relay: Relay } | null>(null);
 

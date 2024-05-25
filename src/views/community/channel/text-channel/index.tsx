@@ -7,7 +7,7 @@ import useTimelineLoader from '../../../../hooks/use-timeline-loader';
 import useSubject from '../../../../hooks/use-subject';
 import SendMessageForm from './send-message-form';
 import TextMessage from './text-message';
-import { useCurrentCommunity } from '../../../../providers/community-context';
+import { useCurrentCommunity } from '../../../../providers/local/community-provider';
 import Settings01 from '../../../../components/icons/components/settings-01';
 import EditChannelModal from '../../../../components/channel/edit-channel-modal';
 import SimpleHeader from '../../../../components/simple-header';

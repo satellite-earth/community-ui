@@ -3,10 +3,10 @@ import { useToast } from '@chakra-ui/react';
 import { EventTemplate, NostrEvent } from 'nostr-tools';
 
 import { useSigningContext } from './signing-provider';
-import { isReplaceable } from '../helpers/nostr/event';
-import replaceableEventsService from '../services/replaceable-events';
-import relayPoolService from '../services/relay-pool';
-import RelaySet, { RelaySetFrom } from '../classes/relay-set';
+import { isReplaceable } from '../../helpers/nostr/event';
+import replaceableEventsService from '../../services/replaceable-events';
+import relayPoolService from '../../services/relay-pool';
+import RelaySet, { RelaySetFrom } from '../../classes/relay-set';
 
 type PublishContextType = {
 	publishEvent(

@@ -2,6 +2,11 @@ import { IconProps, createIcon } from '@chakra-ui/react';
 import CheckVerified01 from './components/check-verified-01';
 import AlertOctagon from './components/alert-octagon';
 import Zap from './components/zap';
+import MessageChatSquare from './components/message-chat-square';
+import ChevronDown from './components/chevron-down';
+import ChevronUp from './components/chevron-up';
+import ChevronLeft from './components/chevron-left';
+import ChevronRight from './components/chevron-right';
 
 export const VerifiedIcon = CheckVerified01;
 export const VerificationFailed = AlertOctagon;
@@ -15,3 +20,9 @@ export const VerificationMissing = createIcon({
 });
 
 export const ZapIcon = Zap;
+
+export const ThreadIcon = MessageChatSquare;
+export const ChevronDownIcon = ChevronDown;
+export const ChevronUpIcon = ChevronUp;
+export const ChevronLeftIcon = ChevronLeft;
+export const ChevronRightIcon = ChevronRight;

@@ -1,10 +1,10 @@
 import { PropsWithChildren, createContext, useContext, useMemo } from 'react';
 import { kinds } from 'nostr-tools';
 
-import TimelineLoader from '../classes/timeline-loader';
-import useCurrentAccount from '../hooks/use-current-account';
-import useTimelineLoader from '../hooks/use-timeline-loader';
-import privateNode from '../services/private-node';
+import TimelineLoader from '../../classes/timeline-loader';
+import useCurrentAccount from '../../hooks/use-current-account';
+import useTimelineLoader from '../../hooks/use-timeline-loader';
+import privateNode from '../../services/private-node';
 
 type DMTimelineContextType = {
 	timeline?: TimelineLoader;

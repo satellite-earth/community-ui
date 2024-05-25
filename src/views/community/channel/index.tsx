@@ -3,7 +3,7 @@ import TextChannelView from './text-channel';
 
 import { CHANNEL_KIND } from '../../../helpers/nostr/channel';
 import useReplaceableEvent from '../../../hooks/use-replaceable-event';
-import { useCurrentCommunity } from '../../../providers/community-context';
+import { useCurrentCommunity } from '../../../providers/local/community-provider';
 
 export default function ChannelView() {
 	const { id } = useParams();

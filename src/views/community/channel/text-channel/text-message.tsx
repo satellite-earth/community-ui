@@ -5,7 +5,7 @@ import UserAvatar from '../../../../components/user/user-avatar';
 import UserName from '../../../../components/user/user-name';
 import useEventZaps from '../../../../hooks/use-event-zaps';
 import InlineZaps, { InlineZapButton } from './inline-zaps';
-import { useCurrentCommunity } from '../../../../providers/community-context';
+import { useCurrentCommunity } from '../../../../providers/local/community-provider';
 
 export default function TextMessage({ message }: { message: NostrEvent }) {
 	const { relay } = useCurrentCommunity();

@@ -4,13 +4,13 @@ import { NostrEvent, nip57 } from 'nostr-tools';
 import { ZapIcon } from '../../../../components/icons';
 import UserAvatar from '../../../../components/user/user-avatar';
 import useEventZaps from '../../../../hooks/use-event-zaps';
-import { useSigningContext } from '../../../../providers/signing-provider';
+import { useSigningContext } from '../../../../providers/global/signing-provider';
 import useUserMetadata from '../../../../hooks/use-user-metadata';
 import { getZapEndpoint } from '../../../../helpers/nostr/zaps';
 import { getInvoiceFromCallbackUrl } from '../../../../helpers/nostr/lnurl';
 import eventZapsService from '../../../../services/event-zaps';
 import { readablizeSats } from '../../../../helpers/bolt11';
-import { useCurrentCommunity } from '../../../../providers/community-context';
+import { useCurrentCommunity } from '../../../../providers/local/community-provider';
 
 export function InlineZapButton({
 	event,

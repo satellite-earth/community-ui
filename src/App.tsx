@@ -12,13 +12,14 @@ import AppLayout from './components/layout';
 import LoginNsecView from './views/login/nsec';
 import { theme } from './theme';
 import ChannelView from './views/community/channel';
-import { GlobalProviders } from './providers';
+import { GlobalProviders } from './providers/global';
 import ConnectView from './views/connect';
 import DashboardHomeView from './views/dashboard';
 import DashboardAuthView from './views/dashboard/auth';
 import MessagesView from './views/messages';
-import DMTimelineProvider from './providers/messages-provider';
+import DMTimelineProvider from './providers/global/messages-provider';
 import CommunityView from './views/community';
+import DirectMessageConversationView from './views/messages/conversation';
 
 function InitialConnection({ children }: PropsWithChildren) {
 	const mode = 'private';
@@ -73,7 +74,11 @@ const router = createBrowserRouter([
 			</InitialConnection>
 		),
 		children: [
-			{ path: 'messages', element: <MessagesView /> },
+			{
+				path: 'messages',
+				element: <MessagesView />,
+				children: [{ path: 'p/:pubkey', element: <DirectMessageConversationView /> }],
+			},
 			{ path: '', element: <CommunityView />, children: [{ path: 'g/:id', element: <ChannelView /> }] },
 		],
 	},

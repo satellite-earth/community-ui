@@ -19,8 +19,8 @@ import dayjs from 'dayjs';
 import { EventTemplate } from 'nostr-tools';
 import { useForm } from 'react-hook-form';
 
-import { usePublishEvent } from '../../providers/publish-provider';
-import { useCurrentCommunity } from '../../providers/community-context';
+import { usePublishEvent } from '../../providers/global/publish-provider';
+import { useCurrentCommunity } from '../../providers/local/community-provider';
 
 export default function CreateGroupModal({ isOpen, onClose, ...props }: Omit<ModalProps, 'children'>) {
 	const toast = useToast();

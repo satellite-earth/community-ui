@@ -15,4 +15,12 @@ export const theme = extendTheme({
 			900: '#000000',
 		},
 	},
+	semanticTokens: {
+		colors: {
+			'card-hover-overlay': {
+				_light: 'blackAlpha.50',
+				_dark: 'whiteAlpha.50',
+			},
+		},
+	},
 });

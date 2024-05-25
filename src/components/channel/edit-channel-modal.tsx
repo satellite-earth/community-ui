@@ -19,9 +19,9 @@ import { useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
 
 import { getTagValue } from '../../helpers/nostr/event';
-import { usePublishEvent } from '../../providers/publish-provider';
+import { usePublishEvent } from '../../providers/global/publish-provider';
 import { useState } from 'react';
-import { useCurrentCommunity } from '../../providers/community-context';
+import { useCurrentCommunity } from '../../providers/local/community-provider';
 
 export default function EditChannelModal({
 	isOpen,

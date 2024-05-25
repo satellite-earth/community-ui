@@ -12,7 +12,7 @@ import Plus from '../../icons/components/plus';
 import CreateGroupModal from '../../channel/create-channel-modal';
 import Edit01 from '../../icons/components/edit-01';
 import EditChannelModal from '../../channel/edit-channel-modal';
-import { useCurrentCommunity } from '../../../providers/community-context';
+import { useCurrentCommunity } from '../../../providers/local/community-provider';
 import useCommunityChannels from '../../../hooks/use-community-channels';
 import { getChannelId, getChannelName, getChannelPicture } from '../../../helpers/nostr/channel';
 
