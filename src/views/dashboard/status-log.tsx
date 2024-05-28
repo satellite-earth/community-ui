@@ -1,4 +1,4 @@
-import { controlApi } from '../../services/private-node';
+import { controlApi } from '../../services/personal-node';
 import { Box, FlexProps } from '@chakra-ui/react';
 
 import useSubject from '../../hooks/use-subject';

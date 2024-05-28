@@ -3,7 +3,7 @@ import { Navigate, Outlet, useMatch } from 'react-router-dom';
 import { Flex, Heading, useBreakpointValue } from '@chakra-ui/react';
 
 import useCurrentAccount from '../../hooks/use-current-account';
-import privateNode from '../../services/private-node';
+import personalNode from '../../services/personal-node';
 import useSubject from '../../hooks/use-subject';
 import { useMessagesTimeline } from '../../providers/global/messages-provider';
 import { groupIntoConversations, identifyConversation } from '../../helpers/nostr/dms';
@@ -55,7 +55,7 @@ function MessagesPage() {
 export default function MessagesView() {
 	const account = useCurrentAccount();
 	if (!account) return <Navigate to="/login" replace />;
-	if (!privateNode) return <Navigate to="/connect" />;
+	if (!personalNode) return <Navigate to="/connect" />;
 
 	return <MessagesPage />;
 }

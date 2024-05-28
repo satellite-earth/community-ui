@@ -1,10 +1,10 @@
 import { Button, Flex, Heading, useBreakpointValue } from '@chakra-ui/react';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 
-import RequirePrivateNodeAuth from '../../components/dashboard/require-private-node-auth';
+import RequirePersonalNodeAuth from '../../components/dashboard/require-personal-node-auth';
 import StatusLog from './status-log';
 import PanelItemString from '../../components/dashboard/panel-item-string';
-import privateNode from '../../services/private-node';
+import personalNode from '../../services/personal-node';
 import Panel from '../../components/dashboard/panel';
 import DatabasePanel from './database';
 import ReceiverPanel from './receiver';
@@ -25,7 +25,7 @@ function DashboardHome() {
 			<Flex gap="2" flex={1} overflow="hidden">
 				<Flex gap="2" flex={1} direction="column" overflow="auto">
 					<Panel label="RELAY">
-						<PanelItemString label="URL" value={privateNode!.url} qr />
+						<PanelItemString label="URL" value={personalNode!.url} qr />
 					</Panel>
 					<ReceiverPanel />
 					<DatabasePanel />
@@ -38,8 +38,8 @@ function DashboardHome() {
 
 export default function DashboardHomeView() {
 	return (
-		<RequirePrivateNodeAuth>
+		<RequirePersonalNodeAuth>
 			<DashboardHome />
-		</RequirePrivateNodeAuth>
+		</RequirePersonalNodeAuth>
 	);
 }

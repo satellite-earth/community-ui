@@ -19,7 +19,7 @@ import ThreadsProvider from '../../../providers/local/thread-provider';
 import TimelineLoader from '../../../classes/timeline-loader';
 import DirectMessageBlock from '../components/direct-message-block';
 import useParamsProfilePointer from '../../../hooks/use-params-pubkey-pointer';
-import privateNode from '../../../services/private-node';
+import personalNode from '../../../services/personal-node';
 import useRouterMarker from '../../../hooks/use-router-marker';
 import UserName from '../../../components/user/user-name';
 import { BackButton } from '../../../components/back-button';
@@ -87,7 +87,7 @@ function DirectMessageConversationPage({ pubkey }: { pubkey: string }) {
 				authors: [pubkey, account.pubkey],
 			},
 		],
-		privateNode!,
+		personalNode!,
 		{ eventFilter },
 	);
 

@@ -4,7 +4,7 @@ import ErrorBoundary from './components/error-boundary';
 import { Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import './styles.css';
-import privateNode, { resetPrivateNodeURL } from './services/private-node';
+import privateNode, { resetPrivateNodeURL } from './services/personal-node';
 
 import LoginView from './views/login';
 import LoginStartView from './views/login/start';

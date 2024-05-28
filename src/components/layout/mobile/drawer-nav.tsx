@@ -24,7 +24,7 @@ import UserName from '../../user/user-name';
 import UserDnsIdentity from '../../user/user-dns-identity';
 import ColorModeButton from '../../color-mode-button';
 import MobileCommunityButton from './community-button';
-import privateNode from '../../../services/private-node';
+import personalNode from '../../../services/personal-node';
 import MessageSquare01 from '../../icons/components/message-square-01';
 
 export default function DrawerNav({ isOpen, onClose, ...props }: Omit<ModalProps, 'children'>) {
@@ -71,7 +71,7 @@ export default function DrawerNav({ isOpen, onClose, ...props }: Omit<ModalProps
 					<Button variant="link" p="4" w="full" onClick={explore.onOpen}>
 						Explore Communities
 					</Button>
-					{privateNode && (
+					{personalNode && (
 						<Button variant="link" p="4" w="full" as={RouterLink} to="/dashboard">
 							Satellite Node
 						</Button>

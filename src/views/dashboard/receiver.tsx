@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import Panel from '../../components/dashboard/panel';
 import PanelItemToggle from '../../components/dashboard/panel-item-toggle';
 import useSubject from '../../hooks/use-subject';
-import { controlApi } from '../../services/private-node';
+import { controlApi } from '../../services/personal-node';
 import TextButton from '../../components/dashboard/text-button';
 import Signal01 from '../../components/icons/components/signal-01';
 import { RelayUrlInput } from '../../components/relay-url-input';

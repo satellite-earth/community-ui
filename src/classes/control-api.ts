@@ -7,19 +7,19 @@ import {
 import { PrivateNodeConfig } from '@satellite-earth/core/types/private-node-config.js';
 
 import Subject, { PersistentSubject } from './subject';
-import PrivateNode from './private-node';
+import PersonalNode from './personal-node';
 
 const MAX_LOG_LINES = 200;
 
-export default class PrivateNodeControlApi {
-	node: PrivateNode;
+export default class PersonalNodeControlApi {
+	node: PersonalNode;
 
 	logs = new PersistentSubject<string[]>([]);
 	config = new Subject<PrivateNodeConfig>();
 	databaseStats = new Subject<DatabaseStats>();
 	receiverStatus = new Subject<ReceiverStatus>();
 
-	constructor(node: PrivateNode) {
+	constructor(node: PersonalNode) {
 		this.node = node;
 
 		this.node.authenticated.subscribe((authenticated) => {

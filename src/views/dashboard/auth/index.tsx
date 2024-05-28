@@ -4,7 +4,7 @@ import { EventTemplate, VerifiedEvent } from 'nostr-tools';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Flex, FormControl, FormLabel, Input } from '@chakra-ui/react';
 
-import privateNode, { setPrivateNodeURL } from '../../../services/private-node';
+import personalNode, { setPrivateNodeURL } from '../../../services/personal-node';
 import Panel from '../../../components/dashboard/panel';
 import TextButton from '../../../components/dashboard/text-button';
 
@@ -17,11 +17,11 @@ export default function DashboardAuthView() {
 	});
 
 	const authenticate = async (auth: string | ((evt: EventTemplate) => Promise<VerifiedEvent>)) => {
-		if (!privateNode) return;
+		if (!personalNode) return;
 
 		try {
-			if (!privateNode.connected) await privateNode.connect();
-			await privateNode.authenticate(auth);
+			if (!personalNode.connected) await personalNode.connect();
+			await personalNode.authenticate(auth);
 
 			navigate('/dashboard', { replace: true });
 		} catch (error) {

@@ -6,7 +6,7 @@ import { logger } from '../helpers/debug';
 import ControlledObservable from './controlled-observable';
 import { PersistentSubject } from './subject';
 
-export default class PrivateNode extends Relay {
+export default class PersonalNode extends Relay {
 	log = logger.extend('PrivateNode');
 	authenticated = new PersistentSubject(false);
 	onControlResponse = new ControlledObservable<ControlResponse>();

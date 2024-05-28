@@ -4,7 +4,7 @@ import { kinds } from 'nostr-tools';
 import TimelineLoader from '../../classes/timeline-loader';
 import useCurrentAccount from '../../hooks/use-current-account';
 import useTimelineLoader from '../../hooks/use-timeline-loader';
-import privateNode from '../../services/private-node';
+import personalNode from '../../services/personal-node';
 
 type DMTimelineContextType = {
 	timeline?: TimelineLoader;
@@ -30,7 +30,7 @@ export default function DMTimelineProvider({ children }: PropsWithChildren) {
 					{ '#p': [account.pubkey], kinds: [kinds.EncryptedDirectMessage] },
 				]
 			: undefined,
-		privateNode ?? undefined,
+		personalNode ?? undefined,
 	);
 
 	const context = useMemo(() => ({ timeline }), [timeline]);

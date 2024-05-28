@@ -7,7 +7,7 @@ import { Button, Flex, FlexProps, Heading, Textarea } from '@chakra-ui/react';
 import { useSigningContext } from '../../../providers/global/signing-provider';
 import { useDecryptionContext } from '../../../providers/global/decryption-provider';
 import { usePublishEvent } from '../../../providers/global/publish-provider';
-import privateNode from '../../../services/private-node';
+import personalNode from '../../../services/personal-node';
 
 export default function SendMessageForm({
 	pubkey,
@@ -46,7 +46,7 @@ export default function SendMessageForm({
 		}
 
 		setLoadingMessage('Signing...');
-		const pub = await publish(draft, privateNode!);
+		const pub = await publish(draft, personalNode!);
 
 		if (pub) {
 			reset();

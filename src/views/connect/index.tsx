@@ -1,7 +1,7 @@
 import { Button, Flex, FormControl, FormHelperText, FormLabel, Heading, Input, Spinner, Text } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 
-import { setPrivateNodeURL } from '../../services/private-node';
+import { setPrivateNodeURL } from '../../services/personal-node';
 import QRCodeScannerButton from '../../components/qr-code/qr-code-scanner-button';
 
 function ConnectForm() {

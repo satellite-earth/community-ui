@@ -1,7 +1,7 @@
 import { forwardRef, useEffect } from 'react';
 import { Input, InputProps, useForceUpdate } from '@chakra-ui/react';
 
-import privateNode from '../services/private-node';
+import personalNode from '../services/personal-node';
 import { Kind0ParsedContent, getUserDisplayName, parseKind0Event } from '../helpers/nostr/user-metadata';
 import replaceableEventsService from '../services/replaceable-events';
 
@@ -9,10 +9,10 @@ import replaceableEventsService from '../services/replaceable-events';
 let profiles: Kind0ParsedContent[] = [];
 function load() {
 	return new Promise<void>((res) => {
-		if (!privateNode || profiles.length > 0) return res();
+		if (!personalNode || profiles.length > 0) return res();
 
 		profiles = [];
-		const sub = privateNode.subscribe([{ kinds: [0] }], {
+		const sub = personalNode.subscribe([{ kinds: [0] }], {
 			onevent: (event) => {
 				profiles.push(parseKind0Event(event));
 				replaceableEventsService.handleEvent(event, false);
