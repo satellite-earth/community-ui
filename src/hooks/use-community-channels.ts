@@ -1,4 +1,6 @@
-import { AbstractRelay, NostrEvent } from 'nostr-tools';
+import { NostrEvent } from 'nostr-tools';
+import { AbstractRelay } from 'nostr-tools/abstract-relay';
+
 import useTimelineLoader from './use-timeline-loader';
 import { CHANNEL_KIND } from '../helpers/nostr/channel';
 import useSubject from './use-subject';

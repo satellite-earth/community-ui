@@ -1,7 +1,9 @@
 import dayjs from 'dayjs';
 import { Debugger } from 'debug';
-import { AbstractRelay, Filter, NostrEvent } from 'nostr-tools';
+import { Filter, NostrEvent } from 'nostr-tools';
+import { AbstractRelay } from 'nostr-tools/abstract-relay';
 import _throttle from 'lodash.throttle';
+import Observable from 'zen-observable';
 
 import MultiSubscription from './multi-subscription';
 import { PersistentSubject } from './subject';
@@ -13,7 +15,6 @@ import { mergeFilter, isFilterEqual } from '../helpers/nostr/filter';
 import SuperMap from './super-map';
 import ChunkedRequest from './chunked-request';
 import relayPoolService from '../services/relay-pool';
-import Observable from 'zen-observable';
 
 const BLOCK_SIZE = 100;
 

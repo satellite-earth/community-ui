@@ -1,9 +1,10 @@
 import { nanoid } from 'nanoid';
+import { Filter, NostrEvent } from 'nostr-tools';
+import { AbstractRelay } from 'nostr-tools/abstract-relay';
 
 import relayPoolService from '../services/relay-pool';
 import { isFilterEqual } from '../helpers/nostr/filter';
 import ControlledObservable from './controlled-observable';
-import { AbstractRelay, Filter, NostrEvent } from 'nostr-tools';
 import PersistentSubscription from './persistent-subscription';
 
 export default class MultiSubscription {

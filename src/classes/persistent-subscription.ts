@@ -1,5 +1,6 @@
 import { nanoid } from 'nanoid';
-import { AbstractRelay, Filter, Relay, Subscription, SubscriptionParams } from 'nostr-tools';
+import { Filter, Relay } from 'nostr-tools';
+import { AbstractRelay, Subscription, SubscriptionParams } from 'nostr-tools/abstract-relay';
 
 import relayPoolService from '../services/relay-pool';
 
@@ -17,7 +18,7 @@ export default class PersistentSubscription {
 		this.id = nanoid(8);
 		this.filters = [];
 		this.params = {
-			//@ts-expect-error
+			// @ts-expect-error
 			id: this.id,
 			...params,
 		};

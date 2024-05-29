@@ -1,6 +1,7 @@
-import { NostrEvent, AbstractRelay } from 'nostr-tools';
+import { NostrEvent } from 'nostr-tools';
 import _throttle from 'lodash.throttle';
 import debug, { Debugger } from 'debug';
+import { AbstractRelay } from 'nostr-tools/abstract-relay';
 
 import PersistentSubscription from './persistent-subscription';
 import createDefer, { Deferred } from './deferred';
