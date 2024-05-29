@@ -1,6 +1,8 @@
 import { logger } from '../helpers/debug';
 import PersonalNode from '../classes/personal-node';
 import PersonalNodeControlApi from '../classes/control-api';
+import signingService from './signing';
+import accountService from './account';
 
 const log = logger.extend('private-node');
 
@@ -25,10 +27,27 @@ if (window.satellite) {
 	log('Unable to find private node URL');
 }
 
-personalNode?.connect().then(() => {
-	// automatically authenticate with auth
-	if (window.satellite) {
-		window.satellite.getAdminAuth().then((auth) => personalNode.authenticate(auth));
+// automatically authenticate with personal node
+personalNode?.onChallenge.subscribe(async () => {
+	try {
+		if (window.satellite) {
+			await window.satellite.getAdminAuth().then((auth) => personalNode.authenticate(auth));
+		}
+
+		const savedAuth = localStorage.getItem('personal-node-auth');
+		if (savedAuth) {
+			if (savedAuth === 'nostr') {
+				const account = accountService.current.value;
+				if (!account) return;
+
+				await personalNode.authenticate((draft) => signingService.requestSignature(draft, account));
+			} else {
+				await personalNode.authenticate(savedAuth);
+			}
+		}
+	} catch (err) {
+		console.log('Failed to authenticate with personal node', err);
+		localStorage.removeItem('personal-node-auth');
 	}
 });
 
@@ -36,7 +55,7 @@ const controlApi = personalNode ? new PersonalNodeControlApi(personalNode) : und
 
 if (import.meta.env.DEV) {
 	// @ts-expect-error
-	window.privateNode = personalNode;
+	window.personalNode = personalNode;
 	// @ts-expect-error
 	window.controlApi = controlApi;
 }

@@ -4,7 +4,7 @@ import { ControlMessage, ControlResponse } from '@satellite-earth/core/types/con
 import createDefer, { Deferred } from './deferred';
 import { logger } from '../helpers/debug';
 import ControlledObservable from './controlled-observable';
-import { PersistentSubject } from './subject';
+import Subject, { PersistentSubject } from './subject';
 
 export default class PersonalNode extends Relay {
 	log = logger.extend('PrivateNode');
@@ -13,6 +13,8 @@ export default class PersonalNode extends Relay {
 
 	sentAuthId = '';
 	authPromise: Deferred<string> | null = null;
+
+	onChallenge = new Subject<string>();
 
 	authenticate(auth: string | ((evt: EventTemplate) => Promise<VerifiedEvent>)) {
 		if (!this.connected) throw new Error('Not connected');
@@ -41,6 +43,10 @@ export default class PersonalNode extends Relay {
 
 		return this.authPromise;
 	}
+
+	_onauth = (challenge: string) => {
+		this.onChallenge.next(challenge);
+	};
 
 	_onmessage(message: MessageEvent<string>) {
 		try {

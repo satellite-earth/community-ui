@@ -1,10 +1,11 @@
+import { Navigate, useLocation } from 'react-router-dom';
 import { Button, Flex, FormControl, FormHelperText, FormLabel, Heading, Input, Spinner, Text } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 
-import { setPrivateNodeURL } from '../../services/personal-node';
+import personalNode, { resetPrivateNodeURL, setPrivateNodeURL } from '../../services/personal-node';
 import QRCodeScannerButton from '../../components/qr-code/qr-code-scanner-button';
 
-function ConnectForm() {
+function ConnectForm({ onConnect }: { onConnect?: () => void }) {
 	const { register, handleSubmit, formState, setValue } = useForm({
 		defaultValues: {
 			url: '',
@@ -21,6 +22,10 @@ function ConnectForm() {
 			<>
 				<Spinner thickness="4px" speed="0.65s" emptyColor="gray.200" color="blue.500" size="xl" />
 				<Text>Connecting...</Text>
+
+				<Button variant="link" onClick={resetPrivateNodeURL}>
+					Cancel
+				</Button>
 			</>
 		);
 
@@ -42,6 +47,12 @@ function ConnectForm() {
 }
 
 export default function ConnectView() {
+	const location = useLocation();
+
+	if (personalNode) {
+		return <Navigate to={location.state?.back ?? '/'} replace />;
+	}
+
 	return (
 		<Flex w="full" h="full" alignItems="center" justifyContent="center">
 			<Flex direction="column" gap="2" w="full" maxW="sm" m="4">

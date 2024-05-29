@@ -1,10 +1,9 @@
-import { PropsWithChildren, Suspense, useEffect, useState } from 'react';
-import { Button, ChakraProvider, Code, Flex, Spinner, useForceUpdate, useInterval } from '@chakra-ui/react';
+import { Suspense } from 'react';
+import { ChakraProvider } from '@chakra-ui/react';
 import ErrorBoundary from './components/error-boundary';
 import { Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import './styles.css';
-import privateNode, { resetPrivateNodeURL } from './services/personal-node';
 
 import LoginView from './views/login';
 import LoginStartView from './views/login/start';
@@ -15,45 +14,14 @@ import ChannelView from './views/community/channel';
 import { GlobalProviders } from './providers/global';
 import ConnectView from './views/connect';
 import DashboardHomeView from './views/dashboard';
-import DashboardAuthView from './views/dashboard/auth';
+import PersonalNodeAuthView from './views/node-auth';
 import MessagesView from './views/messages';
 import DMTimelineProvider from './providers/global/messages-provider';
 import CommunityView from './views/community';
 import DirectMessageConversationView from './views/messages/conversation';
-
-function InitialConnection({ children }: PropsWithChildren) {
-	const mode = 'private';
-
-	const update = useForceUpdate();
-	useInterval(update, 100);
-
-	const [done, setDone] = useState(false);
-	useEffect(() => {
-		if (!done && privateNode?.connected) setDone(true);
-	}, [privateNode?.connected, done]);
-
-	if (done) return <>{children}</>;
-
-	if (mode === 'private') {
-		if (!privateNode) return <ConnectView />;
-
-		if (!privateNode.connected)
-			return (
-				<Flex alignItems="center" justifyContent="center" gap="2" direction="column" h="full" w="full">
-					<Flex gap="4" alignItems="center">
-						<Spinner /> Connecting...
-					</Flex>
-					<Code>{privateNode.url}</Code>
-
-					<Button variant="link" onClick={resetPrivateNodeURL}>
-						Cancel
-					</Button>
-				</Flex>
-			);
-	}
-
-	return <>{children}</>;
-}
+import RequirePrivateNodeConnection from './components/router/require-personal-node-connection';
+import RequireCurrentAccount from './components/router/require-current-account';
+import RequirePersonalNodeAuth from './components/router/require-personal-node-auth';
 
 const router = createBrowserRouter([
 	{
@@ -65,19 +33,37 @@ const router = createBrowserRouter([
 		],
 	},
 	{
+		path: 'connect',
+		children: [
+			{ path: '', element: <ConnectView /> },
+			{ path: 'auth', element: <PersonalNodeAuthView /> },
+		],
+	},
+	{
 		path: '',
 		element: (
-			<InitialConnection>
-				<DMTimelineProvider>
-					<AppLayout />
-				</DMTimelineProvider>
-			</InitialConnection>
+			<RequirePrivateNodeConnection>
+				<RequireCurrentAccount>
+					<DMTimelineProvider>
+						<AppLayout />
+					</DMTimelineProvider>
+				</RequireCurrentAccount>
+			</RequirePrivateNodeConnection>
 		),
 		children: [
 			{
 				path: 'messages',
 				element: <MessagesView />,
-				children: [{ path: 'p/:pubkey', element: <DirectMessageConversationView /> }],
+				children: [
+					{
+						path: 'p/:pubkey',
+						element: (
+							<RequirePersonalNodeAuth>
+								<DirectMessageConversationView />
+							</RequirePersonalNodeAuth>
+						),
+					},
+				],
 			},
 			{ path: '', element: <CommunityView />, children: [{ path: 'g/:id', element: <ChannelView /> }] },
 		],
@@ -85,13 +71,19 @@ const router = createBrowserRouter([
 	{
 		path: 'dashboard',
 		element: (
-			<InitialConnection>
+			<RequirePrivateNodeConnection>
 				<Outlet />
-			</InitialConnection>
+			</RequirePrivateNodeConnection>
 		),
 		children: [
-			{ path: '', element: <DashboardHomeView /> },
-			{ path: 'auth', element: <DashboardAuthView /> },
+			{
+				path: '',
+				element: (
+					<RequirePersonalNodeAuth>
+						<DashboardHomeView />
+					</RequirePersonalNodeAuth>
+				),
+			},
 		],
 	},
 ]);

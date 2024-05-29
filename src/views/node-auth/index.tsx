@@ -1,16 +1,23 @@
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { EventTemplate, VerifiedEvent } from 'nostr-tools';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Flex, FormControl, FormLabel, Input } from '@chakra-ui/react';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { Checkbox, Flex, FormControl, FormLabel, Input, useDisclosure, useToast } from '@chakra-ui/react';
 
-import personalNode, { setPrivateNodeURL } from '../../../services/personal-node';
-import Panel from '../../../components/dashboard/panel';
-import TextButton from '../../../components/dashboard/text-button';
+import personalNode, { setPrivateNodeURL } from '../../services/personal-node';
+import Panel from '../../components/dashboard/panel';
+import TextButton from '../../components/dashboard/text-button';
+import useCurrentAccount from '../../hooks/use-current-account';
+import { useSigningContext } from '../../providers/global/signing-provider';
 
-export default function DashboardAuthView() {
+export default function PersonalNodeAuthView() {
+	const toast = useToast();
 	const navigate = useNavigate();
+	const account = useCurrentAccount();
+	const { requestSignature } = useSigningContext();
 	const [search] = useSearchParams();
+	const remember = useDisclosure({ defaultIsOpen: true });
+	const location = useLocation();
 
 	const { register, handleSubmit, formState } = useForm({
 		defaultValues: { auth: search.get('auth') ?? '' },
@@ -23,23 +30,26 @@ export default function DashboardAuthView() {
 			if (!personalNode.connected) await personalNode.connect();
 			await personalNode.authenticate(auth);
 
-			navigate('/dashboard', { replace: true });
+			navigate(location.state.back || '/', { replace: true });
 		} catch (error) {
 			if (error instanceof Error) alert(error.message);
 		}
 	};
 
-	const loginWithNip07 = async () => {
+	const authenticateWithNostr = async () => {
 		try {
-			if (!window.nostr) throw new Error('Missing NIP-07 extension');
+			if (!account) return navigate('/login', { state: { back: location } });
 
-			await authenticate(async (draft) => window.nostr!.signEvent(draft));
+			if (remember.isOpen) localStorage.setItem('personal-node-auth', 'nostr');
+
+			await authenticate((draft) => requestSignature(draft) as Promise<VerifiedEvent>);
 		} catch (error) {
-			if (error instanceof Error) alert(error.message);
+			if (error instanceof Error) toast({ status: 'error', description: error.message });
 		}
 	};
 
 	const submit = handleSubmit(async (values) => {
+		if (remember.isOpen) localStorage.setItem('personal-node-auth', values.auth);
 		await authenticate(values.auth);
 	});
 
@@ -66,11 +76,15 @@ export default function DashboardAuthView() {
 						{window.nostr && (
 							<>
 								<p style={{ marginInline: 'auto', marginBlock: 0 }}>--OR--</p>
-								<TextButton type="button" onClick={loginWithNip07}>
-									[Login with NIP-07]
+								<TextButton type="button" onClick={authenticateWithNostr}>
+									[Login with Nostr]
 								</TextButton>
 							</>
 						)}
+
+						<Checkbox fontFamily="monospace" mt="2" isChecked={remember.isOpen} onChange={remember.onToggle}>
+							Remember Me
+						</Checkbox>
 					</>
 				)}
 			</Panel>

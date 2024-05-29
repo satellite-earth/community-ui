@@ -19,7 +19,7 @@ import ThreadsProvider from '../../../providers/local/thread-provider';
 import TimelineLoader from '../../../classes/timeline-loader';
 import DirectMessageBlock from '../components/direct-message-block';
 import useParamsProfilePointer from '../../../hooks/use-params-pubkey-pointer';
-import personalNode from '../../../services/personal-node';
+import personalNode, { controlApi } from '../../../services/personal-node';
 import useRouterMarker from '../../../hooks/use-router-marker';
 import UserName from '../../../components/user/user-name';
 import { BackButton } from '../../../components/back-button';
@@ -90,6 +90,15 @@ function DirectMessageConversationPage({ pubkey }: { pubkey: string }) {
 		personalNode!,
 		{ eventFilter },
 	);
+
+	// tell personal node to open / close conversation
+	useEffect(() => {
+		controlApi?.send(['CONTROL', 'DM', 'OPEN', account.pubkey, pubkey]);
+
+		return () => {
+			controlApi?.send(['CONTROL', 'DM', 'CLOSE', account.pubkey, pubkey]);
+		};
+	}, [pubkey, account.pubkey]);
 
 	const callback = useTimelineCurserIntersectionCallback(timeline);
 

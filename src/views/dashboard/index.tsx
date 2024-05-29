@@ -1,7 +1,6 @@
 import { Button, Flex, Heading, useBreakpointValue } from '@chakra-ui/react';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 
-import RequirePersonalNodeAuth from '../../components/dashboard/require-personal-node-auth';
 import StatusLog from './status-log';
 import PanelItemString from '../../components/dashboard/panel-item-string';
 import personalNode from '../../services/personal-node';
@@ -9,7 +8,7 @@ import Panel from '../../components/dashboard/panel';
 import DatabasePanel from './database';
 import ReceiverPanel from './receiver';
 
-function DashboardHome() {
+export default function DashboardHomeView() {
 	const navigate = useNavigate();
 	const isMobile = useBreakpointValue({ base: true, lg: false });
 
@@ -33,13 +32,5 @@ function DashboardHome() {
 				{!isMobile && <StatusLog flex={1} />}
 			</Flex>
 		</Flex>
-	);
-}
-
-export default function DashboardHomeView() {
-	return (
-		<RequirePersonalNodeAuth>
-			<DashboardHome />
-		</RequirePersonalNodeAuth>
 	);
 }

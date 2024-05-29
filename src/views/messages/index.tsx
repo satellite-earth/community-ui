@@ -1,9 +1,8 @@
 import { useMemo } from 'react';
-import { Navigate, Outlet, useMatch } from 'react-router-dom';
-import { Flex, Heading, useBreakpointValue } from '@chakra-ui/react';
+import { Outlet, useMatch } from 'react-router-dom';
+import { Flex, useBreakpointValue } from '@chakra-ui/react';
 
 import useCurrentAccount from '../../hooks/use-current-account';
-import personalNode from '../../services/personal-node';
 import useSubject from '../../hooks/use-subject';
 import { useMessagesTimeline } from '../../providers/global/messages-provider';
 import { groupIntoConversations, identifyConversation } from '../../helpers/nostr/dms';
@@ -13,7 +12,7 @@ import IntersectionObserverProvider from '../../providers/local/intersection-obs
 import useTimelineCurserIntersectionCallback from '../../hooks/use-timeline-cursor-intersection-callback';
 import TimelineActionAndStatus from '../../components/timeline/timeline-action-and-status';
 
-function MessagesPage() {
+export default function MessagesView() {
 	const match = useMatch('/messages');
 	const account = useCurrentAccount()!;
 	const timeline = useMessagesTimeline();
@@ -50,12 +49,4 @@ function MessagesPage() {
 	}
 
 	return <Outlet />;
-}
-
-export default function MessagesView() {
-	const account = useCurrentAccount();
-	if (!account) return <Navigate to="/login" replace />;
-	if (!personalNode) return <Navigate to="/connect" />;
-
-	return <MessagesPage />;
 }

@@ -1,4 +1,4 @@
-import { nip04, getPublicKey, finalizeEvent, EventTemplate, NostrEvent } from 'nostr-tools';
+import { nip04, getPublicKey, finalizeEvent, EventTemplate, NostrEvent, VerifiedEvent } from 'nostr-tools';
 
 import { Account } from './account';
 import db from './db';
@@ -107,12 +107,12 @@ class SigningService {
 					...draft,
 					pubkey: getPublicKey(hexToBytes(secKey)),
 				};
-				const event = finalizeEvent(tmpDraft, hexToBytes(secKey)) as NostrEvent;
+				const event = finalizeEvent(tmpDraft, hexToBytes(secKey));
 				return event;
 			}
 			case 'extension':
 				if (window.nostr) {
-					const signed = await window.nostr.signEvent(draft);
+					const signed = (await window.nostr.signEvent(draft)) as VerifiedEvent;
 					checkSig(signed);
 					return signed;
 				} else throw new Error('Missing nostr extension');

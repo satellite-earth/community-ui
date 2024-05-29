@@ -7,7 +7,7 @@ export default function LoginView() {
 	const current = useSubject(accountService.current);
 	const location = useLocation();
 
-	if (current) return <Navigate to={location.state?.from ?? '/'} replace />;
+	if (current) return <Navigate to={location.state?.back ?? '/'} replace />;
 
 	return (
 		<Flex justifyContent="center" w="full">
