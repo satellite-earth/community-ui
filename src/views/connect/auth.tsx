@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { EventTemplate, VerifiedEvent } from 'nostr-tools';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { Checkbox, Flex, FormControl, FormLabel, Input, useDisclosure, useToast } from '@chakra-ui/react';
 
 import personalNode, { setPrivateNodeURL } from '../../services/personal-node';
@@ -9,8 +9,9 @@ import Panel from '../../components/dashboard/panel';
 import TextButton from '../../components/dashboard/text-button';
 import useCurrentAccount from '../../hooks/use-current-account';
 import { useSigningContext } from '../../providers/global/signing-provider';
+import useSubject from '../../hooks/use-subject';
 
-export default function PersonalNodeAuthView() {
+export function PersonalNodeAuthPage() {
 	const toast = useToast();
 	const navigate = useNavigate();
 	const account = useCurrentAccount();
@@ -90,4 +91,15 @@ export default function PersonalNodeAuthView() {
 			</Panel>
 		</Flex>
 	);
+}
+
+export default function PersonalNodeAuthView() {
+	const location = useLocation();
+	const authenticated = useSubject(personalNode?.authenticated);
+
+	if (authenticated) {
+		return <Navigate to={location.state?.back ?? '/'} replace />;
+	}
+
+	return <PersonalNodeAuthPage />;
 }

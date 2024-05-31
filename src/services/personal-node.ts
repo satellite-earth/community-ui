@@ -27,29 +27,33 @@ if (window.satellite) {
 	log('Unable to find private node URL');
 }
 
-// automatically authenticate with personal node
-personalNode?.onChallenge.subscribe(async () => {
-	try {
-		if (window.satellite) {
-			await window.satellite.getAdminAuth().then((auth) => personalNode.authenticate(auth));
-		}
+if (personalNode) {
+	personalNode.connect();
 
-		const savedAuth = localStorage.getItem('personal-node-auth');
-		if (savedAuth) {
-			if (savedAuth === 'nostr') {
-				const account = accountService.current.value;
-				if (!account) return;
-
-				await personalNode.authenticate((draft) => signingService.requestSignature(draft, account));
-			} else {
-				await personalNode.authenticate(savedAuth);
+	// automatically authenticate with personal node
+	personalNode.onChallenge.subscribe(async () => {
+		try {
+			if (window.satellite) {
+				await window.satellite.getAdminAuth().then((auth) => personalNode.authenticate(auth));
 			}
+
+			const savedAuth = localStorage.getItem('personal-node-auth');
+			if (savedAuth) {
+				if (savedAuth === 'nostr') {
+					const account = accountService.current.value;
+					if (!account) return;
+
+					await personalNode.authenticate((draft) => signingService.requestSignature(draft, account));
+				} else {
+					await personalNode.authenticate(savedAuth);
+				}
+			}
+		} catch (err) {
+			console.log('Failed to authenticate with personal node', err);
+			localStorage.removeItem('personal-node-auth');
 		}
-	} catch (err) {
-		console.log('Failed to authenticate with personal node', err);
-		localStorage.removeItem('personal-node-auth');
-	}
-});
+	});
+}
 
 const controlApi = personalNode ? new PersonalNodeControlApi(personalNode) : undefined;
 

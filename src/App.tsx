@@ -14,7 +14,7 @@ import ChannelView from './views/community/channel';
 import { GlobalProviders } from './providers/global';
 import ConnectView from './views/connect';
 import DashboardHomeView from './views/dashboard';
-import PersonalNodeAuthView from './views/node-auth';
+import PersonalNodeAuthView from './views/connect/auth';
 import MessagesView from './views/messages';
 import DMTimelineProvider from './providers/global/messages-provider';
 import CommunityView from './views/community';
