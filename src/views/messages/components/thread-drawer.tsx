@@ -114,11 +114,11 @@ export default function ThreadDrawer({
 			<DrawerOverlay />
 			<DrawerContent bgColor="var(--chakra-colors-chakra-body-bg)">
 				<DrawerCloseButton />
-				<DrawerHeader p="2" display="flex" gap="4">
+				<DrawerHeader p="4" display="flex" gap="4">
 					<Text>Threads</Text>
 				</DrawerHeader>
 
-				<DrawerBody px="2" pt="0" pb="2" gap="2" display="flex" flexDirection="column">
+				<DrawerBody px="4" pt="0" pb="2" gap="2" display="flex" flexDirection="column">
 					{renderContent()}
 				</DrawerBody>
 			</DrawerContent>

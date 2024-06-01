@@ -23,8 +23,8 @@ export default function MobileLayout() {
 
 	if (location.pathname === '/') {
 		return (
-			<Flex direction="column" overflow="hidden" w="full">
-				<Flex alignItems="center" gap="4" p="2">
+			<Flex direction="column" overflow="hidden" w="full" h="full">
+				<Flex alignItems="center" gap="4" p="2" borderBottomWidth={1}>
 					<IconButton
 						icon={<HamburgerIcon boxSize={5} />}
 						aria-label="Show Menu"

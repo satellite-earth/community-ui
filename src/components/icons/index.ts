@@ -21,6 +21,8 @@ export const VerificationMissing = createIcon({
 
 export const ZapIcon = Zap;
 
+export const DirectMessagesIcon = MessageChatSquare;
+
 export const ThreadIcon = MessageChatSquare;
 export const ChevronDownIcon = ChevronDown;
 export const ChevronUpIcon = ChevronUp;

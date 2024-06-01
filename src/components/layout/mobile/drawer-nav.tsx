@@ -12,7 +12,6 @@ import {
 	ModalProps,
 	Spacer,
 	Text,
-	useDisclosure,
 } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -23,12 +22,10 @@ import useCurrentAccount from '../../../hooks/use-current-account';
 import UserName from '../../user/user-name';
 import UserDnsIdentity from '../../user/user-dns-identity';
 import ColorModeButton from '../../color-mode-button';
-import MobileCommunityButton from './community-button';
 import personalNode from '../../../services/personal-node';
-import MessageSquare01 from '../../icons/components/message-square-01';
+import { DirectMessagesIcon } from '../../icons';
 
 export default function DrawerNav({ isOpen, onClose, ...props }: Omit<ModalProps, 'children'>) {
-	const explore = useDisclosure();
 	const account = useCurrentAccount();
 
 	const community = useSubject(communitiesService.community);
@@ -59,18 +56,16 @@ export default function DrawerNav({ isOpen, onClose, ...props }: Omit<ModalProps
 				<DrawerBody p="0" display="flex" flexDirection="column">
 					<Flex as={RouterLink} to="/messages" alignItems="center" p="2" gap="4" tabIndex={0} cursor="pointer">
 						<Center w="10" h="10">
-							<MessageSquare01 boxSize={6} />
+							<DirectMessagesIcon boxSize={6} />
 						</Center>
 						<Text fontWeight="bold">Messages</Text>
 					</Flex>
 					<Divider />
-					{communities.map((community) => (
-						<MobileCommunityButton community={community} key={community.id} />
-					))}
 					<Spacer />
-					<Button variant="link" p="4" w="full" onClick={explore.onOpen}>
-						Explore Communities
-					</Button>
+					{/* {communities.map((community) => (
+						<MobileCommunityButton community={community} key={community.id} />
+					))} */}
+					<Spacer />
 					{personalNode && (
 						<Button variant="link" p="4" w="full" as={RouterLink} to="/dashboard">
 							Satellite Node

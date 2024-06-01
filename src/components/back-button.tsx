@@ -10,7 +10,7 @@ export function BackButton({ ...props }: Omit<IconButtonProps, 'onClick' | 'chil
 			aria-label="Back"
 			{...props}
 			onClick={() => navigate(-1)}
-			hideFrom="md"
+			hideFrom="lg"
 		/>
 	);
 }

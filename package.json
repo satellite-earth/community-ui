@@ -32,6 +32,7 @@
 		"@satellite-earth/core": "^0.2.0",
 		"@scure/base": "^1.1.5",
 		"@webscopeio/react-textarea-autocomplete": "^4.9.2",
+		"chroma-js": "^2.4.2",
 		"dayjs": "^1.11.10",
 		"debug": "^4.3.4",
 		"framer-motion": "^11.0.5",
@@ -54,6 +55,7 @@
 		"zen-observable": "^0.10.0"
 	},
 	"devDependencies": {
+		"@types/chroma-js": "^2.4.4",
 		"@types/debug": "^4.1.12",
 		"@types/lodash.throttle": "^4.1.9",
 		"@types/react": "^18.2.55",

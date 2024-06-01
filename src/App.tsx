@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { ChakraProvider } from '@chakra-ui/react';
 import ErrorBoundary from './components/error-boundary';
-import { Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import './styles.css';
 
@@ -10,18 +10,17 @@ import LoginStartView from './views/login/start';
 import AppLayout from './components/layout';
 import LoginNsecView from './views/login/nsec';
 import { theme } from './theme';
-import ChannelView from './views/community/channel';
 import { GlobalProviders } from './providers/global';
 import ConnectView from './views/connect';
 import DashboardHomeView from './views/dashboard';
 import PersonalNodeAuthView from './views/connect/auth';
 import MessagesView from './views/messages';
 import DMTimelineProvider from './providers/global/messages-provider';
-import CommunityView from './views/community';
 import DirectMessageConversationView from './views/messages/conversation';
 import RequirePrivateNodeConnection from './components/router/require-personal-node-connection';
 import RequireCurrentAccount from './components/router/require-current-account';
 import RequirePersonalNodeAuth from './components/router/require-personal-node-auth';
+import HomeView from './views/home';
 
 const router = createBrowserRouter([
 	{
@@ -65,14 +64,17 @@ const router = createBrowserRouter([
 					},
 				],
 			},
-			{ path: '', element: <CommunityView />, children: [{ path: 'g/:id', element: <ChannelView /> }] },
+			{
+				path: '',
+				element: <HomeView />,
+			},
 		],
 	},
 	{
 		path: 'dashboard',
 		element: (
 			<RequirePrivateNodeConnection>
-				<Outlet />
+				<AppLayout />
 			</RequirePrivateNodeConnection>
 		),
 		children: [

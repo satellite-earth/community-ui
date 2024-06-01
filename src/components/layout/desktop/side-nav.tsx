@@ -25,7 +25,7 @@ import ExploreCommunitiesModal from '../../explore/expore-communities-modal';
 import communitiesService from '../../../services/communities';
 import CommunityButton from './community-button';
 import Database01 from '../../icons/components/database-01';
-import MessageSquare01 from '../../icons/components/message-square-01';
+import { DirectMessagesIcon } from '../../icons';
 
 function UserAccount() {
 	const account = useCurrentAccount()!;
@@ -68,15 +68,15 @@ export default function DesktopSideNav() {
 				as={RouterLink}
 				aria-label="Messages"
 				title="Messages"
-				icon={<MessageSquare01 boxSize={7} />}
+				icon={<DirectMessagesIcon boxSize={7} />}
 				w="12"
 				h="12"
 				fontSize="24"
 				variant="outline"
 				to="/messages"
 			/>
-			<Divider />
-			{communities.map((community) => (
+			{/* <Divider /> */}
+			{/* {communities.map((community) => (
 				<CommunityButton key={community.pubkey} community={community} />
 			))}
 			<IconButton
@@ -87,7 +87,7 @@ export default function DesktopSideNav() {
 				h="12"
 				fontSize="24"
 				onClick={explore.onOpen}
-			/>
+			/> */}
 			<IconButton
 				w="12"
 				h="12"
