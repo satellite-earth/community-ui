@@ -74,7 +74,7 @@ export function PersonalNodeAuthPage() {
 						<TextButton type="submit" ml="auto" mt="2">
 							[Login]
 						</TextButton>
-						{window.nostr && (
+						{account && (
 							<>
 								<p style={{ marginInline: 'auto', marginBlock: 0 }}>--OR--</p>
 								<TextButton type="button" onClick={authenticateWithNostr}>

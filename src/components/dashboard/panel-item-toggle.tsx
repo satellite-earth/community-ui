@@ -5,7 +5,7 @@ export default function PanelItemToggle({
 	value,
 	onChange,
 	...props
-}: Omit<FormControlProps, 'children'>&{
+}: Omit<FormControlProps, 'children'> & {
 	label?: string;
 	value: boolean;
 	onChange: () => void;
