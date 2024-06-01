@@ -12,7 +12,7 @@
 		"url": "git+https://github.com/satellite-earth/web-ui.git"
 	},
 	"scripts": {
-		"prepack": "yarn build",
+		"prepack": "pnpm build",
 		"dev": "vite",
 		"build": "tsc && vite build",
 		"postbuild": "cp dist/index.html dist/404.html",
