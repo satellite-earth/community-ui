@@ -33,7 +33,7 @@ export default function MessagesView() {
 	if (showMenu) {
 		return (
 			<>
-				<Flex w="full" overflow="hidden">
+				<Flex w="full" overflow="hidden" h="full">
 					<Flex
 						direction="column"
 						w={{ base: 'full', lg: 'md' }}
@@ -42,7 +42,7 @@ export default function MessagesView() {
 					>
 						<SimpleHeader title="Messages" />
 						<IntersectionObserverProvider callback={callback}>
-							<Flex direction="column" overflow="auto" flex={1}>
+							<Flex direction="column" overflow="auto" flex={1} h="full">
 								{conversations.map((conversation) => (
 									<ConversationButton key={conversation.pubkeys.join(',')} conversation={conversation} />
 								))}

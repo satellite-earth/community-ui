@@ -8,6 +8,7 @@ import communitiesService from '../../../services/communities';
 import { getCommunityName } from '../../../helpers/nostr/communities';
 import ExploreCommunitiesModal from '../../explore/expore-communities-modal';
 import DrawerNav from './drawer-nav';
+import RequestNotifications from '../request-notifications';
 
 export default function MobileLayout() {
 	const drawer = useDisclosure();
@@ -24,6 +25,7 @@ export default function MobileLayout() {
 	if (location.pathname === '/') {
 		return (
 			<Flex direction="column" overflow="hidden" w="full" h="full">
+				<RequestNotifications />
 				<Flex alignItems="center" gap="4" p="2" borderBottomWidth={1}>
 					<IconButton
 						icon={<HamburgerIcon boxSize={5} />}

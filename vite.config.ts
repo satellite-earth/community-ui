@@ -11,8 +11,12 @@ export default defineConfig({
 	plugins: [
 		react(),
 		VitePWA({
+			strategies: 'injectManifest',
 			registerType: 'autoUpdate',
-			injectRegister: 'auto',
+			injectRegister: null,
+			srcDir: 'src',
+			filename: 'worker.ts',
+			injectManifest: { minify: false, sourcemap: true },
 			workbox: {
 				// This increase the cache limit to 3mB
 				maximumFileSizeToCacheInBytes: 2097152 * 1.5,
@@ -51,6 +55,10 @@ export default defineConfig({
 				lang: 'en',
 				start_url: '/',
 				scope: '/',
+			},
+			devOptions: {
+				enabled: true,
+				type: 'module',
 			},
 		}),
 	],

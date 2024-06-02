@@ -1,6 +1,7 @@
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 import Desktop from './views/desktop';
+import './services/worker';
 
 // setup dayjs
 import dayjs from 'dayjs';
