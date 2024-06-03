@@ -1,9 +1,9 @@
 import { memo, useCallback, useContext, useEffect, useMemo } from 'react';
-import { ButtonGroup, Card, Flex, IconButton } from '@chakra-ui/react';
+import { ButtonGroup, Flex, IconButton } from '@chakra-ui/react';
 import { UNSAFE_DataRouterContext, useLocation, useNavigate } from 'react-router-dom';
 import { NostrEvent, kinds } from 'nostr-tools';
 
-import { ChevronLeftIcon, ThreadIcon } from '../../../components/icons';
+import { ThreadIcon } from '../../../components/icons';
 import UserAvatar from '../../../components/user/user-avatar';
 import useSubject from '../../../hooks/use-subject';
 import useTimelineLoader from '../../../hooks/use-timeline-loader';
@@ -13,7 +13,6 @@ import useTimelineCurserIntersectionCallback from '../../../hooks/use-timeline-c
 import TimelineActionAndStatus from '../../../components/timeline/timeline-action-and-status';
 import UserDnsIdentity from '../../../components/user/user-dns-identity';
 import SendMessageForm from '../components/send-message-form';
-import { groupMessages } from '../../../helpers/nostr/dms';
 import ThreadDrawer from '../components/thread-drawer';
 import ThreadsProvider from '../../../providers/local/thread-provider';
 import TimelineLoader from '../../../classes/timeline-loader';
@@ -23,6 +22,7 @@ import personalNode, { controlApi } from '../../../services/personal-node';
 import useRouterMarker from '../../../hooks/use-router-marker';
 import UserName from '../../../components/user/user-name';
 import { BackButton } from '../../../components/back-button';
+import { groupMessages } from '../../../helpers/nostr/thread';
 
 /** This is broken out from DirectMessageChatPage for performance reasons. Don't use outside of file */
 const ChatLog = memo(({ timeline }: { timeline: TimelineLoader }) => {

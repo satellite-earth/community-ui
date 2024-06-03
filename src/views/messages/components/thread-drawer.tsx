@@ -23,9 +23,9 @@ import Timestamp from '../../../components/timestamp';
 import { Thread, useThreadsContext } from '../../../providers/local/thread-provider';
 import ThreadButton from '../../../components/message/thread-button';
 import SendMessageForm from './send-message-form';
-import { groupMessages } from '../../../helpers/nostr/dms';
 import DirectMessageBlock from './direct-message-block';
 import UserName from '../../../components/user/user-name';
+import { groupMessages } from '../../../helpers/nostr/thread';
 
 function MessagePreview({ message, ...props }: { message: NostrEvent } & Omit<TextProps, 'children'>) {
 	return (

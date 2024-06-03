@@ -15,7 +15,6 @@ import ConnectView from './views/connect';
 import DashboardHomeView from './views/dashboard';
 import PersonalNodeAuthView from './views/connect/auth';
 import MessagesView from './views/messages';
-import DMTimelineProvider from './providers/global/messages-provider';
 import DirectMessageConversationView from './views/messages/conversation';
 import RequirePrivateNodeConnection from './components/router/require-personal-node-connection';
 import RequireCurrentAccount from './components/router/require-current-account';
@@ -43,24 +42,22 @@ const router = createBrowserRouter([
 		element: (
 			<RequirePrivateNodeConnection>
 				<RequireCurrentAccount>
-					<DMTimelineProvider>
-						<AppLayout />
-					</DMTimelineProvider>
+					<AppLayout />
 				</RequireCurrentAccount>
 			</RequirePrivateNodeConnection>
 		),
 		children: [
 			{
 				path: 'messages',
-				element: <MessagesView />,
+				element: (
+					<RequirePersonalNodeAuth>
+						<MessagesView />
+					</RequirePersonalNodeAuth>
+				),
 				children: [
 					{
 						path: 'p/:pubkey',
-						element: (
-							<RequirePersonalNodeAuth>
-								<DirectMessageConversationView />
-							</RequirePersonalNodeAuth>
-						),
+						element: <DirectMessageConversationView />,
 					},
 				],
 			},

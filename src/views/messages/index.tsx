@@ -1,31 +1,28 @@
-import { useMemo } from 'react';
 import { Outlet, useMatch } from 'react-router-dom';
 import { Flex, useBreakpointValue } from '@chakra-ui/react';
+import { useMount } from 'react-use';
 
 import useCurrentAccount from '../../hooks/use-current-account';
 import useSubject from '../../hooks/use-subject';
-import { useMessagesTimeline } from '../../providers/global/messages-provider';
-import { groupIntoConversations, identifyConversation } from '../../helpers/nostr/dms';
 import ConversationButton from './components/conversation-button';
 import SimpleHeader from '../../components/simple-header';
-import IntersectionObserverProvider from '../../providers/local/intersection-observer';
-import useTimelineCurserIntersectionCallback from '../../hooks/use-timeline-cursor-intersection-callback';
-import TimelineActionAndStatus from '../../components/timeline/timeline-action-and-status';
 import BottomNav from '../../components/layout/mobile/bottom-nav';
+import { controlApi } from '../../services/personal-node';
 
 export default function MessagesView() {
 	const match = useMatch('/messages');
 	const account = useCurrentAccount()!;
-	const timeline = useMessagesTimeline();
-	const messages = useSubject(timeline.timeline);
 
-	const conversations = useMemo(() => {
-		return groupIntoConversations(messages)
-			.map((c) => identifyConversation(c, account.pubkey))
-			.sort((a, b) => b.messages[0].created_at - a.messages[0].created_at);
-	}, [messages, account.pubkey]);
+	const stats = useSubject(controlApi?.directMessageStats);
 
-	const callback = useTimelineCurserIntersectionCallback(timeline);
+	useMount(() => {
+		controlApi?.send(['CONTROL', 'DM', 'GET-STATS']);
+	});
+
+	const sorted = Object.entries(stats || {}).sort(
+		(a, b) =>
+			Math.max(b[1].lastReceived ?? 0, b[1].lastSent ?? 0) - Math.max(a[1].lastReceived ?? 0, a[1].lastSent ?? 0),
+	);
 
 	const isMobile = useBreakpointValue({ base: true, lg: false });
 	const showMenu = !isMobile || !!match;
@@ -41,14 +38,16 @@ export default function MessagesView() {
 						flexShrink={0}
 					>
 						<SimpleHeader title="Messages" />
-						<IntersectionObserverProvider callback={callback}>
-							<Flex direction="column" overflow="auto" flex={1} h="full">
-								{conversations.map((conversation) => (
-									<ConversationButton key={conversation.pubkeys.join(',')} conversation={conversation} />
-								))}
-								<TimelineActionAndStatus timeline={timeline} />
-							</Flex>
-						</IntersectionObserverProvider>
+						<Flex direction="column" overflow="auto" flex={1} h="full">
+							{sorted.map(([pubkey, stats]) => (
+								<ConversationButton
+									key={pubkey}
+									pubkey={pubkey}
+									lastReceived={stats.lastReceived}
+									lastSent={stats.lastSent}
+								/>
+							))}
+						</Flex>
 					</Flex>
 					<Outlet />
 				</Flex>

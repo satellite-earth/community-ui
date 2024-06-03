@@ -1,6 +1,7 @@
 import {
 	ControlMessage,
 	ControlResponse,
+	DMStats,
 	DatabaseStats,
 	ReceiverStatus,
 } from '@satellite-earth/core/types/control-api.js';
@@ -18,6 +19,7 @@ export default class PersonalNodeControlApi {
 	config = new Subject<PrivateNodeConfig>();
 	databaseStats = new Subject<DatabaseStats>();
 	receiverStatus = new Subject<ReceiverStatus>();
+	directMessageStats = new Subject<DMStats>();
 
 	constructor(node: PersonalNode) {
 		this.node = node;
@@ -54,6 +56,8 @@ export default class PersonalNodeControlApi {
 					this.logs.next([]);
 					break;
 			}
+		} else if (response[1] === 'DM' && response[2] === 'STATS') {
+			this.directMessageStats.next(response[3]);
 		}
 	}
 

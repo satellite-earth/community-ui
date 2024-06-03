@@ -8,6 +8,7 @@ import dayjs from 'dayjs';
 import relativeTimePlugin from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTimePlugin);
 import localizedFormat from 'dayjs/plugin/localizedFormat';
+import { StrictMode } from 'react';
 dayjs.extend(localizedFormat);
 
 const shouldRenderDesktopUI = () => {

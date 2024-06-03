@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Alert, AlertDescription, AlertIcon, Button, ButtonProps } from '@chakra-ui/react';
+import { NostrEvent } from 'nostr-tools';
 
 import useCurrentAccount from '../../../hooks/use-current-account';
 import { getDMRecipient, getDMSender } from '../../../helpers/nostr/dms';
 import LockUnlocked01 from '../../../components/icons/components/lock-unlocked-01';
 import { useDecryptionContainer } from '../../../providers/global/decryption-provider';
-import { NostrEvent } from 'nostr-tools';
 
 export default function DecryptPlaceholder({
 	children,
