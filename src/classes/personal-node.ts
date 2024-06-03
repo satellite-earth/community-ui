@@ -67,6 +67,20 @@ export default class PersonalNode extends Relay {
 		super._onmessage(message);
 	}
 
+	onclose = () => {
+		this.authenticated.next(false);
+		// @ts-expect-error
+		this.connectionPromise = undefined;
+	};
+
+	close(): void {
+		super.close();
+
+		this.authenticated.next(false);
+		// @ts-expect-error
+		this.connectionPromise = undefined;
+	}
+
 	// Send control message to node
 	sendControlMessage(message: ControlMessage) {
 		return this.send(JSON.stringify(message));

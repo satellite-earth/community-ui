@@ -32,10 +32,9 @@ export default function ConversationButton({
 			<UserAvatar pubkey={pubkey} />
 			<Flex direction="column" gap="1" overflow="hidden" flex={1}>
 				<Flex gap="2" alignItems="center" overflow="hidden">
-					<HoverLinkOverlay as={RouterLink} to={`/messages/p/${nip19.npubEncode(pubkey)}` + location.search}>
+					<HoverLinkOverlay as={RouterLink} to={`/messages/p/${nip19.npubEncode(pubkey)}` + location.search} mr="auto">
 						<UserName pubkey={pubkey} isTruncated />
 					</HoverLinkOverlay>
-					<Spacer />
 					{lastSent && lastReceived && lastSent > lastReceived && <CheckIcon boxSize={4} color="green.500" />}
 					{lastMessage && <Timestamp flexShrink={0} timestamp={lastMessage} />}
 				</Flex>

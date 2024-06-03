@@ -62,7 +62,7 @@ export default class PersonalNodeControlApi {
 	}
 
 	send(message: ControlMessage) {
-		this.node.send(JSON.stringify(message));
+		if (this.node.connected) this.node.send(JSON.stringify(message));
 	}
 
 	async setConfigField(field: keyof PrivateNodeConfig, value: any) {

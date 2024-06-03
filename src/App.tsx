@@ -34,7 +34,14 @@ const router = createBrowserRouter([
 		path: 'connect',
 		children: [
 			{ path: '', element: <ConnectView /> },
-			{ path: 'auth', element: <PersonalNodeAuthView /> },
+			{
+				path: 'auth',
+				element: (
+					<RequirePrivateNodeConnection>
+						<PersonalNodeAuthView />
+					</RequirePrivateNodeConnection>
+				),
+			},
 		],
 	},
 	{

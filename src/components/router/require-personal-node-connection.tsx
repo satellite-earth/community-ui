@@ -6,7 +6,7 @@ import personalNode from '../../services/personal-node';
 export default function RequirePrivateNodeConnection({ children }: PropsWithChildren) {
 	const location = useLocation();
 
-	if (!personalNode)
+	if (!personalNode || !personalNode.connected)
 		return <Navigate to="/connect" replace state={{ back: (location.state?.back ?? location) satisfies To }} />;
 
 	return <>{children}</>;

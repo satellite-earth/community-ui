@@ -9,6 +9,7 @@ import { getCommunityName } from '../../../helpers/nostr/communities';
 import ExploreCommunitiesModal from '../../explore/expore-communities-modal';
 import DrawerNav from './drawer-nav';
 import RequestNotifications from '../request-notifications';
+import ConnectionStatus from '../connection-status';
 
 export default function MobileLayout() {
 	const drawer = useDisclosure();
@@ -24,7 +25,8 @@ export default function MobileLayout() {
 
 	if (location.pathname === '/') {
 		return (
-			<Flex direction="column" overflow="hidden" w="full" h="full">
+			<>
+				<ConnectionStatus />
 				<RequestNotifications />
 				<Flex alignItems="center" gap="4" p="2" borderBottomWidth={1}>
 					<IconButton
@@ -43,7 +45,7 @@ export default function MobileLayout() {
 				<DrawerNav isOpen={drawer.isOpen} onClose={drawer.onClose} />
 
 				{explore.isOpen && <ExploreCommunitiesModal isOpen onClose={explore.onClose} />}
-			</Flex>
+			</>
 		);
 	}
 
