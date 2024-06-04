@@ -1,8 +1,8 @@
 import { Box, Flex, Heading, Image, LinkBox, Text } from '@chakra-ui/react';
+import { getChannelAbout, getChannelId, getChannelName, getChannelPicture } from '@satellite-earth/core/helpers/nostr';
 import { Link as RouterLink } from 'react-router-dom';
 import { NostrEvent } from 'nostr-tools';
 
-import { getChannelAbout, getChannelId, getChannelName, getChannelPicture } from '../../../helpers/nostr/channel';
 import HoverLinkOverlay from '../../hover-link-overlay';
 
 export default function ChannelButton({ channel }: { channel: NostrEvent }) {

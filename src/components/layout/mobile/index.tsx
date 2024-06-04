@@ -2,10 +2,10 @@ import { useEffect } from 'react';
 import { Flex, Heading, IconButton, useDisclosure } from '@chakra-ui/react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { HamburgerIcon } from '@chakra-ui/icons';
+import { getCommunityName } from '@satellite-earth/core/helpers/nostr';
 
 import useSubject from '../../../hooks/use-subject';
 import communitiesService from '../../../services/communities';
-import { getCommunityName } from '../../../helpers/nostr/communities';
 import ExploreCommunitiesModal from '../../explore/expore-communities-modal';
 import DrawerNav from './drawer-nav';
 import RequestNotifications from '../request-notifications';

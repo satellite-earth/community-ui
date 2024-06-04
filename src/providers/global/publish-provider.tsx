@@ -1,9 +1,9 @@
 import { PropsWithChildren, createContext, useCallback, useContext, useMemo } from 'react';
 import { useToast } from '@chakra-ui/react';
 import { EventTemplate, NostrEvent } from 'nostr-tools';
+import { isReplaceable } from '@satellite-earth/core/helpers/nostr';
 
 import { useSigningContext } from './signing-provider';
-import { isReplaceable } from '../../helpers/nostr/event';
 import replaceableEventsService from '../../services/replaceable-events';
 import relayPoolService from '../../services/relay-pool';
 import RelaySet, { RelaySetFrom } from '../../classes/relay-set';

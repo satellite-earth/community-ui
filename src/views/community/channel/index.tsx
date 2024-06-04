@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import TextChannelView from './text-channel';
+import { CHANNEL_KIND } from '@satellite-earth/core/helpers/nostr';
 
-import { CHANNEL_KIND } from '../../../helpers/nostr/channel';
 import useReplaceableEvent from '../../../hooks/use-replaceable-event';
 import { useCurrentCommunity } from '../../../providers/local/community-provider';
 

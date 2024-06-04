@@ -1,8 +1,7 @@
 import { Flex, IconButton, useDisclosure } from '@chakra-ui/react';
+import { COMMUNITY_CHAT_MESSAGE, getChannelName } from '@satellite-earth/core/helpers/nostr';
 import { NostrEvent } from 'nostr-tools';
 
-import { COMMUNITY_CHAT_MESSAGE } from '../../../../helpers/nostr/kinds';
-import { getChannelName } from '../../../../helpers/nostr/channel';
 import useTimelineLoader from '../../../../hooks/use-timeline-loader';
 import useSubject from '../../../../hooks/use-subject';
 import SendMessageForm from './send-message-form';

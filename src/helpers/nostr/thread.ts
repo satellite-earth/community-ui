@@ -1,7 +1,6 @@
 import dayjs from 'dayjs';
 import { NostrEvent } from 'nostr-tools';
-
-import { sortByDate } from './event';
+import { sortByDate } from '@satellite-earth/core/helpers/nostr/event.js';
 
 export function groupMessages(messages: NostrEvent[], minutes = 5, ascending = false) {
 	const sorted = messages.sort(sortByDate);

@@ -1,7 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { nip19 } from 'nostr-tools';
-
-import { CustomAddressPointer, parseCoordinate } from '../helpers/nostr/event';
+import { CustomAddressPointer, parseCoordinate } from '@satellite-earth/core/helpers/nostr';
 
 export default function useParamsAddressPointer(key: string): nip19.AddressPointer;
 export default function useParamsAddressPointer(key: string, requireD: true): nip19.AddressPointer;

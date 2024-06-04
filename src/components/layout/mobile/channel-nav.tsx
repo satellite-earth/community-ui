@@ -1,11 +1,11 @@
 import { NostrEvent } from 'nostr-tools';
 import { Center, Flex, Text } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
+import { getChannelId } from '@satellite-earth/core/helpers/nostr';
 
 import communityRelaysService from '../../../services/community-relays';
 import useCommunityChannels from '../../../hooks/use-community-channels';
 import ChannelButton from './channel-button';
-import { getChannelId } from '../../../helpers/nostr/channel';
 import { DirectMessagesIcon } from '../../icons';
 
 export default function MobileChannelNav({ community }: { community: NostrEvent }) {

@@ -1,9 +1,9 @@
 import { NostrEvent, Relay } from 'nostr-tools';
 import _throttle from 'lodash.throttle';
+import { getEventCoordinate } from '@satellite-earth/core/helpers/nostr';
 
 import SuperMap from '../classes/super-map';
 import { logger } from '../helpers/debug';
-import { getEventCoordinate } from '../helpers/nostr/event';
 import EventStore from '../classes/event-store';
 import Subject from '../classes/subject';
 import BatchKindLoader, { createCoordinate } from '../classes/batch-kind-loader';

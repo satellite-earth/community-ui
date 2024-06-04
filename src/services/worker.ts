@@ -1,13 +1,15 @@
 import { registerSW } from 'virtual:pwa-register';
 import { logger } from '../helpers/debug';
+import Subject from '../classes/subject';
 
 const log = logger.extend('ServiceWorker');
 
-let registration: ServiceWorkerRegistration | null = null;
+export const serviceWorkerRegistration = new Subject<ServiceWorkerRegistration | null>();
+
 registerSW({
 	immediate: true,
 	onRegisteredSW: (s, r) => {
-		if (r) registration = r;
+		if (r) serviceWorkerRegistration.next(r);
 
 		if (import.meta.env.DEV) {
 			// @ts-expect-error

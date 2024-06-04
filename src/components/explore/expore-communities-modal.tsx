@@ -16,10 +16,10 @@ import {
 	Text,
 } from '@chakra-ui/react';
 import { NostrEvent } from 'nostr-tools';
+import { getTagValue } from '@satellite-earth/core/helpers/nostr';
 
 import useTimelineLoader from '../../hooks/use-timeline-loader';
 import useSubject from '../../hooks/use-subject';
-import { getTagValue } from '../../helpers/nostr/event';
 import communitiesService from '../../services/communities';
 import personalNode from '../../services/personal-node';
 

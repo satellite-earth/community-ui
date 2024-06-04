@@ -16,9 +16,9 @@ import {
 } from '@chakra-ui/react';
 import { EventTemplate, NostrEvent } from 'nostr-tools';
 import { useForm } from 'react-hook-form';
+import { getTagValue } from '@satellite-earth/core/helpers/nostr';
 import dayjs from 'dayjs';
 
-import { getTagValue } from '../../helpers/nostr/event';
 import { usePublishEvent } from '../../providers/global/publish-provider';
 import { useState } from 'react';
 import { useCurrentCommunity } from '../../providers/local/community-provider';

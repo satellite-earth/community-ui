@@ -2,9 +2,9 @@ import { useForm } from 'react-hook-form';
 import { EventTemplate } from 'nostr-tools';
 import { Button, Flex, Input } from '@chakra-ui/react';
 import dayjs from 'dayjs';
+import { COMMUNITY_CHAT_MESSAGE } from '@satellite-earth/core/helpers/nostr';
 
 import { usePublishEvent } from '../../../../providers/global/publish-provider';
-import { COMMUNITY_CHAT_MESSAGE } from '../../../../helpers/nostr/kinds';
 import { useCurrentCommunity } from '../../../../providers/local/community-provider';
 
 export default function SendMessageForm({ groupId }: { groupId: string }) {

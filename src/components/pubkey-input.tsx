@@ -1,8 +1,8 @@
 import { forwardRef, useEffect } from 'react';
 import { Input, InputProps, useForceUpdate } from '@chakra-ui/react';
+import { Kind0ParsedContent, getUserDisplayName, parseKind0Event } from '@satellite-earth/core/helpers/nostr';
 
 import personalNode from '../services/personal-node';
-import { Kind0ParsedContent, getUserDisplayName, parseKind0Event } from '../helpers/nostr/user-metadata';
 import replaceableEventsService from '../services/replaceable-events';
 
 // NOTE: hacky way to load all kind 0 events

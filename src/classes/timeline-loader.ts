@@ -4,12 +4,12 @@ import { Filter, NostrEvent } from 'nostr-tools';
 import { AbstractRelay } from 'nostr-tools/abstract-relay';
 import _throttle from 'lodash.throttle';
 import Observable from 'zen-observable';
+import { isReplaceable } from '@satellite-earth/core/helpers/nostr';
 
 import MultiSubscription from './multi-subscription';
 import { PersistentSubject } from './subject';
 import { logger } from '../helpers/debug';
 import EventStore from './event-store';
-import { isReplaceable } from '../helpers/nostr/event';
 import replaceableEventsService from '../services/replaceable-events';
 import { mergeFilter, isFilterEqual } from '../helpers/nostr/filter';
 import SuperMap from './super-map';

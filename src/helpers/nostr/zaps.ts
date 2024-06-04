@@ -1,8 +1,7 @@
 import { bech32 } from '@scure/base';
 import { NostrEvent, nip57, utils } from 'nostr-tools';
+import { type Kind0ParsedContent } from '@satellite-earth/core/helpers/nostr/profile.js';
 import { ParsedInvoice, parsePaymentRequest } from '../bolt11';
-
-import { Kind0ParsedContent } from './user-metadata';
 
 // based on https://github.com/nbd-wtf/nostr-tools/blob/master/nip57.ts
 export async function getZapEndpoint(metadata: Kind0ParsedContent): Promise<null | string> {
