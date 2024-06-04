@@ -24,7 +24,7 @@ registerRoute(new NavigationRoute(createHandlerBoundToURL('index.html'), { allow
 
 // notifications
 import { type DirectMessageNotification } from '@satellite-earth/core/types/control-api/notifications.js';
-import { getDMSender } from '@satellite-earth/core/helpers/nostr';
+import { getDMSender } from '@satellite-earth/core/helpers/nostr/dms.js';
 import { getUserDisplayName } from '@satellite-earth/core/helpers/nostr/profile.js';
 
 self.addEventListener('push', (event) => {
