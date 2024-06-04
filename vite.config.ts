@@ -15,7 +15,7 @@ export default defineConfig({
 			registerType: 'autoUpdate',
 			injectRegister: null,
 			srcDir: 'src',
-			filename: 'worker/index.ts',
+			filename: 'worker.ts',
 			injectManifest: { minify: false, sourcemap: true },
 			workbox: {
 				// This increase the cache limit to 3mB

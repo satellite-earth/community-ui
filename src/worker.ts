@@ -1,3 +1,4 @@
+//  / <reference no-default-lib="true"/>
 /// <reference lib="ES2022" />
 /// <reference lib="DOM" />
 /// <reference lib="webworker" />
@@ -6,10 +7,25 @@
 // https://github.com/microsoft/TypeScript/issues/14877
 declare var self: ServiceWorkerGlobalScope;
 
+self.addEventListener('install', () => {
+	self.skipWaiting();
+});
+
+// caching
+import { cleanupOutdatedCaches, precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching';
+import { registerRoute, NavigationRoute } from 'workbox-routing';
+
+precacheAndRoute(self.__WB_MANIFEST);
+cleanupOutdatedCaches();
+
+let allowlist: undefined | RegExp[] = undefined;
+if (import.meta.env.DEV) allowlist = [/^\/$/];
+registerRoute(new NavigationRoute(createHandlerBoundToURL('index.html'), { allowlist }));
+
+// notifications
 import { type DirectMessageNotification } from '@satellite-earth/core/types/control-api/notifications.js';
 import { getDMSender } from '@satellite-earth/core/helpers/nostr';
 import { getUserDisplayName } from '@satellite-earth/core/helpers/nostr/profile.js';
-import { finishRepostEvent } from 'nostr-tools/nip18';
 
 self.addEventListener('push', (event) => {
 	const data = event.data?.json() as DirectMessageNotification | undefined;
