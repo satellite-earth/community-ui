@@ -33,7 +33,7 @@ export default function RequestNotifications() {
 	if (hide || !registration || !!subscription) return;
 
 	return (
-		<Alert status="info" flexWrap="wrap" gap="2">
+		<Alert status="info" flexWrap="wrap" gap="2" overflow="visible">
 			<AlertIcon />
 			<AlertTitle>Enable Notifications</AlertTitle>
 			<AlertDescription>get notifications when you receive a new direct message</AlertDescription>
