@@ -1,5 +1,5 @@
 import { EventTemplate, Relay, VerifiedEvent } from 'nostr-tools';
-import { ControlMessage, ControlResponse } from '@satellite-earth/core/types/control-api.js';
+import { ControlMessage, ControlResponse } from '@satellite-earth/core/types/control-api/index.d.ts';
 
 import createDefer, { Deferred } from './deferred';
 import { logger } from '../helpers/debug';
