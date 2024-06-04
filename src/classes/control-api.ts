@@ -1,11 +1,8 @@
-import {
-	ControlMessage,
-	ControlResponse,
-	DMStats,
-	DatabaseStats,
-	ReceiverStatus,
-} from '@satellite-earth/core/types/control-api.js';
+import { ControlMessage, ControlResponse } from '@satellite-earth/core/types/control-api/index.d.ts';
 import { PrivateNodeConfig } from '@satellite-earth/core/types/private-node-config.js';
+import { DatabaseStats } from '@satellite-earth/core/types/control-api/database.js';
+import { ReceiverStatus } from '@satellite-earth/core/types/control-api/receiver.js';
+import { DMStats } from '@satellite-earth/core/types/control-api/direct-messages.js';
 
 import Subject, { PersistentSubject } from './subject';
 import PersonalNode from './personal-node';
@@ -20,6 +17,7 @@ export default class PersonalNodeControlApi {
 	databaseStats = new Subject<DatabaseStats>();
 	receiverStatus = new Subject<ReceiverStatus>();
 	directMessageStats = new Subject<DMStats>();
+	vapidKey = new Subject<string>();
 
 	constructor(node: PersonalNode) {
 		this.node = node;
@@ -58,6 +56,8 @@ export default class PersonalNodeControlApi {
 			}
 		} else if (response[1] === 'DM' && response[2] === 'STATS') {
 			this.directMessageStats.next(response[3]);
+		} else if (response[1] === 'NOTIFICATIONS' && response[2] === 'VAPID-KEY') {
+			this.vapidKey.next(response[3]);
 		}
 	}
 

@@ -8,16 +8,29 @@ import DatabasePanel from './database';
 import ReceiverPanel from './receiver';
 import BottomNav from '../../components/layout/mobile/bottom-nav';
 import LogsTab from './tabs/logs-tab';
+import NotificationsTab from './tabs/notifications-tab';
+import useRouteStateValue from '../../hooks/use-route-state-value';
 
 export default function DashboardHomeView() {
 	const isMobile = useBreakpointValue({ base: true, lg: false });
+	const { value: tab, setValue: setTab } = useRouteStateValue('tab', 0);
 
 	return (
 		<>
-			<Tabs w="full" h="full" overflow="hidden" isLazy display="flex" flexDirection="column" colorScheme="brand">
+			<Tabs
+				w="full"
+				h="full"
+				overflow="hidden"
+				isLazy
+				display="flex"
+				flexDirection="column"
+				colorScheme="brand"
+				index={tab}
+				onChange={(t) => setTab(t)}
+			>
 				<TabList overflowX="auto" overflowY="hidden">
 					<Tab>Dashboard</Tab>
-					{/* <Tab>Two</Tab> */}
+					<Tab>Notifications</Tab>
 					<Tab whiteSpace="pre">Status Logs</Tab>
 				</TabList>
 
@@ -40,9 +53,9 @@ export default function DashboardHomeView() {
 							</Flex>
 						</Flex>
 					</TabPanel>
-					{/* <TabPanel p="0" flex={1} overflow="hidden" display="flex" flexDirection="column">
-						<p>two!</p>
-					</TabPanel> */}
+					<TabPanel p="0" flex={1} overflow="hidden" display="flex" flexDirection="column">
+						<NotificationsTab />
+					</TabPanel>
 					<TabPanel p="0" flex={1} overflow="hidden" display="flex" flexDirection="column">
 						<LogsTab />
 					</TabPanel>
