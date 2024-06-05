@@ -56,7 +56,11 @@ function NotificationSettings() {
 					Enable Notifications
 				</Button>
 			)}
-			{!registration && <Text color="red">Service Worker unsupported</Text>}
+			{!registration && (
+				<Text color="orange" py="2">
+					Service Worker unsupported
+				</Text>
+			)}
 		</>
 	);
 }

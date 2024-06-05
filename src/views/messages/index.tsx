@@ -1,6 +1,8 @@
 import { Outlet, useMatch } from 'react-router-dom';
 import { Flex, useBreakpointValue } from '@chakra-ui/react';
 import { useMount } from 'react-use';
+import { FixedSizeList, ListChildComponentProps } from 'react-window';
+import AutoSizer from 'react-virtualized-auto-sizer';
 
 import useCurrentAccount from '../../hooks/use-current-account';
 import useSubject from '../../hooks/use-subject';
@@ -8,6 +10,14 @@ import ConversationButton from './components/conversation-button';
 import SimpleHeader from '../../components/simple-header';
 import BottomNav from '../../components/layout/mobile/bottom-nav';
 import { controlApi } from '../../services/personal-node';
+
+function Conversation({ index, style, data }: ListChildComponentProps<[string, any][]>) {
+	const [pubkey, stats] = data[index];
+
+	return (
+		<ConversationButton pubkey={pubkey} lastReceived={stats.lastReceived} lastSent={stats.lastSent} style={style} />
+	);
+}
 
 export default function MessagesView() {
 	const match = useMatch('/messages');
@@ -38,15 +48,21 @@ export default function MessagesView() {
 						flexShrink={0}
 					>
 						<SimpleHeader title="Messages" />
-						<Flex direction="column" overflow="auto" flex={1} h="full">
-							{sorted.map(([pubkey, stats]) => (
-								<ConversationButton
-									key={pubkey}
-									pubkey={pubkey}
-									lastReceived={stats.lastReceived}
-									lastSent={stats.lastSent}
-								/>
-							))}
+						<Flex h="full" flex={1} overflow="hidden">
+							<AutoSizer>
+								{({ width, height }) => (
+									<FixedSizeList
+										height={height}
+										width={width}
+										itemData={sorted}
+										itemCount={sorted.length}
+										itemKey={(i, data) => data[i][0]}
+										itemSize={64}
+									>
+										{Conversation}
+									</FixedSizeList>
+								)}
+							</AutoSizer>
 						</Flex>
 					</Flex>
 					<Outlet />

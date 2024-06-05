@@ -1,4 +1,4 @@
-import { Flex, LinkBox, Spacer } from '@chakra-ui/react';
+import { Flex, FlexProps, LinkBox } from '@chakra-ui/react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { CheckIcon } from '@chakra-ui/icons';
 import { nip19 } from 'nostr-tools';
@@ -18,17 +18,18 @@ export default function ConversationButton({
 	pubkey,
 	lastSent,
 	lastReceived,
+	...props
 }: {
 	pubkey: string;
 	lastSent?: number;
 	lastReceived?: number;
-}) {
+} & Omit<FlexProps, 'children'>) {
 	const location = useLocation();
 
 	const lastMessage = Math.max(lastSent ?? 0, lastReceived ?? 0);
 
 	return (
-		<LinkBox as={Flex} gap="2" overflow="hidden" p="2" flexShrink={0}>
+		<LinkBox as={Flex} gap="2" overflow="hidden" p="2" flexShrink={0} {...props}>
 			<UserAvatar pubkey={pubkey} />
 			<Flex direction="column" gap="1" overflow="hidden" flex={1}>
 				<Flex gap="2" alignItems="center" overflow="hidden">
