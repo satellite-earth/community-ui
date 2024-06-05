@@ -3,6 +3,7 @@ import PersonalNode from '../classes/personal-node';
 import PersonalNodeControlApi from '../classes/control-api';
 import signingService from './signing';
 import accountService from './account';
+import relayPoolService from './relay-pool';
 
 const log = logger.extend('private-node');
 
@@ -28,7 +29,9 @@ if (window.satellite) {
 }
 
 if (personalNode) {
-	personalNode.connect();
+	// add the personal node to the relay pool and connect
+	relayPoolService.relays.set(personalNode.url, personalNode);
+	relayPoolService.requestConnect(personalNode);
 
 	// automatically authenticate with personal node
 	personalNode.onChallenge.subscribe(async () => {
