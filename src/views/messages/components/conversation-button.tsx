@@ -1,4 +1,4 @@
-import { Flex, FlexProps, LinkBox } from '@chakra-ui/react';
+import { Flex, FlexProps, LinkBox, Text } from '@chakra-ui/react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { CheckIcon } from '@chakra-ui/icons';
 import { nip19 } from 'nostr-tools';
@@ -8,11 +8,8 @@ import UserName from '../../../components/user/user-name';
 import UserAvatar from '../../../components/user/user-avatar';
 import UserDnsIdentity from '../../../components/user/user-dns-identity';
 import HoverLinkOverlay from '../../../components/hover-link-overlay';
-
-// function MessagePreview({ message, pubkey }: { message: NostrEvent; pubkey: string }) {
-// 	const { plaintext } = useDecryptionContainer(pubkey, message.content);
-// 	return <Text isTruncated>{plaintext || '<Encrypted>'}</Text>;
-// }
+import { useDraft } from '../../../hooks/use-cache-form';
+import Pencil01 from '../../../components/icons/components/pencil-01';
 
 export default function ConversationButton({
 	pubkey,
@@ -26,6 +23,7 @@ export default function ConversationButton({
 } & Omit<FlexProps, 'children'>) {
 	const location = useLocation();
 
+	const draft = useDraft(pubkey);
 	const lastMessage = Math.max(lastSent ?? 0, lastReceived ?? 0);
 
 	return (
@@ -36,6 +34,11 @@ export default function ConversationButton({
 					<HoverLinkOverlay as={RouterLink} to={`/messages/p/${nip19.npubEncode(pubkey)}` + location.search} mr="auto">
 						<UserName pubkey={pubkey} isTruncated />
 					</HoverLinkOverlay>
+					{!!draft && (
+						<Text color="blue.500" fontWeight="bold">
+							Draft
+						</Text>
+					)}
 					{lastSent && lastReceived && lastSent > lastReceived && <CheckIcon boxSize={4} color="green.500" />}
 					{lastMessage && <Timestamp flexShrink={0} timestamp={lastMessage} />}
 				</Flex>

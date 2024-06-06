@@ -36,14 +36,12 @@ self.addEventListener('push', (event) => {
 			const name = getUserDisplayName(content, data.event.pubkey);
 			const message = `New direct message from ${name}`;
 
-			event.waitUntil(
-				self.registration.showNotification(message, { body: 'maybe contents?', data: getDMSender(data.event) }),
-			);
+			event.waitUntil(self.registration.showNotification(name, { body: message, data: getDMSender(data.event) }));
 		} else if (data?.event) {
 			const message = `New direct message`;
 
 			event.waitUntil(
-				self.registration.showNotification(message, { body: 'maybe contents?', data: getDMSender(data.event) }),
+				self.registration.showNotification('Direct Message', { body: message, data: getDMSender(data.event) }),
 			);
 		}
 	} catch (error) {}

@@ -8,6 +8,7 @@ import { useSigningContext } from '../../../providers/global/signing-provider';
 import { useDecryptionContext } from '../../../providers/global/decryption-provider';
 import { usePublishEvent } from '../../../providers/global/publish-provider';
 import personalNode from '../../../services/personal-node';
+import useCacheForm from '../../../hooks/use-cache-form';
 
 export default function SendMessageForm({
 	pubkey,
@@ -26,6 +27,11 @@ export default function SendMessageForm({
 		mode: 'all',
 	});
 	watch('content');
+
+	const clearCache = useCacheForm<{ content: string }>(pubkey, getValues, reset, formState, {
+		clearOnKeyChange: true,
+		isEmpty: (v) => !v.content,
+	});
 
 	const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
 
@@ -49,6 +55,7 @@ export default function SendMessageForm({
 		const pub = await publish(draft, personalNode!);
 
 		if (pub) {
+			clearCache();
 			reset();
 
 			// add plaintext to decryption context
@@ -73,7 +80,7 @@ export default function SendMessageForm({
 					<Textarea
 						mb="2"
 						value={getValues().content}
-						onChange={(e) => setValue('content', e.target.value, { shouldDirty: true })}
+						onChange={(e) => setValue('content', e.target.value, { shouldDirty: true, shouldTouch: true })}
 						rows={2}
 						isRequired
 						ref={textAreaRef}
