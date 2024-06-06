@@ -5,14 +5,15 @@ import signingService from './signing';
 import accountService from './account';
 import relayPoolService from './relay-pool';
 
+export const PERSONAL_NODE_STORAGE_KEY = 'private-node-url';
 const log = logger.extend('private-node');
 
 export function setPrivateNodeURL(url: string) {
-	localStorage.setItem('private-node-url', url);
+	localStorage.setItem(PERSONAL_NODE_STORAGE_KEY, url);
 	location.reload();
 }
 export function resetPrivateNodeURL() {
-	localStorage.removeItem('private-node-url');
+	localStorage.removeItem(PERSONAL_NODE_STORAGE_KEY);
 	location.reload();
 }
 
@@ -21,9 +22,14 @@ let personalNode: PersonalNode | null = null;
 if (window.satellite) {
 	log('Using URL from window.satellite');
 	personalNode = new PersonalNode(await window.satellite.getLocalRelay());
-} else if (localStorage.getItem('private-node-url')) {
-	log('Using URL from localStorage');
-	personalNode = new PersonalNode(localStorage.getItem('private-node-url')!);
+} else if (localStorage.getItem(PERSONAL_NODE_STORAGE_KEY)) {
+	try {
+		log('Using URL from localStorage');
+		personalNode = new PersonalNode(localStorage.getItem(PERSONAL_NODE_STORAGE_KEY)!);
+	} catch (err) {
+		log('Failed to create personal node, clearing storage');
+		localStorage.removeItem(PERSONAL_NODE_STORAGE_KEY);
+	}
 } else {
 	log('Unable to find private node URL');
 }

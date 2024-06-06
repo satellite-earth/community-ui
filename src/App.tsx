@@ -16,10 +16,11 @@ import DashboardHomeView from './views/dashboard';
 import PersonalNodeAuthView from './views/connect/auth';
 import MessagesView from './views/messages';
 import DirectMessageConversationView from './views/messages/conversation';
-import RequirePrivateNodeConnection from './components/router/require-personal-node-connection';
+import RequirePersonalNodeConnection from './components/router/require-personal-node-connection';
 import RequireCurrentAccount from './components/router/require-current-account';
 import RequirePersonalNodeAuth from './components/router/require-personal-node-auth';
 import HomeView from './views/home';
+import PersonalNodeSetupView from './views/setup';
 
 const router = createBrowserRouter([
 	{
@@ -37,9 +38,32 @@ const router = createBrowserRouter([
 			{
 				path: 'auth',
 				element: (
-					<RequirePrivateNodeConnection>
+					<RequirePersonalNodeConnection>
 						<PersonalNodeAuthView />
-					</RequirePrivateNodeConnection>
+					</RequirePersonalNodeConnection>
+				),
+			},
+		],
+	},
+	{
+		path: 'setup',
+		element: <PersonalNodeSetupView />,
+	},
+	{
+		path: 'dashboard',
+		element: (
+			<RequirePersonalNodeConnection>
+				<ScrollRestoration />
+				<AppLayout />
+			</RequirePersonalNodeConnection>
+		),
+		children: [
+			{
+				path: '',
+				element: (
+					<RequirePersonalNodeAuth>
+						<DashboardHomeView />
+					</RequirePersonalNodeAuth>
 				),
 			},
 		],
@@ -47,12 +71,12 @@ const router = createBrowserRouter([
 	{
 		path: '',
 		element: (
-			<RequirePrivateNodeConnection>
+			<RequirePersonalNodeConnection>
 				<RequireCurrentAccount>
 					<ScrollRestoration />
 					<AppLayout />
 				</RequireCurrentAccount>
-			</RequirePrivateNodeConnection>
+			</RequirePersonalNodeConnection>
 		),
 		children: [
 			{
@@ -72,25 +96,6 @@ const router = createBrowserRouter([
 			{
 				path: '',
 				element: <HomeView />,
-			},
-		],
-	},
-	{
-		path: 'dashboard',
-		element: (
-			<RequirePrivateNodeConnection>
-				<ScrollRestoration />
-				<AppLayout />
-			</RequirePrivateNodeConnection>
-		),
-		children: [
-			{
-				path: '',
-				element: (
-					<RequirePersonalNodeAuth>
-						<DashboardHomeView />
-					</RequirePersonalNodeAuth>
-				),
 			},
 		],
 	},

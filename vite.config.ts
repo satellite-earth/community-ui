@@ -22,9 +22,9 @@ export default defineConfig({
 				maximumFileSizeToCacheInBytes: 2097152 * 1.5,
 			},
 			manifest: {
-				name: 'Satellite Communities',
+				name: 'Satellite',
 				short_name: 'Satellite',
-				description: 'An interface for satellite communities',
+				description: 'An interface for satellite',
 				display: 'standalone',
 				orientation: 'portrait-primary',
 				theme_color: '#171819',
