@@ -1,17 +1,20 @@
 import { Button, Flex, FormControl, FormHelperText, FormLabel, Heading, Input, useToast } from '@chakra-ui/react';
+import { getPublicKey, nip19 } from 'nostr-tools';
+import { useForm } from 'react-hook-form';
+import { Navigate } from 'react-router-dom';
 
 import personalNode, { controlApi, setPrivateNodeURL } from '../../services/personal-node';
 import useRouteSearchValue from '../../hooks/use-route-search-value';
 import QRCodeScannerButton from '../../components/qr-code/qr-code-scanner-button';
-import { useForm } from 'react-hook-form';
-import { getPublicKey, nip19 } from 'nostr-tools';
 import { isHexKey } from '../../helpers/nip19';
 import dnsIdentityService from '../../services/dns-identity';
+import useSubject from '../../hooks/use-subject';
 
 export default function PersonalNodeSetupView() {
 	const toast = useToast();
 	const relayParam = useRouteSearchValue('relay');
 	const authParam = useRouteSearchValue('auth');
+	const config = useSubject(controlApi?.config);
 
 	const { register, setValue, formState, handleSubmit } = useForm({
 		defaultValues: { owner: '' },
@@ -67,6 +70,10 @@ export default function PersonalNodeSetupView() {
 			if (error instanceof Error) toast({ status: 'error', description: error.message });
 		}
 	});
+
+	if (config?.owner) {
+		return <Navigate to="/" />;
+	}
 
 	if (relayParam.value) {
 		if (personalNode) {
