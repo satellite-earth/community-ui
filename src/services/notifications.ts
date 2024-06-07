@@ -2,6 +2,14 @@ import { type WebSubscription } from '@satellite-earth/core/types/control-api/no
 
 import { controlApi } from './personal-node';
 import { serviceWorkerRegistration } from './worker';
+import Subject from '../classes/subject';
+
+export const pushSubscription = new Subject<PushSubscription | null>();
+serviceWorkerRegistration.subscribe(async (registration) => {
+	if (registration) {
+		pushSubscription.next(await registration.pushManager.getSubscription());
+	}
+});
 
 export async function enableNotifications() {
 	if (!controlApi) throw new Error('Missing control api');
@@ -26,16 +34,15 @@ export async function enableNotifications() {
 		};
 
 		controlApi.send(['CONTROL', 'NOTIFICATIONS', 'REGISTER', metadata]);
+		pushSubscription.next(subscription);
 	} else throw new Error('Failed to register subscription');
 }
 
 export async function disableNotifications() {
-	const subscription = await serviceWorkerRegistration.value?.pushManager.getSubscription();
-
-	if (subscription) {
-		const key = subscription.toJSON().keys?.p256dh;
+	if (pushSubscription.value) {
+		const key = pushSubscription.value.toJSON().keys?.p256dh;
 		if (key) controlApi?.send(['CONTROL', 'NOTIFICATIONS', 'UNREGISTER', key]);
 
-		await subscription.unsubscribe();
+		await pushSubscription.value.unsubscribe();
 	}
 }

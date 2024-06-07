@@ -8,7 +8,7 @@ import useSubject from '../../../hooks/use-subject';
 import communitiesService from '../../../services/communities';
 import ExploreCommunitiesModal from '../../explore/expore-communities-modal';
 import DrawerNav from './drawer-nav';
-import RequestNotifications from '../request-notifications';
+import NotificationsPrompt from '../notifications-prompt';
 import ConnectionStatus from '../connection-status';
 
 export default function MobileLayout() {
@@ -27,7 +27,7 @@ export default function MobileLayout() {
 		return (
 			<>
 				<ConnectionStatus />
-				<RequestNotifications />
+				<NotificationsPrompt />
 				<Flex alignItems="center" gap="4" p="2" borderBottomWidth={1}>
 					<IconButton
 						icon={<HamburgerIcon boxSize={5} />}

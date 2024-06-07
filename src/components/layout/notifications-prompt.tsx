@@ -1,20 +1,19 @@
 import { Alert, AlertDescription, AlertIcon, AlertTitle, Button, CloseButton, useToast } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useLocalStorage } from 'react-use';
 
 import useSubject from '../../hooks/use-subject';
 import { serviceWorkerRegistration } from '../../services/worker';
-import { enableNotifications } from '../../services/notifications';
+import { enableNotifications, pushSubscription } from '../../services/notifications';
+import { controlApi } from '../../services/personal-node';
 
-export default function RequestNotifications() {
+export default function NotificationsPrompt() {
 	const toast = useToast();
 	const [hide, setHide] = useLocalStorage('hide-request-notifications', false);
 
+	const vapidKey = useSubject(controlApi?.vapidKey);
 	const registration = useSubject(serviceWorkerRegistration);
-	const [subscription, setSubscription] = useState<PushSubscription | null>();
-	useEffect(() => {
-		registration?.pushManager.getSubscription().then((sub) => setSubscription(sub));
-	}, [registration]);
+	const subscription = useSubject(pushSubscription);
 
 	const [loading, setLoading] = useState(false);
 	const enable = async () => {
@@ -22,15 +21,13 @@ export default function RequestNotifications() {
 		try {
 			if (Notification.permission !== 'granted') await Notification.requestPermission();
 			if (!subscription) await enableNotifications();
-
-			registration?.pushManager.getSubscription().then((sub) => setSubscription(sub));
 		} catch (error) {
 			if (error instanceof Error) toast({ status: 'error', description: error.message });
 		}
 		setLoading(false);
 	};
 
-	if (hide || !registration || !!subscription) return;
+	if (hide || !registration || !!subscription || !vapidKey) return;
 
 	return (
 		<Alert status="info" flexWrap="wrap" gap="2" overflow="visible">

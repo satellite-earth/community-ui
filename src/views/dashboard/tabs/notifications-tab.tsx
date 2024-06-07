@@ -6,7 +6,7 @@ import useSubject from '../../../hooks/use-subject';
 import Panel from '../../../components/dashboard/panel';
 import PanelItemString from '../../../components/dashboard/panel-item-string';
 import { serviceWorkerRegistration } from '../../../services/worker';
-import { disableNotifications, enableNotifications } from '../../../services/notifications';
+import { disableNotifications, enableNotifications, pushSubscription } from '../../../services/notifications';
 
 function NotificationSettings() {
 	const toast = useToast();
@@ -16,10 +16,7 @@ function NotificationSettings() {
 	}, []);
 
 	const registration = useSubject(serviceWorkerRegistration);
-	const [subscription, setSubscription] = useState<PushSubscription | null>();
-	useEffect(() => {
-		registration?.pushManager.getSubscription().then((sub) => setSubscription(sub));
-	}, [registration]);
+	const subscription = useSubject(pushSubscription);
 
 	const [loading, setLoading] = useState(false);
 	const toggle = async () => {
@@ -27,8 +24,6 @@ function NotificationSettings() {
 		try {
 			if (!subscription) await enableNotifications();
 			else await disableNotifications();
-
-			registration?.pushManager.getSubscription().then((sub) => setSubscription(sub));
 		} catch (error) {
 			if (error instanceof Error) toast({ status: 'error', description: error.message });
 		}

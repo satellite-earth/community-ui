@@ -3,14 +3,14 @@ import { Outlet } from 'react-router-dom';
 
 import DesktopSideNav from './side-nav';
 import ErrorBoundary from '../../error-boundary';
-import RequestNotifications from '../request-notifications';
+import NotificationsPrompt from '../notifications-prompt';
 import ConnectionStatus from '../connection-status';
 
 export default function DesktopLayout() {
 	return (
 		<>
 			<ConnectionStatus />
-			<RequestNotifications />
+			<NotificationsPrompt />
 			<Flex
 				direction={{
 					base: 'column',
