@@ -102,7 +102,7 @@ export default function ReceiverPanel() {
 				</Flex>
 				{config?.owner ? <UserName pubkey={config?.owner} /> : <Text>NOT SET</Text>}
 			</Box>
-			<Box>
+			{/* <Box>
 				<Flex gap="2" justifyContent="space-between">
 					<Text>PUBKEYS</Text>
 					{!addPubkey.isOpen && (
@@ -124,7 +124,7 @@ export default function ReceiverPanel() {
 					</Flex>
 				))}
 			</Box>
-			{addPubkey.isOpen && <AddPubkeyForm onCancel={addPubkey.onClose} onAdd={addPubkey.onClose} />}
+			{addPubkey.isOpen && <AddPubkeyForm onCancel={addPubkey.onClose} onAdd={addPubkey.onClose} />} */}
 
 			<Box>
 				<Flex gap="2" justifyContent="space-between" mt="2">

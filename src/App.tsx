@@ -16,11 +16,12 @@ import DashboardHomeView from './views/dashboard';
 import PersonalNodeAuthView from './views/connect/auth';
 import MessagesView from './views/messages';
 import DirectMessageConversationView from './views/messages/conversation';
-import RequirePersonalNodeConnection from './components/router/require-personal-node-connection';
+import RequirePersonalNode from './components/router/require-personal-node';
 import RequireCurrentAccount from './components/router/require-current-account';
 import RequirePersonalNodeAuth from './components/router/require-personal-node-auth';
 import HomeView from './views/home';
 import PersonalNodeSetupView from './views/setup';
+import ConnectionStatus from './components/layout/connection-status';
 
 const router = createBrowserRouter([
 	{
@@ -38,9 +39,10 @@ const router = createBrowserRouter([
 			{
 				path: 'auth',
 				element: (
-					<RequirePersonalNodeConnection>
+					<RequirePersonalNode>
+						<ConnectionStatus />
 						<PersonalNodeAuthView />
-					</RequirePersonalNodeConnection>
+					</RequirePersonalNode>
 				),
 			},
 		],
@@ -52,10 +54,10 @@ const router = createBrowserRouter([
 	{
 		path: 'dashboard',
 		element: (
-			<RequirePersonalNodeConnection>
+			<RequirePersonalNode requireConnection>
 				<ScrollRestoration />
 				<AppLayout />
-			</RequirePersonalNodeConnection>
+			</RequirePersonalNode>
 		),
 		children: [
 			{
@@ -71,12 +73,12 @@ const router = createBrowserRouter([
 	{
 		path: '',
 		element: (
-			<RequirePersonalNodeConnection>
+			<RequirePersonalNode>
 				<RequireCurrentAccount>
 					<ScrollRestoration />
 					<AppLayout />
 				</RequireCurrentAccount>
-			</RequirePersonalNodeConnection>
+			</RequirePersonalNode>
 		),
 		children: [
 			{

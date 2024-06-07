@@ -1,10 +1,13 @@
-import { Navigate, useLocation, useSearchParams } from 'react-router-dom';
+import { useCallback, useEffect, useState } from 'react';
+import { Navigate, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import {
 	Alert,
 	AlertDescription,
 	AlertIcon,
 	AlertTitle,
+	Box,
 	Button,
+	Code,
 	Flex,
 	FormControl,
 	FormHelperText,
@@ -12,18 +15,17 @@ import {
 	Heading,
 	Input,
 	Spinner,
-	useForceUpdate,
-	useInterval,
-	useToast,
+	Text,
 } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import { Link as RouterLink } from 'react-router-dom';
 
 import personalNode, { setPrivateNodeURL } from '../../services/personal-node';
 import QRCodeScannerButton from '../../components/qr-code/qr-code-scanner-button';
-import { useCallback, useEffect, useState } from 'react';
+import TextButton from '../../components/dashboard/text-button';
+import useSubject from '../../hooks/use-subject';
 
-function ConnectForm({ onConnect }: { onConnect?: () => void }) {
+function ConnectForm() {
 	const [params] = useSearchParams();
 	const { register, handleSubmit, formState, setValue } = useForm({
 		defaultValues: {
@@ -56,6 +58,36 @@ function ConnectForm({ onConnect }: { onConnect?: () => void }) {
 				<Button isLoading={formState.isSubmitting} type="submit" ml="auto" colorScheme="brand">
 					Connect
 				</Button>
+			</Flex>
+		</Flex>
+	);
+}
+
+function ConnectConfirmation() {
+	const [params] = useSearchParams();
+	const relay = params.get('relay');
+	const navigate = useNavigate();
+
+	const connect = () => {
+		if (relay) setPrivateNodeURL(relay);
+	};
+
+	return (
+		<Flex direction="column" gap="2">
+			<Heading>Change Node?</Heading>
+			<Box>
+				<Text>You are currently connected to:</Text>
+				<Code>{personalNode?.url}</Code>
+			</Box>
+			<Box>
+				<Text>Do you want to change nodes to:</Text>
+				<Code>{relay}</Code>
+			</Box>
+			<Flex gap="2" w="sm">
+				<TextButton onClick={() => navigate('/')}>[ cancel ]</TextButton>
+				<TextButton colorScheme="green" onClick={connect}>
+					[ connect ]
+				</TextButton>
 			</Flex>
 		</Flex>
 	);
@@ -116,21 +148,24 @@ function ReconnectForm() {
 }
 
 export default function ConnectView() {
-	const update = useForceUpdate();
-	useInterval(update, 1000);
-
 	const location = useLocation();
-	const [params] = useSearchParams();
-	const reconnect = !params.has('config') && !!personalNode;
+	const connected = useSubject(personalNode?.connectedSub);
 
-	if (personalNode?.connected && !params.has('config')) {
+	const [params] = useSearchParams();
+	const relayParam = params.get('relay');
+
+	if (connected && !params.has('config') && !relayParam) {
 		return <Navigate to={location.state?.back ?? '/'} replace />;
+	}
+
+	if (personalNode && relayParam && new URL(personalNode.url).toString() === new URL(relayParam).toString()) {
+		return <Navigate replace to="/" />;
 	}
 
 	return (
 		<Flex w="full" h="full" alignItems="center" justifyContent="center">
 			<Flex direction="column" gap="2" w="full" maxW="sm" m="4">
-				{reconnect ? <ReconnectForm /> : <ConnectForm />}
+				{relayParam ? <ConnectConfirmation /> : <ConnectForm />}
 			</Flex>
 		</Flex>
 	);

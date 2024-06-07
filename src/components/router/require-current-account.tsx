@@ -9,5 +9,6 @@ export default function RequireCurrentAccount({ children }: PropsWithChildren) {
 
 	if (!account)
 		return <Navigate to="/login" replace state={{ back: (location.state?.back ?? location) satisfies To }} />;
+
 	return <>{children}</>;
 }

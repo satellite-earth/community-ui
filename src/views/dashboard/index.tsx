@@ -2,7 +2,7 @@ import { Flex, Tab, TabList, TabPanel, TabPanels, Tabs, useBreakpointValue } fro
 
 import StatusLog from './status-log';
 import PanelItemString from '../../components/dashboard/panel-item-string';
-import personalNode from '../../services/personal-node';
+import personalNode, { resetPrivateNodeURL } from '../../services/personal-node';
 import Panel from '../../components/dashboard/panel';
 import DatabasePanel from './database';
 import ReceiverPanel from './receiver';
@@ -10,10 +10,17 @@ import BottomNav from '../../components/layout/mobile/bottom-nav';
 import LogsTab from './tabs/logs-tab';
 import NotificationsTab from './tabs/notifications-tab';
 import useRouteStateValue from '../../hooks/use-route-state-value';
+import TextButton from '../../components/dashboard/text-button';
 
 export default function DashboardHomeView() {
 	const isMobile = useBreakpointValue({ base: true, lg: false });
 	const { value: tab, setValue: setTab } = useRouteStateValue('tab', 0);
+
+	const disconnect = () => {
+		if (confirm('Disconnect from personal node?')) {
+			resetPrivateNodeURL();
+		}
+	};
 
 	return (
 		<>
@@ -41,6 +48,9 @@ export default function DashboardHomeView() {
 								<Flex gap="2" flex={1} direction="column" overflow="auto">
 									<Panel label="RELAY">
 										<PanelItemString label="URL" value={personalNode!.url} qr />
+										<TextButton onClick={disconnect} mr="auto" mt="1" colorScheme="red">
+											[ disconnect ]
+										</TextButton>
 									</Panel>
 									<ReceiverPanel />
 									<DatabasePanel />

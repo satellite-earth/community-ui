@@ -8,8 +8,19 @@ import Subject, { PersistentSubject } from './subject';
 
 export default class PersonalNode extends Relay {
 	log = logger.extend('PrivateNode');
+	connectedSub = new PersistentSubject(false);
 	authenticated = new PersistentSubject(false);
 	onControlResponse = new ControlledObservable<ControlResponse>();
+
+	constructor(url: string) {
+		super(url);
+
+		// override _connected property
+		Object.defineProperty(this, '_connected', {
+			get: () => this.connectedSub.value,
+			set: (v) => this.connectedSub.next(v),
+		});
+	}
 
 	sentAuthId = '';
 	authPromise: Deferred<string> | null = null;
