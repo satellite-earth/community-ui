@@ -48,8 +48,8 @@ export default function DashboardHomeView() {
 								<Flex gap="2" flex={1} direction="column" overflow="auto">
 									<Panel label="RELAY">
 										<PanelItemString label="URL" value={personalNode!.url} qr />
-										<TextButton onClick={disconnect} mr="auto" mt="1" colorScheme="red">
-											[ disconnect ]
+										<TextButton onClick={disconnect} mr="auto" mt="1" colorScheme="orange">
+											[disconnect]
 										</TextButton>
 									</Panel>
 									<ReceiverPanel />
