@@ -78,6 +78,7 @@ export default class PersonalNodeControlApi {
 		});
 	}
 
+	/*
 	async addExplicitRelay(relay: string | URL) {
 		const url = new URL(relay).toString();
 
@@ -101,4 +102,5 @@ export default class PersonalNodeControlApi {
 			this.config.value?.pubkeys.filter((p) => p !== pubkey),
 		);
 	}
+	*/
 }
