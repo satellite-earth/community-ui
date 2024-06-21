@@ -4,7 +4,7 @@ import { Filter, NostrEvent } from 'nostr-tools';
 import timelineCacheService from '../services/timeline-cache';
 import { EventFilter } from '../classes/timeline-loader';
 import { stringifyFilter } from '../helpers/nostr/filter';
-import { useCommunityContext } from '../providers/community-context';
+import { useCommunityContext } from '../providers/local/community-provider';
 import communityDeleteStreams from '../services/delete-events';
 import RelaySet, { RelaySetFrom } from '../classes/relay-set';
 
@@ -16,7 +16,7 @@ type Options = {
 export default function useTimelineLoader(
 	key: string,
 	filters: Filter[] | undefined,
-	relays: RelaySetFrom,
+	relays?: RelaySetFrom,
 	opts?: Options,
 ) {
 	const timeline = useMemo(() => timelineCacheService.createTimeline(key), [key]);

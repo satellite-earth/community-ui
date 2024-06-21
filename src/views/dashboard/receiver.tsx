@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import Panel from '../../components/dashboard/panel';
 import PanelItemToggle from '../../components/dashboard/panel-item-toggle';
 import useSubject from '../../hooks/use-subject';
-import { controlApi } from '../../services/private-node';
+import { controlApi } from '../../services/personal-node';
 import TextButton from '../../components/dashboard/text-button';
 import Signal01 from '../../components/icons/components/signal-01';
 import { RelayUrlInput } from '../../components/relay-url-input';
@@ -12,6 +12,7 @@ import UserName from '../../components/user/user-name';
 import { PubkeyInput } from '../../components/pubkey-input';
 import { nip19 } from 'nostr-tools';
 
+/*
 function AddRelayForm({ onCancel, onAdd }: { onCancel?: () => void; onAdd?: () => void }) {
 	const { register, handleSubmit, formState } = useForm({ defaultValues: { relay: '' }, mode: 'all' });
 
@@ -39,7 +40,9 @@ function AddRelayForm({ onCancel, onAdd }: { onCancel?: () => void; onAdd?: () =
 		</Flex>
 	);
 }
+*/
 
+/*
 function AddPubkeyForm({ onCancel, onAdd }: { onCancel?: () => void; onAdd?: () => void }) {
 	const { register, handleSubmit, formState } = useForm({ defaultValues: { pubkey: '' }, mode: 'all' });
 
@@ -75,10 +78,11 @@ function AddPubkeyForm({ onCancel, onAdd }: { onCancel?: () => void; onAdd?: () 
 		</Flex>
 	);
 }
+*/
 
 export default function ReceiverPanel() {
-	const addRelay = useDisclosure();
-	const addPubkey = useDisclosure();
+	// const addRelay = useDisclosure();
+	// const addPubkey = useDisclosure();
 	const status = useSubject(controlApi?.receiverStatus);
 	const config = useSubject(controlApi?.config);
 
@@ -102,7 +106,7 @@ export default function ReceiverPanel() {
 				</Flex>
 				{config?.owner ? <UserName pubkey={config?.owner} /> : <Text>NOT SET</Text>}
 			</Box>
-			<Box>
+			{/* <Box>
 				<Flex gap="2" justifyContent="space-between">
 					<Text>PUBKEYS</Text>
 					{!addPubkey.isOpen && (
@@ -124,9 +128,9 @@ export default function ReceiverPanel() {
 					</Flex>
 				))}
 			</Box>
-			{addPubkey.isOpen && <AddPubkeyForm onCancel={addPubkey.onClose} onAdd={addPubkey.onClose} />}
+			{addPubkey.isOpen && <AddPubkeyForm onCancel={addPubkey.onClose} onAdd={addPubkey.onClose} />} */}
 
-			<Box>
+			{/*<Box>
 				<Flex gap="2" justifyContent="space-between" mt="2">
 					<Text>RELAYS</Text>
 					{!addRelay.isOpen && (
@@ -150,9 +154,9 @@ export default function ReceiverPanel() {
 						</TextButton>
 					</Flex>
 				))}
-			</Box>
+			</Box>*/}
 
-			{addRelay.isOpen && <AddRelayForm onCancel={addRelay.onClose} onAdd={addRelay.onClose} />}
+			{/*addRelay.isOpen && <AddRelayForm onCancel={addRelay.onClose} onAdd={addRelay.onClose} />*/}
 		</Panel>
 	);
 }

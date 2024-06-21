@@ -22,9 +22,9 @@ export default function PanelItemString({
 	return (
 		<div>
 			<Flex alignItems="center">
-				<Flex gap="2" w="full" alignItems="center">
-					<Text>{label}</Text>
-					<Code w="full" bg="none" userSelect="all" fontFamily="monospace">
+				<Flex gap="2" w="full" alignItems="center" wrap="wrap">
+					<Text whiteSpace="pre">{label}</Text>
+					<Code bg="none" userSelect="all" fontFamily="monospace" mr="auto" maxW="full">
 						{value}
 					</Code>
 					<CopyButton variant="link" value={value} fontFamily="monospace" />

@@ -41,6 +41,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 8
+
       - name: Checkout @satellite-earth/core
         uses: actions/checkout@v4
         with:
@@ -51,16 +55,16 @@ jobs:
       - name: Build @satellite-earth/core
         run: |
           cd core
-          yarn install
-          yarn build
+          pnpm install
+          pnpm build
 
       - name: Install dependencies
         run: |
-          yarn add ./core
-          yarn install
+          pnpm add ./core
+          pnpm install
 
       - name: Build
-        run: yarn build
+        run: pnpm build
 
       - name: Redirect 404 to Index for SPA
         run: cp dist/index.html dist/404.html

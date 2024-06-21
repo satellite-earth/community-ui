@@ -1,17 +1,16 @@
-import { Center, Flex, Heading } from '@chakra-ui/react';
-import useSubject from '../../../hooks/use-subject';
-import communitiesService from '../../../services/communities';
-import CommunitiesNav from './communities-nav';
-import CommunityContextProvider from '../../../providers/community-context';
-import ChannelNav from './channel-nav';
-import ErrorBoundary from '../../error-boundary';
+import { Flex } from '@chakra-ui/react';
 import { Outlet } from 'react-router-dom';
 
-export default function DesktopLayout() {
-	const community = useSubject(communitiesService.community);
+import DesktopSideNav from './side-nav';
+import ErrorBoundary from '../../error-boundary';
+import NotificationsPrompt from '../notifications-prompt';
+import ConnectionStatus from '../connection-status';
 
+export default function DesktopLayout() {
 	return (
 		<>
+			<ConnectionStatus />
+			<NotificationsPrompt />
 			<Flex
 				direction={{
 					base: 'column',
@@ -20,23 +19,10 @@ export default function DesktopLayout() {
 				overflow="hidden"
 				h="full"
 			>
-				<CommunitiesNav />
-				{community ? (
-					<>
-						<CommunityContextProvider community={community}>
-							<ChannelNav />
-							<Flex direction="column" overflow="hidden" grow={1}>
-								<ErrorBoundary>
-									<Outlet />
-								</ErrorBoundary>
-							</Flex>
-						</CommunityContextProvider>
-					</>
-				) : (
-					<Center flex={1}>
-						<Heading>Select Community</Heading>
-					</Center>
-				)}
+				<DesktopSideNav />
+				<ErrorBoundary>
+					<Outlet />
+				</ErrorBoundary>
 			</Flex>
 		</>
 	);

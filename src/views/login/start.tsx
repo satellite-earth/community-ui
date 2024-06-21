@@ -68,15 +68,7 @@ export default function LoginStartView() {
 						Extension
 					</Button>
 				)}
-				<Button
-					flexDirection="column"
-					h="auto"
-					p="4"
-					as={RouterLink}
-					to="./nsec"
-					state={location.state}
-					variant="outline"
-				>
+				<Button flexDirection="column" h="auto" p="4" as={RouterLink} to="./nsec" variant="outline">
 					<Key01 boxSize={12} />
 					Private key
 				</Button>

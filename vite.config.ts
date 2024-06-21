@@ -4,7 +4,6 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-	base: process.env.VITE_BASE ?? './',
 	build: {
 		target: ['chrome89', 'edge89', 'firefox89', 'safari15'],
 		sourcemap: true,
@@ -12,16 +11,20 @@ export default defineConfig({
 	plugins: [
 		react(),
 		VitePWA({
+			strategies: 'injectManifest',
 			registerType: 'autoUpdate',
-			injectRegister: 'auto',
+			injectRegister: null,
+			srcDir: 'src',
+			filename: 'worker.ts',
+			injectManifest: { minify: false, sourcemap: true },
 			workbox: {
 				// This increase the cache limit to 3mB
 				maximumFileSizeToCacheInBytes: 2097152 * 1.5,
 			},
 			manifest: {
-				name: 'Satellite Communities',
+				name: 'Satellite',
 				short_name: 'Satellite',
-				description: 'An interface for satellite communities',
+				description: 'An interface for satellite',
 				display: 'standalone',
 				orientation: 'portrait-primary',
 				theme_color: '#171819',
@@ -52,6 +55,10 @@ export default defineConfig({
 				lang: 'en',
 				start_url: '/',
 				scope: '/',
+			},
+			devOptions: {
+				enabled: true,
+				type: 'module',
 			},
 		}),
 	],

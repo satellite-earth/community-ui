@@ -16,12 +16,12 @@ import {
 	Text,
 } from '@chakra-ui/react';
 import { NostrEvent } from 'nostr-tools';
+import { getTagValue } from '@satellite-earth/core/helpers/nostr';
 
 import useTimelineLoader from '../../hooks/use-timeline-loader';
 import useSubject from '../../hooks/use-subject';
-import { getTagValue } from '../../helpers/nostr/event';
 import communitiesService from '../../services/communities';
-import privateNode from '../../services/private-node';
+import personalNode from '../../services/personal-node';
 
 function CommunityCard({ community, onJoin }: { community: NostrEvent; onJoin?: () => void }) {
 	const name = getTagValue(community, 'name');
@@ -72,7 +72,7 @@ export default function ExploreCommunitiesModal({ isOpen, onClose }: Omit<ModalP
 				kinds: [12012],
 			},
 		],
-		privateNode!,
+		personalNode!,
 	);
 
 	const communities = useSubject(timeline.timeline).filter((e) => !joined.some((i) => i.pubkey === e.pubkey));

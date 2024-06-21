@@ -1,10 +1,10 @@
 import { nanoid } from 'nanoid';
 import { NostrEvent, kinds } from 'nostr-tools';
 import { getEventUID } from 'nostr-idb';
+import { doesEventMatchCoordinate, sortByDate } from '@satellite-earth/core/helpers/nostr';
 
 import ControlledObservable from './controlled-observable';
 import SuperMap from './super-map';
-import { doesEventMatchCoordinate, sortByDate } from '../helpers/nostr/event';
 
 export type EventFilter = (event: NostrEvent, store: EventStore) => boolean;
 

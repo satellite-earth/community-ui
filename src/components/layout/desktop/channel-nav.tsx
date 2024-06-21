@@ -1,5 +1,12 @@
 import { useState } from 'react';
 import { Box, Button, Flex, Heading, IconButton, Image, useDisclosure } from '@chakra-ui/react';
+import {
+	getChannelId,
+	getChannelName,
+	getChannelPicture,
+	getCommunityBanner,
+	getCommunityName,
+} from '@satellite-earth/core/helpers/nostr';
 import { Link as RouterLink } from 'react-router-dom';
 import { NostrEvent } from 'nostr-tools';
 
@@ -7,16 +14,14 @@ import accountService from '../../../services/account';
 import useCurrentAccount from '../../../hooks/use-current-account';
 import UserAvatar from '../../user/user-avatar';
 import UserName from '../../user/user-name';
-import { getCommunityBanner, getCommunityName } from '../../../helpers/nostr/communities';
 import Plus from '../../icons/components/plus';
-import CreateGroupModal from '../../group/create-channel-modal';
+import CreateGroupModal from '../../channel/create-channel-modal';
 import Edit01 from '../../icons/components/edit-01';
-import EditChannelModal from '../../group/edit-channel-modal';
-import { useCurrentCommunity } from '../../../providers/community-context';
+import EditChannelModal from '../../channel/edit-channel-modal';
+import { useCurrentCommunity } from '../../../providers/local/community-provider';
 import useCommunityChannels from '../../../hooks/use-community-channels';
-import { getChannelId, getChannelName, getChannelPicture } from '../../../helpers/nostr/channel';
 
-export default function ChannelNav() {
+export default function DesktopChannelNav() {
 	const account = useCurrentAccount();
 	const createGroupModal = useDisclosure();
 	const { community, relay } = useCurrentCommunity();

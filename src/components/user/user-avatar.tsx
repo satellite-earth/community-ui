@@ -1,8 +1,8 @@
 import { forwardRef, memo } from 'react';
 import { Avatar, AvatarProps } from '@chakra-ui/react';
+import { Kind0ParsedContent, getUserDisplayName } from '@satellite-earth/core/helpers/nostr';
 
 import useUserMetadata from '../../hooks/use-user-metadata';
-import { Kind0ParsedContent, getUserDisplayName } from '../../helpers/nostr/user-metadata';
 
 export type UserAvatarProps = Omit<MetadataAvatarProps, 'pubkey' | 'metadata'> & {
 	pubkey: string;

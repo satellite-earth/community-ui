@@ -1,9 +1,10 @@
 import { nanoid } from 'nanoid';
+import { Filter, NostrEvent } from 'nostr-tools';
+import { AbstractRelay } from 'nostr-tools/abstract-relay';
 
 import relayPoolService from '../services/relay-pool';
 import { isFilterEqual } from '../helpers/nostr/filter';
 import ControlledObservable from './controlled-observable';
-import { AbstractRelay, Filter, NostrEvent } from 'nostr-tools';
 import PersistentSubscription from './persistent-subscription';
 
 export default class MultiSubscription {
@@ -70,7 +71,7 @@ export default class MultiSubscription {
 		// else open and update subscriptions
 		for (const relay of this.relays) {
 			let subscription = this.subscriptions.get(relay);
-			if (!subscription || !isFilterEqual(subscription.filters, this.filters)) {
+			if (!subscription || !isFilterEqual(subscription.filters, this.filters) || subscription.closed) {
 				if (!subscription) {
 					subscription = new PersistentSubscription(relay, {
 						onevent: (event) => this.handleEvent(event),

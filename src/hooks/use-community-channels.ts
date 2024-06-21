@@ -1,6 +1,8 @@
-import { AbstractRelay, NostrEvent } from 'nostr-tools';
+import { NostrEvent } from 'nostr-tools';
+import { AbstractRelay } from 'nostr-tools/abstract-relay';
+import { CHANNEL_KIND } from '@satellite-earth/core/helpers/nostr';
+
 import useTimelineLoader from './use-timeline-loader';
-import { CHANNEL_KIND } from '../helpers/nostr/channel';
 import useSubject from './use-subject';
 
 export default function useCommunityChannels(community: NostrEvent, relay: AbstractRelay) {

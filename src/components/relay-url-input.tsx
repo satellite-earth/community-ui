@@ -2,7 +2,7 @@ import { forwardRef } from 'react';
 import { Input, InputProps } from '@chakra-ui/react';
 
 import useTimelineLoader from '../hooks/use-timeline-loader';
-import privateNode from '../services/private-node';
+import personalNode from '../services/personal-node';
 import useSubject from '../hooks/use-subject';
 
 export type RelayUrlInputProps = Omit<InputProps, 'type'>;
@@ -14,7 +14,7 @@ export const RelayUrlInput = forwardRef(({ ...props }: Omit<InputProps, 'type'>,
 	const timeline = useTimelineLoader(
 		'clearnet-relays',
 		[{ kinds: [30166], authors: [NOSTR_WATCH_PUBKEY], since: 1704196800, '#n': ['clearnet'] }],
-		privateNode ? [privateNode, NOSTR_WATCH_RELAY] : [NOSTR_WATCH_RELAY],
+		personalNode ? [personalNode, NOSTR_WATCH_RELAY] : [NOSTR_WATCH_RELAY],
 	);
 
 	const events = useSubject(timeline.timeline);

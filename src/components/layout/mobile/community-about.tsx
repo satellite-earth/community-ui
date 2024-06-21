@@ -1,7 +1,6 @@
 import { Box, Heading, Image, Text } from '@chakra-ui/react';
+import { getCommunityBanner, getCommunityName } from '@satellite-earth/core/helpers/nostr';
 import { NostrEvent } from 'nostr-tools';
-
-import { getCommunityBanner, getCommunityName } from '../../../helpers/nostr/communities';
 
 export default function CommunityAbout({ community }: { community: NostrEvent }) {
 	const name = getCommunityName(community);

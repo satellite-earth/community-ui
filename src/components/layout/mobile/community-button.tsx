@@ -1,12 +1,12 @@
 import { NostrEvent } from 'nostr-tools';
-import { Button, Flex, Image, Text } from '@chakra-ui/react';
+import { Flex, Image, Text } from '@chakra-ui/react';
+import { getCommunityImage, getCommunityName } from '@satellite-earth/core/helpers/nostr';
 
 import useSubject from '../../../hooks/use-subject';
 import timelineCacheService from '../../../services/timeline-cache';
-import { getCommunityImage, getCommunityName } from '../../../helpers/nostr/communities';
 import communitiesService from '../../../services/communities';
 
-export default function CommunityButton({ community }: { community: NostrEvent }) {
+export default function MobileCommunityButton({ community }: { community: NostrEvent }) {
 	const selected = useSubject(communitiesService.community);
 
 	const select = () => {

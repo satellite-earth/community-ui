@@ -19,23 +19,26 @@ export type AmberAccount = CommonAccount & {
 
 export type Account = ExtensionAccount | LocalAccount | AmberAccount;
 
-/** Global service for managing accounts */
 class AccountService {
 	loading = new PersistentSubject(true);
 	accounts = new PersistentSubject<Account[]>([]);
 	current = new PersistentSubject<Account | null>(null);
 
-	constructor() {
-		db.getAll('accounts').then((accounts) => {
-			this.accounts.next(accounts);
+	async setup() {
+		const accounts = await db.getAll('accounts');
 
-			const lastAccount = localStorage.getItem('lastAccount');
-			if (lastAccount && this.hasAccount(lastAccount)) {
-				this.switchAccount(lastAccount);
-			}
+		this.accounts.next(accounts);
 
-			this.loading.next(false);
-		});
+		const lastAccount = localStorage.getItem('lastAccount');
+		if (lastAccount && this.hasAccount(lastAccount)) {
+			this.switchAccount(lastAccount);
+		} else if (window.satellite && window.nostr) {
+			const pubkey = await window.nostr.getPublicKey();
+			this.addAccount({ type: 'extension', pubkey });
+			this.switchAccount(pubkey);
+		}
+
+		this.loading.next(false);
 	}
 
 	hasAccount(pubkey: string) {
@@ -82,6 +85,7 @@ class AccountService {
 }
 
 const accountService = new AccountService();
+await accountService.setup();
 
 if (import.meta.env.DEV) {
 	// @ts-expect-error

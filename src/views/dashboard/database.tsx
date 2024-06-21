@@ -3,7 +3,7 @@ import { NostrEvent } from 'nostr-tools';
 import { Flex } from '@chakra-ui/react';
 
 import useSubject from '../../hooks/use-subject';
-import privateNode, { controlApi } from '../../services/private-node';
+import personalNode, { controlApi } from '../../services/personal-node';
 import Panel from '../../components/dashboard/panel';
 import { formatDataSize } from '../../helpers/number';
 import TextButton from '../../components/dashboard/text-button';
@@ -11,7 +11,7 @@ import ImportEventsButton from '../../components/dashboard/import-events-button'
 
 export default function DatabasePanel() {
 	const status = useSubject(controlApi?.databaseStats);
-	const importEvent = useCallback(async (event: NostrEvent) => privateNode?.publish(event), []);
+	const importEvent = useCallback(async (event: NostrEvent) => personalNode?.publish(event), []);
 
 	if (!status) return;
 
@@ -34,9 +34,9 @@ export default function DatabasePanel() {
 					gap: '12px',
 				}}
 			>
-				<TextButton onClick={() => privateNode?.clearDatabase()}>[CLEAR]</TextButton>
+				<TextButton onClick={() => personalNode?.clearDatabase()}>[CLEAR]</TextButton>
 				<ImportEventsButton onEvent={importEvent} />
-				<TextButton onClick={() => privateNode?.exportDatabase()}>[EXPORT]</TextButton>
+				<TextButton onClick={() => personalNode?.exportDatabase()}>[EXPORT]</TextButton>
 			</div>
 		</Panel>
 	);

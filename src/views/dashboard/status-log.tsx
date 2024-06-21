@@ -1,11 +1,10 @@
-import { controlApi } from '../../services/private-node';
-import { Box, FlexProps } from '@chakra-ui/react';
-
-import useSubject from '../../hooks/use-subject';
-import Panel from '../../components/dashboard/panel';
 import { useEffect, useRef } from 'react';
+import { Box, BoxProps, Text } from '@chakra-ui/react';
 
-export default function StatusLog({ ...props }: Omit<FlexProps, 'children'>) {
+import { controlApi } from '../../services/personal-node';
+import useSubject from '../../hooks/use-subject';
+
+export default function StatusLog({ ...props }: Omit<BoxProps, 'children'>) {
 	const logs = useSubject(controlApi?.logs) ?? [];
 	const scrollBox = useRef<HTMLDivElement | null>(null);
 
@@ -23,22 +22,12 @@ export default function StatusLog({ ...props }: Omit<FlexProps, 'children'>) {
 	}, []);
 
 	return (
-		<Panel label="STATUS LOGS" fontFamily="monospace" overflow="hidden" {...props}>
-			<Box overflow="auto" pb="5em" ref={scrollBox}>
-				{logs.map((log, i) => (
-					<div
-						key={log + i}
-						style={{
-							flexShrink: 0,
-							overflow: 'hidden',
-							whiteSpace: 'nowrap',
-							textOverflow: 'ellipsis',
-						}}
-					>
-						{log}
-					</div>
-				))}
-			</Box>
-		</Panel>
+		<Box overflow="auto" pb="5em" ref={scrollBox} {...props}>
+			{logs.map((log, i) => (
+				<Text isTruncated flexShrink={0}>
+					{log}
+				</Text>
+			))}
+		</Box>
 	);
 }
