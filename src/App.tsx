@@ -75,8 +75,10 @@ const router = createBrowserRouter([
 		element: (
 			<RequirePersonalNode>
 				<RequireCurrentAccount>
-					<ScrollRestoration />
-					<AppLayout />
+					<RequirePersonalNodeAuth>
+						<ScrollRestoration />
+						<AppLayout />
+					</RequirePersonalNodeAuth>
 				</RequireCurrentAccount>
 			</RequirePersonalNode>
 		),
